@@ -12,18 +12,18 @@ module.exports = (router) => {
   // router.get('/test', [IsAuthenticated], TestController.index);
 
   //users route
-  router.get('/users', UserController.list);
-  router.get('/users/:id', UserController.get);
-  router.post('/users', UserController.create);
-  router.put('/users/:id', UserController.update);
-  router.delete('/users/:id', UserController.delete);
+  router.get('/users', [IsAuthenticated] , UserController.list);
+  router.get('/users/:id', [IsAuthenticated], UserController.get);
+  router.post('/users', [IsAuthenticated], UserController.create);
+  router.put('/users/:id', [IsAuthenticated], UserController.update);
+  router.delete('/users/:id', [IsAuthenticated], UserController.delete);
 
   //admin account route
-  router.get('/admin', AdminController.list);
-  router.get('/admin/:id', AdminController.get);
-  router.post('/admin', AdminController.create);
-  router.put('/admin/:id', AdminController.update);
-  router.delete('/admin/:id', AdminController.delete);
+  router.get('/admin', [IsAuthenticated], AdminController.list);
+  router.get('/admin/:id', [IsAuthenticated], AdminController.get);
+  router.post('/admin', [IsAuthenticated], AdminController.create);
+  router.put('/admin/:id', [IsAuthenticated], AdminController.update);
+  router.delete('/admin/:id', [IsAuthenticated], AdminController.delete);
 
   return router;
 }
