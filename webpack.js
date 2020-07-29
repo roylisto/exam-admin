@@ -8,7 +8,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const LiveReloadPlugin = require('webpack-livereload-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const root = path.resolve(__dirname);
-const env = process.env.NODE_ENV;
+const env = process.env.NODE_ENV === 'development' ? 'development' : 'production';
 const webpack = require('webpack');
 
 module.exports = {
@@ -34,7 +34,7 @@ module.exports = {
         test: /\.(png|jpeg|jpg|gif)$/,
         loader: 'file-loader',
         options: {
-          name: env === 'production' ? 'images/[name].[hash:8].[ext]' : 'images/[name].[ext]',
+          name: 'images/[name].[ext]',
         },
       },
       {
@@ -43,7 +43,7 @@ module.exports = {
         options: {
           name: 'fonts/[name].[ext]',
         },
-      },      
+      },
     ]
   },
   optimization: {
@@ -65,7 +65,7 @@ module.exports = {
         }
       })
     ]
-  },  
+  },
   plugins: [
     new CleanWebpackPlugin({
       cleanOnceBeforeBuildPatterns: [
@@ -73,20 +73,24 @@ module.exports = {
       ],
     }),
     new MiniCssExtractPlugin({
-      filename: env === 'production' ? 'css/[name].[hash].css' : 'css/[name].css'
+      filename: env === 'development' ? 'css/[name].css' : 'css/[name].[hash:8].css',
     }),
     new HtmlWebpackPlugin({
-      inject: true,      
+      inject: true,
       template: `${root}/public/index.html`,
-      env: process.env.NODE_ENV,
       minify: {
+        html5: true,
         collapseWhitespace: true,
-      }
+        minifyCSS: true,
+        minifyJS: true,
+        minifyURLs: false,
+        removeComments: true,
+      },
     }),
     new LiveReloadPlugin({
       port: 0,
       appendScriptTag: env === 'development' ? true : false
-    }),    
+    }),
     new webpack.DefinePlugin({
       'process.env.API_URL': JSON.stringify(process.env.API_URL),
       'process.env.IMAGE_URL': JSON.stringify(process.env.IMAGE_URL),

@@ -25,5 +25,9 @@ module.exports = (router) => {
   router.put('/admin/:id', [IsAuthenticated], AdminController.update);
   router.delete('/admin/:id', [IsAuthenticated], AdminController.delete);
 
+  router.get('/test', (req, res) => {
+    res.send('test ci/cd');
+  });
+
   return router;
 }

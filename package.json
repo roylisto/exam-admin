@@ -1,10 +1,14 @@
 {
-  "name": "react-express",
+  "name": "exam-admin",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
+  "engines": {
+    "node": "10.x"
+  },
   "scripts": {
-    "start": "nodemon app.js",
+    "start": "node app.js",
+    "dev": "nodemon app.js",
     "build": "NODE_ENV=production webpack --progress --hide-modules --config webpack.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
