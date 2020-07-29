@@ -7,7 +7,7 @@ module.exports = {
     const { email, password } = req.body;
     if (email && password) {
       try {
-        const user = await db.users.findOne({ where: { email } });
+        const user = await db.admin.findOne({ where: { email } });
         const result = await bcrypt.compare(password, user.password);
         if (result) {
           return jwt.sign({
@@ -15,6 +15,9 @@ module.exports = {
               email,
               id: user.id,
               name: user.name,
+              email: user.email,
+              role: user.role,
+              change_password: user.change_password
             },
           }, process.env.JWT_SECRET, { expiresIn: '1d' }, (err, token) => {
             if (err) return res.status(500).json({ message: 'E_TOKEN' });
