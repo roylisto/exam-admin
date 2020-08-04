@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import ImgLogo from '../../components/Logo';
 import logo from '../../assets/images/react.svg';
+import { Link } from 'react-router-dom';
 
 const Content = styled.div`
   padding: 5%;
@@ -22,6 +23,9 @@ class Homepage extends Component {
         <p>
           Lorem Ipsum adalah contoh teks atau dummy dalam industri percetakan dan penataan huruf atau typesetting. Lorem Ipsum telah menjadi standar contoh teks sejak tahun 1500an, saat seorang tukang cetak yang tidak dikenal mengambil sebuah kumpulan teks dan mengacaknya untuk menjadi sebuah buku contoh huruf.
         </p>
+        <Link to="/login">
+          Login
+        </Link>
       </Content>
     )
   }

@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Switch,
   Route
 } from 'react-router-dom';
 import routes from './routes';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./assets/scss/style.scss";
 
 const AppLayout = styled.div`  
   height: inherit;
