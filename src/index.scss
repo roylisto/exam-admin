@@ -1,38 +1,10 @@
 /* Fonts */
-@font-face {
-  font-family: 'AntipastoPro';
-  font-style: normal;
-  font-weight: 300;
-  src: url('./assets/fonts/antipasto.light.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'AntipastoPro';
-  font-style: normal;
-  font-weight: 400;
-  src: url('./assets/fonts/antipasto.regular.ttf') format('truetype');
-}
 
 @font-face {
   font-family: 'AntipastoPro';
-  font-style: normal;
-  font-weight: normal;
-  src: url('./assets/fonts/antipasto.medium.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'AntipastoPro';
-  font-style: normal;
-  font-weight: 600;
-  src: url('./assets/fonts/antipasto.demibold.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'AntipastoPro';
-  font-style: normal;
   font-weight: bold;
-  src: url('./assets/fonts/antipasto.bold.ttf') format('truetype');
+  src: url('./assets/fonts/AntipastoProDemiBold.ttf');
 }
-
 
 html, body {
   height: 100%;
@@ -40,8 +12,7 @@ html, body {
 }
 
 body {
-  font-family: 'AntipastoPro' , 'Roboto';
-  // font-family: Arial, Helvetica, sans-serif;
+  font-family: 'AntipastoPro' !important;
 }
 
 #root {
