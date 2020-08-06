@@ -16,19 +16,24 @@ module.exports = {
         });
       }
       
-      const account = await user.create({
-        nama: req.body.nama,
-        email: req.body.email,
-        no_hp: req.body.no_hp,
-        tanggal_lahir: req.body.tanggal_lahir,
-        jenis_kelamin: req.body.jenis_kelamin,
-        kelompok: req.body.kelompok,
-        instansi: req.body.instansi
+      const account = await user.findOrCreate({
+        where: {
+          email: req.body.email
+        },
+        defaults: {
+          nama: req.body.nama,
+          email: req.body.email,
+          no_hp: req.body.no_hp,
+          tanggal_lahir: req.body.tanggal_lahir,
+          jenis_kelamin: req.body.jenis_kelamin,
+          kelompok: req.body.kelompok,
+          instansi: req.body.instansi
+        }
       });
       
-      if(account) {
+      if(account) {        
         await peserta.create({
-          email: account.email,
+          email: req.body.email,
           password: randomstring.generate(8),
           valid: test.waktu,
           expired: moment(test.waktu).add(1, 'days').format('YYYY-MM-DD HH:mm:ss'),
