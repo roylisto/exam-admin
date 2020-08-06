@@ -1,5 +1,7 @@
-import Homepage from './containers/Homepage';
-import Login from './containers/Onboarding/Login';
+import { lazy } from 'react'
+
+const Homepage = lazy(()=> import("./containers/Homepage"));
+const Login = lazy(()=> import("./containers/Onboarding/Login"));
 
 const routes = [
   {
