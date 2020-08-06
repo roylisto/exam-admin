@@ -24,7 +24,8 @@ module.exports = (router) => {
   router.post('/users', [IsAuthenticated], UserController.create);
   router.put('/users/:id', [IsAuthenticated], UserController.update);
   router.delete('/users/:id', [IsAuthenticated], UserController.delete);
-  router.post('/users/excel', multer.single('user'), user.import);
+  router.post('/users/peserta/', [IsAuthenticated], UserController.userPeserta);
+  router.post('/users/excel', [IsAuthenticated], multer.single('user'), user.import);
   
   //admin account route
   router.get('/admin', [IsAuthenticated], AdminController.list);

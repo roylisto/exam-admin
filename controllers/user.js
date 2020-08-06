@@ -4,6 +4,52 @@ const randomstring = require("randomstring");
 const moment = require('moment');
 
 module.exports = {
+  userPeserta: async (req, res) => {    
+    try {      
+      const test = await jadwalTest.findByPk(req.body.jadwal_test);
+      
+      if(test == null) {
+        return res.status(404).json({
+          status: 'ERROR',
+          messages: 'jadwal test not found!',
+          data: {}
+        });
+      }
+      
+      const account = await user.create({
+        nama: req.body.nama,
+        email: req.body.email,
+        no_hp: req.body.no_hp,
+        tanggal_lahir: req.body.tanggal_lahir,
+        jenis_kelamin: req.body.jenis_kelamin,
+        kelompok: req.body.kelompok,
+        instansi: req.body.instansi
+      });
+      
+      if(account) {
+        await peserta.create({
+          email: account.email,
+          password: randomstring.generate(8),
+          valid: test.waktu,
+          expired: moment(test.waktu).add(1, 'days').format('YYYY-MM-DD HH:mm:ss'),
+          jadwal_test: test.id
+        }); 
+      }
+      
+      res.json({
+        status: 'OK',
+        messages: 'Success insert data.',
+        data: {}
+      });
+    } catch (err) {
+      res.status(500).json({
+        status: 'ERROR',
+        messages: err,
+        data: {}
+      });
+    }
+  },
+
   import: async (req, res) => {    
     try {      
       const { jadwal_test } = req.body;
@@ -126,7 +172,7 @@ module.exports = {
   },
 
   create: (req, res) => {
-    let { nama, email, no_hp, tanggal_lahir, kelompok, instansi } = req.body
+    let { nama, email, no_hp, tanggal_lahir, kelompok, instansi, jenis_kelamin } = req.body
     user.create({
       nama: nama,
       email: email,
@@ -151,7 +197,7 @@ module.exports = {
   },
 
   update: (req, res) => {
-    let { nama, email, no_hp, tanggal_lahir, kelompok, instansi } = req.body
+    let { nama, email, no_hp, tanggal_lahir, kelompok, instansi, jenis_kelamin } = req.body
     user.update({
       nama: nama,
       email: email,
