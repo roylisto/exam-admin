@@ -61,20 +61,43 @@ module.exports = {
     }
   },
 
-  list: (req, res) => {
-    user.findAll().then( users => {
-      res.json({
+  list: async (req, res) => {
+    try {
+      if(req.query.email) {
+        const account_user = await user.findOne({
+          where: {
+            email: req.query.email
+          }
+        });
+        
+        if(account_user) {
+          return res.json({
+            status: 'OK',
+            messages: '',
+            data: account_user
+          });
+        }
+
+        res.status(404).json({
+          status: 'OK',
+          messages: 'Data not found!',
+          data: {}
+        });
+      } else {
+        const account_user = await user.findAll();
+        return res.json({
           status: 'OK',
           messages: '',
-          data: users
-      });
-    }).catch(err => {
+          data: account_user
+        });
+      }
+    } catch (err) {
       res.status(500).json({
-          status: 'ERROR',
-          messages: err,
-          data: {}
+        status: 'ERROR',
+        messages: err,
+        data: {}
       }); 
-    });
+    }
   },
 
   get: (req, res) => {
