@@ -69,7 +69,7 @@ module.exports = {
         query = {
           where: {
             waktu: {
-              [ Op.gt ] : moment().toDate()
+              [ Op.gte ] : moment().toDate()
             }
           }
         }
