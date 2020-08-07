@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
-import {
-    Row, Col, Form, Button, Image, Alert
-} from 'react-bootstrap'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 
 const Container = styled.div`
+    width: 100%;
+    height: 100vh;
     color: #ff8080;
+    background-image: url("https://cdn.zeplin.io/5f281c5cde10f72079056c76/assets/ebf99d37-084c-42fd-a465-273925f310b0.png");
+    background-repeat: no-repeat;
+    background-size : auto 100%;
     img {
         width: 100%;
     }
@@ -17,8 +19,10 @@ const Container = styled.div`
     }
 `;
 
-const ContentForm = styled.div`
-    padding-left: 80px;
+const ContentForm = styled.form`
+    margin-right : 20vw;
+    padding : 20px;
+    background-color : white;
     p {
         margin-bottom: 7.5px;
     }
@@ -64,50 +68,45 @@ class Login extends Component {
     render() {
         return (
             <Container>
-                <Row id="login-container">
-                    <Col>
-                        <Image
-                            src="https://cdn.zeplin.io/5f281c5cde10f72079056c76/assets/ebf99d37-084c-42fd-a465-273925f310b0.png"
-                        />
-                    </Col>
-                    <Col className="d-flex align-items-center">
-                        <ContentForm>
-                            <p>Welcome to Admin Page</p>
-                            <h3>Login To your Account</h3>
-                            {
-                                (this.props.error) ?
-                                    <Alert>
-                                        Login Gagal !
-                                    </Alert>
-                                    : ""
-                            }
-                            <Form.Group>
-                                <Form.Control
-                                    id="emailAdmin"
-                                    type="email"
-                                    placeholder="Email"
-                                    onChange={this.handleChange} 
-                                    required/>
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Control
-                                    id="passwordAdmin"
-                                    type="password"
-                                    placeholder="Password"
-                                    onChange={this.handleChange}
-                                    required
-                                />
-                            </Form.Group>
-                            <Button
-                                className="btn-admin pink"
-                                onClick={this.handleLogin}
-                                disabled={!this.state.emailAdmin || !this.state.passwordAdmin}
-                                >
-                                LOG IN
-                            </Button>
-                        </ContentForm>
-                    </Col>
-                </Row>
+                <div className='d-flex align-items-center justify-content-end h-100'>
+                    <ContentForm>
+                        <p>Welcome to Admin Page</p>
+                        <h3>Login To your Account</h3>
+                        {
+                            (this.props.error) ?
+                                <div className="alert" role="alert">
+                                    Login Gagal !
+                                </div>
+                                : ""
+                        }
+                        <div className="form-group">
+                            <input
+                                className="form-control"
+                                id="emailAdmin"
+                                type="email"
+                                placeholder="Email"
+                                onChange={this.handleChange} 
+                                required/>
+                        </div>
+                        <div className="form-group">
+                            <input
+                                className="form-control"
+                                id="passwordAdmin"
+                                type="password"
+                                placeholder="Password"
+                                onChange={this.handleChange}
+                                required
+                            />
+                        </div>
+                        <button
+                            className="btn btn-primary btn-admin pink"
+                            onClick={this.handleLogin}
+                            disabled={!this.state.emailAdmin || !this.state.passwordAdmin}
+                            >
+                            LOG IN
+                        </button>
+                    </ContentForm>
+                </div>
             </Container>
         )
     }

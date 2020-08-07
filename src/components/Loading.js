@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Spinner } from 'react-bootstrap';
 
 const Container = styled.div`
   width: 100vw;
@@ -15,9 +14,9 @@ class Loading extends Component {
     render() {
         return (
             <Container>
-                <Spinner animation="grow" size="sm" variant="primary"/>
-                <Spinner animation="grow" variant="primary"/>
-                <Spinner animation="grow" size="sm" variant="primary"/>
+                <div className="spinner-grow spinner-grow-sm text-primary" role="status"></div>
+                <div className="spinner-grow text-primary" role="status"></div>
+                <div className="spinner-grow spinner-grow-sm text-primary" role="status"></div>
             </Container>
         )
     }
