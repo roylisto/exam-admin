@@ -1,5 +1,6 @@
 const { jadwalTest } = require('../database/models/index.js');
-
+const { Op } = require('sequelize');
+const moment = require('moment');
 module.exports = {
   create: (req, res) => {
     jadwalTest.create(req.body).then(result => {
@@ -60,22 +61,33 @@ module.exports = {
     });
   },
 
-  list: (req, res) => {
-    jadwalTest.findAll({
-      where: req.query
-    }).then(result => {
-      res.json({
+  list: async (req, res) => {
+    try {
+      let query = {};
+      
+      if(req.query.date == 'true') {        
+        query = {
+          where: {
+            waktu: {
+              [ Op.gt ] : moment().toDate()
+            }
+          }
+        }
+      } 
+      const event = await jadwalTest.findAll(query);
+
+      return res.json({
         status: 'OK',
         messages: '',
-        data: result
+        data: event
       });
-    }).catch( err => {
-      res.status(400).json({
+    } catch(err) {
+      res.status(500).json({
         status: 'ERROR',
         messages: err,
         data: {}
       });
-    });
+    }
   },
 
   delete: (req, res) => {
