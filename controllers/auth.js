@@ -12,7 +12,6 @@ module.exports = {
         if (result) {
           return jwt.sign({
             data: {
-              email,
               id: user.id,
               name: user.name,
               email: user.email,

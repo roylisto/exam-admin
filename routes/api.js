@@ -33,6 +33,7 @@ module.exports = (router) => {
   router.post('/admin', [IsAuthenticated], AdminController.create);
   router.put('/admin/:id', [IsAuthenticated], AdminController.update);
   router.delete('/admin/:id', [IsAuthenticated], AdminController.delete);
+  router.post('/admin/reset-password', [IsAuthenticated], AdminController.reset_password);
 
   //peserta route
   router.get('/peserta', [IsAuthenticated], peserta.list);
