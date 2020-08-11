@@ -1,0 +1,20 @@
+.tabel-jadwal {
+    width: 100%;
+    font-family: 'Poppins';
+    color: #484242;
+    td {
+        text-align: center;
+        border-top: none;
+        border-bottom: 1px solid #f5f5f5;
+    }
+    thead th {
+        background-color: #f5f5f5;
+        border-bottom: none;
+        border-top: none;
+    }
+    th[tabindex] {
+        &:focus {
+            outline: none;
+        }
+    }
+}
