@@ -3,7 +3,7 @@ import BootstrapTable from 'react-bootstrap-table-next'
 // ASSETS
 import "./Tabel.scss"
 
-class TabelJadwal extends Component {
+class TabelPeserta extends Component {
     constructor(props) {
         super(props)
     
@@ -14,16 +14,18 @@ class TabelJadwal extends Component {
     
     render() {
         const columns = [
-            { dataField: 'id', text: 'ID'}, 
+            { dataField: 'Email', text: 'Email'}, 
+            { dataField: 'Nama', text: 'Nama'}, 
+            { dataField: 'no_hp', text: 'No HP'}, 
+            { dataField: 'jk', text: 'Jenis Kelamin'}, 
+            { dataField: 'tgl_lahir', text: 'Tanggal Lahir'}, 
+            { dataField: 'kelompok', text: 'Kelompok'}, 
             { dataField: 'instansi', text: 'Instansi'}, 
-            { dataField: 'start_time', text: 'Waktu Mulai'}, 
-            { dataField: 'end_time', text: 'Waktu Berakhir'}, 
-            { dataField: 'ket', text: 'Keterangan'}, 
         ];
           
         return (
             <BootstrapTable 
-                keyField='id' 
+                keyField='Email' 
                 data={ this.state.data } 
                 columns={ columns } 
                 bootstrap4
@@ -35,4 +37,4 @@ class TabelJadwal extends Component {
     }
 }
 
-export default TabelJadwal
+export default TabelPeserta

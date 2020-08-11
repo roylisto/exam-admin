@@ -4,12 +4,10 @@ import styled from 'styled-components';
 import NavbarDashboard from '../../components/NavbarDashboard';
 import Sidebar from '../../components/Sidebar';
 import Button from '../../components/Button';
-import TabelPeserta from "../../components/Tabel/TabelJadwal";
-
-const Container = styled.div`{
-    font-family: 'Poppins';
-    padding : 50px 0 50px ${props => props.span ? "50px" : "200px"};
-}`;
+import TabelPeserta from "../../components/Tabel/TabelPeserta";
+import TabelJadwal from "../../components/Tabel/TabelJadwal";
+import Modal from "../../components/Modal/ModalTambahJadwal";
+import Container from "../../components/Container";
 
 const Header = styled.div`{
     display : flex;
@@ -23,10 +21,42 @@ class Dashboard extends Component {
         super(props)
     
         this.state = {
-            show : "jadwalTest"
+            show : "jadwalTest",
+            showModal : false,
+            timeStart : new Date(),
+            timeEnd : new Date()
         }
         this.handleSwitchView = this.handleSwitchView.bind(this);
         this.switchView = this.switchView.bind(this);
+        this.handleClickModal = this.handleClickModal.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleChangeDate = this.handleChangeDate.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleSubmit(e){
+        e.preventDefault();
+        window.location.reload()
+    }
+
+    handleChangeDate(date, time){
+        this.setState({
+            [time]: date,
+        })
+    }
+
+    handleChange(e) {
+        e.preventDefault();
+        this.setState({
+            [e.target.id]: e.target.value,
+            showError: false
+        })
+    }
+
+    handleClickModal() {
+        this.setState({
+            showModal : !this.state.showModal
+        })
     }
 
     handleSwitchView(view) {
@@ -42,17 +72,28 @@ class Dashboard extends Component {
                     <Container>
                         <Header>
                             <h4>Jadwal Test</h4>
-                            <Button>
+                            <Button onClick={this.handleClickModal}>
                                 Add Jadwal Test
                             </Button>
                         </Header>
-                        <TabelPeserta />
+                        <TabelJadwal />
                     </Container>
                 );
             case "peserta" : 
                 return (
                     <Container>
-                        <h4>Peserta</h4>
+                        <Header>
+                            <h4>Peserta</h4>
+                            <div>
+                                <Button white>
+                                    Import list
+                                </Button>
+                                <Button>
+                                    Input Peserta
+                                </Button>
+                            </div>
+                        </Header>
+                        <TabelPeserta />
                     </Container>
                 );
             default:  
@@ -68,6 +109,16 @@ class Dashboard extends Component {
                     show={this.state.show}
                 />
                 <NavbarDashboard />
+                
+                <Modal 
+                    handleClickModal={this.handleClickModal}
+                    showModal={this.state.showModal} 
+                    handleChange={this.handleChange}
+                    timeStart={this.state.timeStart}
+                    timeEnd={this.state.timeEnd}
+                    handleChangeDate={this.handleChangeDate}
+                    handleSubmit={this.handleSubmit}
+                />
                 
                 {this.switchView()}
 
