@@ -1,6 +1,6 @@
 import { lazy } from 'react'
 
-const Homepage = lazy(()=> import("./containers/Homepage"));
+const Dashboard = lazy(()=> import("./containers/Dashboard"));
 const Login = lazy(()=> import("./containers/Onboarding/Login"));
 
 const routes = [
@@ -11,7 +11,7 @@ const routes = [
   },
   {
     path: '/dashboard',
-    component: Homepage,
+    component: Dashboard,
     exact: true,
   }
 ];
