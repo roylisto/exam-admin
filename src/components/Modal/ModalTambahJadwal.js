@@ -10,19 +10,10 @@ import calendar from "../../assets/images/calendar.png"
 const ModalTambahJadwal = (props) => {
         return (
             <div className="modal" style={{display: (props.showModal) ? "block" : "none"}}>
-                <div className="modal-dialog" role="document">
-                    <div className="modal-content">
+                <div className="modal-dialog modal-dialog-centered" role="document">
+                    <div className="modal-content ">
                         <h5>Add Jadwal Test</h5>
                         <form>
-                            <div className="form-group">
-                                <label>Nama</label>
-                                <input
-                                    className="form-control"
-                                    id="nama"
-                                    type="text"
-                                    onChange={props.handleChange} 
-                                />
-                            </div>
                             <div className="form-group">
                                 <label>Instansi</label>
                                 <input

@@ -7,9 +7,10 @@ const Button = styled.button`
   color: ${props => props.white ? "black" : "white"};
   border: ${props => props.white ? "1px solid #f86060" : "none"};
   border-radius: 50px;
+  transition : all .2s ease;
   &:hover, &:active, &:focus {
-    background-color: #f13f3f;
-    color: white;
+    transform: translateY(-2px);
+    color: ${props => props.white ? "black" : "white"};
     border-radius: 50px;
     outline : none !important;
   }
