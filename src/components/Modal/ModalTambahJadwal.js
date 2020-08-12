@@ -27,7 +27,7 @@ const ModalTambahJadwal = (props) => {
                                 <label>Waktu Mulai</label>
                                 <DatePicker
                                     className="form-control input-icon"
-                                    refs="timeStart"
+                                    id="timeStart"
                                     placeholderText="MM/DD/YYYY"
                                     selected={props.timeStart}
                                     onChange={date => props.handleChangeDate(date,"timeStart")}

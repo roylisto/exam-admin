@@ -8,6 +8,7 @@ import TabelPeserta from "../../components/Tabel/TabelPeserta";
 import TabelJadwal from "../../components/Tabel/TabelJadwal";
 import Modal from "../../components/Modal/ModalTambahJadwal";
 import Container from "../../components/Container";
+import { dateFormatter } from "../../js/DateFormatter";
 
 const Header = styled.div`{
     display : flex;
@@ -36,7 +37,12 @@ class Dashboard extends Component {
 
     handleSubmit(e){
         e.preventDefault();
-        window.location.reload()
+        let { timeStart, timeEnd } = this.state
+
+        console.log(dateFormatter(timeStart));
+        console.log(dateFormatter(timeEnd));
+
+        this.handleClickModal()
     }
 
     handleChangeDate(date, time){
