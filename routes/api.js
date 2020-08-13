@@ -37,7 +37,7 @@ module.exports = (router) => {
 
   //peserta route
   router.get('/peserta', [IsAuthenticated], peserta.list);
-  router.get('/peserta/:id', [IsAuthenticated], peserta.get);
+  router.get('/peserta/:id', [IsAuthenticated], peserta.get); //list get peserta with params id jadwal test
   router.post('/peserta', [IsAuthenticated], peserta.create);
   router.delete('/peserta/:id', [IsAuthenticated], peserta.delete);
 

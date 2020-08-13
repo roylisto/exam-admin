@@ -19,29 +19,38 @@ module.exports = {
     });
   },
 
-  get: (req, res) => {
-    peserta.findOne({
-      where: { id: req.params.id }
-    }).then( result => {
-      if( result === null ) {
+  get: async (req, res) => {
+    try {
+      const event_test = await jadwalTest.findByPk(req.params.id);    
+      if(event_test === null) {
         return res.status(404).json({
-          status: 'ERROR',
-          messages: 'Resource Not Found!',
-          data: {}
+          message: 'Jadwal test not found!'
         });
       }
+
+      const list_peserta = await peserta.findAll({
+        where: { jadwal_test: event_test.id }
+      });
+
+      const jumlah_peserta = await peserta.count({
+        where: { jadwal_test: event_test.id }
+      });
+      
       res.json({
         status: 'OK',
         messages: '',
-        data: result
+        data: {
+          peserta: list_peserta,
+          jumlah_peserta
+        }
       });
-    }).catch( err => {
+    } catch(err) {
       res.status(500).json({
         status: 'ERROR',
         messages: err,
         data: {}
       });
-    });
+    }
   },
 
   create: async (req, res) => {
