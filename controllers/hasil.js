@@ -390,6 +390,12 @@ module.exports = {
           type: db.sequelize.QueryTypes.SELECT
         }
       );
+
+      const jumlah_peserta = await db.peserta.count({
+        where: {
+          jadwal_test: event_test.id
+        }
+      });
     
       const workbook = new Excel.Workbook();
 
@@ -431,7 +437,8 @@ module.exports = {
       await workbook.xlsx.writeFile(`./files/${nameFile}.xlsx`);
       res.json({
         download:`${process.env.API_URL}download?file=${nameFile}.xlsx`,
-        peserta
+        peserta,
+        jumlah_peserta
       });
     } catch (err) {
       res.status(500).json({
