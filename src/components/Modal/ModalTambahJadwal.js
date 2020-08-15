@@ -26,6 +26,9 @@ const ModalTambahJadwal = (props) => {
                             <div className="form-group">
                                 <label>Waktu Mulai</label>
                                 <DatePicker
+                                    showTimeSelect
+                                    timeIntervals={15}
+                                    dateFormat="MM/dd/yyyy hh:mm aa"
                                     className="form-control input-icon"
                                     id="timeStart"
                                     placeholderText="MM/DD/YYYY"
@@ -37,6 +40,9 @@ const ModalTambahJadwal = (props) => {
                             <div className="form-group">
                                 <label>Waktu Berakhir</label>
                                 <DatePicker
+                                    showTimeSelect
+                                    timeIntervals={15}
+                                    dateFormat="MM/dd/yyyy hh:mm aa"
                                     className="form-control input-icon"
                                     id="timeEnd"
                                     placeholderText="MM/DD/YYYY"
