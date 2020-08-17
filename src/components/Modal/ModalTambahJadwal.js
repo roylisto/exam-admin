@@ -35,7 +35,6 @@ const ModalTambahJadwal = (props) => {
                                     placeholderText="MM/DD/YYYY"
                                     selected={props.timeStart}
                                     onChange={date => props.handleChangeDate(date,"timeStart")}
-                                    autocomplete="off"
                                 />
                                 <img src={calendar} />
                             </div>
@@ -61,7 +60,6 @@ const ModalTambahJadwal = (props) => {
                                     type="text"
                                     value={props.keterangan}
                                     onChange={props.handleChange}
-                                    required
                                 />
                             </div>
                             <Button small onClick={props.handleSubmit}>
