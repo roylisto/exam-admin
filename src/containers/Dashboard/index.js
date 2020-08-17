@@ -1,132 +1,74 @@
 import React, { Component } from 'react';
+import { Switch, Route } from 'react-router-dom';
 import styled from 'styled-components';
 // COMPONENTS
 import NavbarDashboard from '../../components/NavbarDashboard';
 import Sidebar from '../../components/Sidebar';
-import Button from '../../components/Button';
-import TabelPeserta from "../../components/Tabel/TabelPeserta";
-import TabelJadwal from "../../components/Tabel/TabelJadwal";
-import Modal from "../../components/Modal/ModalTambahJadwal";
-import Container from "../../components/Container";
-import { dateFormatter } from "../../js/DateFormatter";
+import JadwalTest from "./JadwalTest";
+import SidebarIcon from "../../assets/images/sidebarmenu.svg";
+import Peserta from './Peserta';
 
-const Header = styled.div`{
-    display : flex;
-    justify-content: space-between;
-    align-items: center;
-    padding : 30px 10px 15px;
+const ButtonSidebar = styled.button`{
+    transform: rotate(90deg) scaleY(-1);
+    position : fixed;
+    top: 15px;
+    left : ${props => props.minimize ? "10px" : "165px"};
+    z-index: 20;
+    background: transparent;
+    border: none;
+    &:active,
+    &:focus {
+        outline: none !important;
+    }
+    &:hover {
+        top: 16px;
+    }
+}`
+
+const Container = styled.div`{
+    font-family: 'Poppins';
+    padding-top: 50px;
+    padding-right: ${props => props.minimize ? "34px" : "0"};
+    padding-left: ${props => props.minimize ? "34px" : "200px"};
+    padding-bottom: 50px;
+    transition: all 0.5s;
 }`;
 
 class Dashboard extends Component {
     constructor(props) {
         super(props)
-    
         this.state = {
-            show : "jadwalTest",
-            showModal : false,
-            timeStart : new Date(),
-            timeEnd : new Date()
+             minimize : false
         }
-        this.handleSwitchView = this.handleSwitchView.bind(this);
-        this.switchView = this.switchView.bind(this);
-        this.handleClickModal = this.handleClickModal.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-        this.handleChangeDate = this.handleChangeDate.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    handleSubmit(e){
-        e.preventDefault();
-        let { timeStart, timeEnd } = this.state
-
-        console.log(dateFormatter(timeStart));
-        console.log(dateFormatter(timeEnd));
-
-        this.handleClickModal()
-    }
-
-    handleChangeDate(date, time){
-        this.setState({
-            [time]: date,
-        })
-    }
-
-    handleChange(e) {
-        e.preventDefault();
-        this.setState({
-            [e.target.id]: e.target.value,
-            showError: false
-        })
-    }
-
-    handleClickModal() {
-        this.setState({
-            showModal : !this.state.showModal
-        })
-    }
-
-    handleSwitchView(view) {
-        this.setState({
-            show : view
-        })
+        this.handleMinimize = this.handleMinimize.bind(this);
     }
     
-    switchView(){
-        switch(this.state.show) {
-            case "jadwalTest" : 
-                return (
-                    <Container>
-                        <Header>
-                            <h4>Jadwal Test</h4>
-                            <Button onClick={this.handleClickModal}>
-                                Add Jadwal Test
-                            </Button>
-                        </Header>
-                        <TabelJadwal />
-                    </Container>
-                );
-            case "peserta" : 
-                return (
-                    <Container>
-                        <Header>
-                            <h4>Peserta</h4>
-                            <div>
-                                <Button white>
-                                    Import list
-                                </Button>
-                                <Button>
-                                    Input Peserta
-                                </Button>
-                            </div>
-                        </Header>
-                        <TabelPeserta />
-                    </Container>
-                );
-            default:  
-                return null; 
-        }
+    handleMinimize() {
+        this.setState({
+            minimize : !this.state.minimize
+        });
     }
-
     render() {
         return (
             <React.Fragment>
+                <ButtonSidebar
+                    minimize={this.state.minimize}
+                    onClick={this.handleMinimize}>
+                    <img src={SidebarIcon} />
+                </ButtonSidebar>
                 <Sidebar 
-                    handleSwitchView={this.handleSwitchView}
-                    show={this.state.show}
+                    minimize={this.state.minimize}
                 />
                 <NavbarDashboard />
-                
-                <Modal 
-                    handleClickModal={this.handleClickModal}
-                    showModal={this.state.showModal} 
-                    handleChange={this.handleChange}
-                    timeStart={this.state.timeStart}
-                    timeEnd={this.state.timeEnd}
-                    handleChangeDate={this.handleChangeDate}
-                    handleSubmit={this.handleSubmit}
-                />
-                
-                {this.switchView()}
+
+                <Container 
+                    minimize={this.state.minimize}>
+                    <Switch>
+                        <Route exact path="/dashboard" component={JadwalTest}  />
+                        <Route path="/dashboard/jadwaltest" component={JadwalTest}  />
+                        <Route path="/dashboard/peserta" component={Peserta}  />
+                    </Switch>
+                </Container>
 
             </React.Fragment>
         )

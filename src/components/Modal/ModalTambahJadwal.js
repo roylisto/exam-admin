@@ -2,7 +2,7 @@ import React from 'react';
 import "./Modal.scss"
 // COMPONENTS
 import Button from "../Button"
-import DatePicker from 'react-datepicker'
+import DatePicker from 'react-datepicker' // input type datetime local not support in safari or firefox
 // ASSETS
 import 'react-datepicker/dist/react-datepicker.css'
 import calendar from "../../assets/images/calendar.png"
@@ -13,13 +13,14 @@ const ModalTambahJadwal = (props) => {
                 <div className="modal-dialog modal-dialog-centered" role="document">
                     <div className="modal-content ">
                         <h5>Add Jadwal Test</h5>
-                        <form>
+                        <form onSubmit={props.handleSubmit}>
                             <div className="form-group">
                                 <label>Instansi</label>
                                 <input
                                     className="form-control"
                                     id="instansi"
                                     type="text"
+                                    value={props.instansi}
                                     onChange={props.handleChange}
                                 />
                             </div>
@@ -34,6 +35,7 @@ const ModalTambahJadwal = (props) => {
                                     placeholderText="MM/DD/YYYY"
                                     selected={props.timeStart}
                                     onChange={date => props.handleChangeDate(date,"timeStart")}
+                                    autocomplete="off"
                                 />
                                 <img src={calendar} />
                             </div>
@@ -57,7 +59,9 @@ const ModalTambahJadwal = (props) => {
                                     className="form-control"
                                     id="keterangan"
                                     type="text"
+                                    value={props.keterangan}
                                     onChange={props.handleChange}
+                                    required
                                 />
                             </div>
                             <Button small onClick={props.handleSubmit}>
