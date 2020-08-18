@@ -173,6 +173,7 @@ module.exports = {
         { header: 'ME_kategori', key: 'ME_kategori', width: 10},
         { header: 'IQ', key: 'IQ', width: 8},
         { header: 'IQ_kategori', key: 'IQ_kategori', width: 15},
+        { header: 'Dominasi', key: 'dominasi', width: 8},
       ];
 
       worksheet2.columns = [
@@ -341,7 +342,7 @@ module.exports = {
           } else if(sw.sw > 118) {
             kategori = 'Sangat Tinggi';
           }
-          db.scorePeserta.create({
+          await db.scorePeserta.create({
             kode_soal: check_code[l],
             rw: 0,
             sw: sw.sw,
@@ -352,6 +353,7 @@ module.exports = {
           row[check_code[l]+"_sw"] = sw.sw; 
           row[check_code[l]+"_kategori"] = kategori;
         }
+        row.dominasi = await db.scorePeserta.getJurusan(peserta[i].id);
         worksheet.addRow(row);
         worksheet2.addRow(row2);
       }
