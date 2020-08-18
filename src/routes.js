@@ -12,7 +12,6 @@ const routes = [
   {
     path: '/dashboard',
     component: Dashboard,
-    exact: true,
     requiredAuth: true
   }
 ];

@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { NavLink } from 'react-router-dom'
 // ASSETS
 import logout from '../assets/images/logout.png';
 import home from '../assets/images/home.png';
@@ -7,8 +8,8 @@ import people from '../assets/images/people.png';
 import calendar from '../assets/images/calendar.png';
 
 const Container = styled.div`{
+    width : ${props => props.minimize ? "0" : "200px"};
     height : 100vh;
-    width : ${props => props.span ? "50px" : "200px"};
     background-color: #f86060;
     z-index: 10;
     position : fixed;
@@ -16,26 +17,12 @@ const Container = styled.div`{
     color: #fff;
     font-family: 'Poppins', sans-serif;
     padding: 15px 0;
+    transition: all 0.5s;
     label {
         padding: 40px 15px 5px;
     }
-}`
-
-const SidebarMenu = styled.a`{
-    width: 100%;
-    cursor: pointer;
-    padding: 5px 15px;
-    display: block;
-    color: #fff;
-    margin-top: 20px;
-    &.active, 
-    &:hover {
-        color: #443c3c !important;
-        background-color: #f6f9fc;
-    }
-    &.sub-menu {
-        padding-left: 35px;
-        margin-top: 0;
+    * {
+        display : ${props => props.minimize ? "none" : "inline-block"};
     }
 }`
 
@@ -51,9 +38,9 @@ const Image = styled.img`{
     filter : ${props => props.hover ? "brightness(200%)" : "none"};
 }`
 
-const Sidebar = (props) => {
+const SidebarNew = (props) => {
     return (
-        <Container>
+        <Container minimize={props.minimize}>
             <div className="d-flex justify-content-between">
                 <Logo>Bakatku.id</Logo>
             </div>
@@ -61,28 +48,37 @@ const Sidebar = (props) => {
                 <Image src={home} />
                 Home
             </label>
-            <SidebarMenu 
-                className={`${(props.show === "jadwalTest" || "peserta") ? "active" : ""}`}
-                onClick={()=>props.handleSwitchView("jadwalTest")}
-                >
+            <NavLink
+                to="/dashboard/jadwaltest"
+                activeClassName="sidebar-menu-link-active"
+                className="sidebar-menu-link dropdown"
+                isActive={(match, location) => {
+                    if (location.pathname === "/dashboard" || location.pathname === "/dashboard/jadwaltest") {
+                        return true
+                    }
+                }}
+            >
                 <Image src={calendar} />
                 Jadwal Test 
-            </SidebarMenu>
-            <SidebarMenu 
-                className={`sub-menu ${(props.show === "peserta") ? "active" : ""}`}
-                onClick={()=>props.handleSwitchView("peserta")}
-                >
-                <Image src={people} hover={(props.show !== "peserta")}/>
+            </NavLink>
+            <NavLink
+                to="/dashboard/peserta"
+                activeClassName="sidebar-menu-link-active"
+                className="sidebar-menu-link dropdown sub-menu"
+            >
+                <Image src={people}/>
                 Peserta 
-            </SidebarMenu>
-            <SidebarMenu 
-                href="/" 
-                onClick={()=>localStorage.removeItem("token")}>
+            </NavLink>
+            <NavLink
+                to="/"
+                className="sidebar-menu-link"
+                onClick={()=>localStorage.removeItem("token")}
+            >
                 <Image src={logout} />
                 Log Out 
-            </SidebarMenu>
+            </NavLink>
         </Container>
     )
 }
 
-export default Sidebar
+export default SidebarNew

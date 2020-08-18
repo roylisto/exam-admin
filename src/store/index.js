@@ -1,8 +1,10 @@
 import { init } from "@rematch/core"
 import admin from "./Admin"
+import jadwalTest from "./JadwalTest"
 
 const models = {
     admin,
+    jadwalTest
 }
 
 const store = init ({
@@ -10,5 +12,3 @@ const store = init ({
 })
 
 export default store
-
-// export const { dispatch } = store

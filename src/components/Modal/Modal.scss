@@ -1,0 +1,36 @@
+
+.background {
+    position : fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100vw;
+    height: 100vh;
+}
+
+.modal-content {
+    font-family: 'Roboto';
+    padding: 20px;
+    text-align: center;
+    .form-group {
+        color: #8b8585;
+        text-align: left;
+        img {
+            position: absolute;
+            margin-top: -32px;
+            margin-left: 0.65rem;
+            width: 20px;
+            filter: grayscale(1);
+        }
+    }
+    input {
+        border: .5px solid #8b8585;
+        margin: 0;
+    }
+    .react-datepicker-wrapper {
+        display: block;
+    }
+    .input-icon {
+        padding: .65rem 1rem .65rem 2.5rem;
+    }
+}
