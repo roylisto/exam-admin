@@ -20,71 +20,166 @@ const Header = styled.div`{
 class JadwalTest extends Component {
     constructor(props) {
         super(props)
-    
+
         this.state = {
-            data : [],
-            columns : [
-                { dataField: 'id', text: 'ID',
-                    formatter : (data)=>numberFormatter(data,this.props.data)},
-                { dataField: 'instansi', text: 'Instansi'}, 
-                { dataField: 'waktu', text: 'Waktu Mulai',
-                    formatter : dateFormatter},  
-                { dataField: 'expired', text: 'Waktu Berakhir',
-                    formatter : dateFormatter},  
-                { dataField: 'keterangan', text: 'Keterangan'}, 
-            ],
-            showModal : false,
-            timeStart : '',
-            timeEnd : '',
-            instansi : '',
-            keterangan : ''
+            data: null,
+            columns: [],
+            showModal: '',
+            timeStart: '',
+            timeEnd: '',
+            instansi: '',
+            keterangan: '',
+            errors: {},
         }
         this.handleClickModal = this.handleClickModal.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeDate = this.handleChangeDate.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleClickEdit = this.handleClickEdit.bind(this);
+        this.handleEditSubmit = this.handleEditSubmit.bind(this);
+        this.actionFormatter = this.actionFormatter.bind(this);
+        this.handleCloseModal = this.handleCloseModal.bind(this);
+        this.switchModal = this.switchModal.bind(this);
     }
-    componentDidMount(){
-        this.props.fetchJadwalTest(this.props.token);
-        document.getElementById("timeStart").setAttribute("autocomplete", "off");
-        document.getElementById("timeEnd").setAttribute("autocomplete", "off");
+
+    componentDidMount() {
+        this.props.fetchJadwalTest();
     }
 
     componentDidUpdate(prevProps) {
-        if(prevProps.data !== this.props.data && this.props.data[0] !== null){
+        const columns = [
+            { dataField: 'id', text: 'ID',
+                formatter: (data) => numberFormatter(data, this.props.data) },
+            { dataField: 'instansi', text: 'Instansi' },
+            { dataField: 'waktu', text: 'Waktu Mulai',
+                formatter: dateFormatter },
+            { dataField: 'expired', text: 'Waktu Berakhir',
+                formatter: dateFormatter },
+            { dataField: 'keterangan', text: 'Keterangan' },
+            { dataField: '', text: 'Action',
+                formatter: this.actionFormatter },
+        ]
+        if (prevProps.data !== this.props.data && this.props.data[0] !== null) {
             this.setState({
-                data : this.props.data,
+                data: this.props.data,
+                columns: columns
             })
         }
     }
-    
-    handleClickModal() {
+
+    handleClickModal(modal) {
         this.setState({
-            showModal : !this.state.showModal
+            showModal: modal,
+            errors: {},
         })
     }
 
-    handleSubmit(e){
+    handleCloseModal() {
+        this.setState({
+            showModal: false,
+            timeStart: '',
+            timeEnd: '',
+            instansi: '',
+            keterangan: '',
+            errors: {},
+        })
+    }
+
+    handleClickEdit(modal, row) {
+        let waktu = new Date(row.waktu);
+        let expired = new Date(row.expired);
+
+        this.setState({
+            showModal : modal,
+            timeStart: waktu,
+            timeEnd: expired,
+            instansi: row.instansi,
+            keterangan: row.keterangan,
+            id: row.id,
+            errors: {},
+        });
+    }
+
+    handleEditSubmit(e) {
+        e.preventDefault();
+        let { timeStart, timeEnd, instansi, keterangan, id } = this.state
+        if(this.formValidate()) {
+            const data = {
+                payload: {
+                    instansi: instansi,
+                    waktu: dateFormatter(timeStart),
+                    expired: dateFormatter(timeEnd),
+                    keterangan: keterangan,
+                },
+                id: id
+            }
+            this.props.editJadwalTest(data);
+            window.location.reload();
+        }
+    }
+
+    actionFormatter(e, row) {
+        return (
+            <div className="btn-group">
+                <Button white small xs onClick={()=>this.handleClickEdit("editJadwal",row)}>
+                    <img src={require("../../assets/images/edit.svg")} />
+                    Edit
+                </Button>
+                <Button white small xs>
+                    <img src={require("../../assets/images/delete.svg")} />
+                    Hapus
+                </Button>
+            </div>
+        )
+    }
+
+    formValidate() {
+        let { timeStart, timeEnd, instansi } = this.state;
+        let error = {};
+        let valid = true;
+        
+        if (timeStart === "") {
+            valid = false;
+            error["timeStart"] = true;
+        }
+        if (timeEnd === "") {
+            valid = false;
+            error["timeEnd"] = true;
+        }
+        if (instansi === "") {
+            valid = false;
+            error["instansi"] = true;
+        }
+        if(timeEnd - timeStart <= 0) {
+            valid = false;
+            error["timeEnd"] = true;
+            error["timeEndError"] = true;
+        }
+
+        this.setState({ errors: error });
+        return valid
+    }
+
+    handleSubmit(e) {
         e.preventDefault();
         let { timeStart, timeEnd, instansi, keterangan } = this.state
 
-        if(instansi !== "" && timeStart !== ""){
+        if (this.formValidate()) {
             const payload = {
-                waktu : dateFormatter(timeStart),
-                expired : dateFormatter(timeEnd),
-                instansi : instansi,
-                keterangan : keterangan
-            }
-            this.props.addJadwalTest(payload)
-            window.location.reload()
+                waktu: dateFormatter(timeStart),
+                expired: dateFormatter(timeEnd),
+                instansi: instansi,
+                keterangan: keterangan
+            };
+            this.props.addJadwalTest(payload);
+            window.location.reload();
         }
-
-        this.handleClickModal()
     }
 
-    handleChangeDate(date, time){
+    handleChangeDate(date, time) {
         this.setState({
             [time]: date,
+            errors: { [time]: false }
         })
     }
 
@@ -92,8 +187,49 @@ class JadwalTest extends Component {
         e.preventDefault();
         this.setState({
             [e.target.id]: e.target.value,
-            showError: false
+            errors: { [e.target.id]: false }
         })
+    }
+
+    switchModal() {
+        switch(this.state.showModal) {
+            case "addJadwal" : 
+                return (
+                    <Modal
+                        handleCloseModal={this.handleCloseModal}
+                        showModal={this.state.showModal}
+                        handleChange={this.handleChange}
+                        timeStart={this.state.timeStart}
+                        timeEnd={this.state.timeEnd}
+                        instansi={this.state.instansi}
+                        keterangan={this.state.keterangan}
+                        handleChangeDate={this.handleChangeDate}
+                        handleSubmit={this.handleSubmit}
+                        errors={this.state.errors}
+                        title="Add"
+                    />
+                );
+                break;
+            case "editJadwal" : 
+                return (
+                    <Modal
+                        handleCloseModal={this.handleCloseModal}
+                        showModal={this.state.showModal}
+                        handleChange={this.handleChange}
+                        timeStart={this.state.timeStart}
+                        timeEnd={this.state.timeEnd}
+                        instansi={this.state.instansi}
+                        keterangan={this.state.keterangan}
+                        handleChangeDate={this.handleChangeDate}
+                        handleSubmit={this.handleEditSubmit}
+                        errors={this.state.errors}
+                        title="Edit"
+                    />
+                );
+                break;
+            default:
+                return null
+        }
     }
 
     render() {
@@ -101,41 +237,33 @@ class JadwalTest extends Component {
             <React.Fragment>
                 <Header>
                     <h4>Jadwal Test</h4>
-                    <Button onClick={this.handleClickModal}>
+                    <Button onClick={()=>this.handleClickModal("addJadwal")}>
                         Add Jadwal Test
                     </Button>
                 </Header>
-                <TabelJadwal 
+                <TabelJadwal
                     data={this.state.data}
                     columns={this.state.columns}
                     tableName="tabel-jadwal"
                 />
-                <Modal 
-                    handleClickModal={this.handleClickModal}
-                    showModal={this.state.showModal} 
-                    handleChange={this.handleChange}
-                    timeStart={this.state.timeStart}
-                    timeEnd={this.state.timeEnd}
-                    instansi={this.state.instansi}
-                    keterangan={this.state.keterangan}
-                    handleChangeDate={this.handleChangeDate}
-                    handleSubmit={this.handleSubmit}
-                />
+                {this.switchModal()}
             </React.Fragment>
         )
     }
 }
 
 const mapState = state => ({
-	token: state.admin.token,
-	data: state.jadwalTest.data,
+    token: state.admin.token,
+    data: state.jadwalTest.data,
 })
 
 const mapDispatch = dispatch => ({
-    fetchJadwalTest: value =>
-        dispatch({ type: 'jadwalTest/fetchJadwalTest', payload : value}),
+    fetchJadwalTest: () =>
+        dispatch({ type: 'jadwalTest/fetchJadwalTest' }),
     addJadwalTest: value =>
-        dispatch({ type: 'jadwalTest/addJadwalTest', payload : value}),
+        dispatch({ type: 'jadwalTest/addJadwalTest', payload: value }),
+    editJadwalTest: (value) =>
+        dispatch({ type: 'jadwalTest/editJadwalTest', payload: value }),
 });
 
 

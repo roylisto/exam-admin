@@ -1,5 +1,4 @@
-import { PostData, GetData } from "../services/Agent"
-import { result } from "lodash";
+import { PostData, GetData, UpdateData } from "../services/Agent"
 
 const jadwalTest = {
     state : {
@@ -15,8 +14,8 @@ const jadwalTest = {
         },
     },
     effects: dispatch => ({
-        async fetchJadwalTest(token) {
-            await GetData('jadwal-test',token)
+        async fetchJadwalTest() {
+            await GetData('jadwal-test')
                 .then((result)=>{
                     if(result.status === "OK") {
                         dispatch.jadwalTest.SET_JADWAL_TEST({data : result.data});
@@ -28,6 +27,14 @@ const jadwalTest = {
                 .then((result)=>{
                     if(result.status === "OK") {
                         dispatch.jadwalTest.UPDATE_JADWAL_TEST({status : "add-jadwal-test"});
+                    }
+                })
+        },
+        async editJadwalTest(data) {
+            await UpdateData('jadwal-test',data)
+                .then((result)=>{
+                    if(result.status === "OK") {
+                        dispatch.jadwalTest.UPDATE_JADWAL_TEST({status : "edit-jadwal-test"});
                     }
                 })
         }

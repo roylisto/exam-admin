@@ -3,6 +3,7 @@ import BootstrapTable from 'react-bootstrap-table-next'
 import paginationFactory from 'react-bootstrap-table2-paginator';
 // ASSETS
 import "./Tabel.scss"
+import Loading from "../../components/Loading"
 
 const Tabel = (props) => {
     const options = {
@@ -15,19 +16,24 @@ const Tabel = (props) => {
         prePageText: '<',
         nextPageText: '>',
         disablePageTitle: true,
-      };
-    return (
-        <BootstrapTable 
-            keyField='id' 
-            data={ props.data } 
-            columns={ props.columns } 
-            bootstrap4
-            noDataIndication="Table is Empty"
-            classes={props.tableName}
-            bordered={ false }
-            pagination={ paginationFactory(options)}
-        />
-    )
+    };
+    if(props.data) {
+        return (
+            <BootstrapTable 
+                keyField='id' 
+                data={ props.data } 
+                columns={ props.columns } 
+                bootstrap4
+                noDataIndication="Table is Empty"
+                classes={props.tableName}
+                bordered={ false }
+                pagination={ paginationFactory(options)}
+            />
+        )
+    }
+    else {
+        return <Loading />
+    }
 }
 
 export default Tabel
