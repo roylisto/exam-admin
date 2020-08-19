@@ -52,5 +52,52 @@ module.exports = (sequelize, DataTypes) => {
     );
     return look_iq[0].sw;
   }
+
+  scorePeserta.getJurusan = async (peserta_id) => {
+    const ge = await scorePeserta.findOne({
+      attributes: ['sw'],
+      where: {
+        peserta_id: peserta_id,
+        kode_soal: 'GE'
+      }
+    });
+
+    const ra = await scorePeserta.findOne({
+      attributes: ['sw'],
+      where: {
+        peserta_id: peserta_id,
+        kode_soal: 'RA'
+      }
+    });
+
+    const an = await scorePeserta.findOne({
+      attributes: ['sw'],
+      where: {
+        peserta_id: peserta_id,
+        kode_soal: 'AN'
+      }
+    });
+
+    const zr = await scorePeserta.findOne({
+      attributes: ['sw'],
+      where: {
+        peserta_id: peserta_id,
+        kode_soal: 'ZR'
+      }
+    });
+
+    const eksak = parseFloat(ge.sw) + parseFloat(ra.sw);
+    const noneksak = parseFloat(an.sw) + parseFloat(zr.sw);
+    
+    const seimbang = eksak-noneksak;
+    
+    if(seimbang>= -10 && seimbang<=10) {
+      return 'Seimbang';
+    } else if(eksak>noneksak) {
+      return 'Eksak';
+    } else {
+      return 'Non Eksak'
+    }
+  }
   return scorePeserta;
 };
