@@ -16,7 +16,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     tableName: 'jadwal_test',
     underscored: true,
-    timestamps: true
+    timestamps: true,
+    paranoid: true
   });
   jadwalTest.associate = function(models) {
     // associations can be defined here
