@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import TabelJadwal from "../../components/Tabel/Tabel";
 import Button from '../../components/Button';
 import Modal from "../../components/Modal/ModalTambahJadwal";
+import ModalHapus from '../../components/Modal/ModalHapus';
 import { dateFormatter, numberFormatter } from "../../js/Formatter";
 
 const Header = styled.div`{
@@ -35,11 +36,12 @@ class JadwalTest extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeDate = this.handleChangeDate.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleClickEdit = this.handleClickEdit.bind(this);
+        this.handleClickButtonAction = this.handleClickButtonAction.bind(this);
         this.handleEditSubmit = this.handleEditSubmit.bind(this);
         this.actionFormatter = this.actionFormatter.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
         this.switchModal = this.switchModal.bind(this);
+        this.handleHapus = this.handleHapus.bind(this);
     }
 
     componentDidMount() {
@@ -63,8 +65,14 @@ class JadwalTest extends Component {
             this.setState({
                 data: this.props.data,
                 columns: columns
-            })
+            });
         }
+    }
+
+    handleHapus() {
+        let { id } = this.state;
+
+        this.props.hapusJadwalTest(id);
     }
 
     handleClickModal(modal) {
@@ -85,7 +93,7 @@ class JadwalTest extends Component {
         })
     }
 
-    handleClickEdit(modal, row) {
+    handleClickButtonAction(modal, row) {
         let waktu = new Date(row.waktu);
         let expired = new Date(row.expired);
 
@@ -114,18 +122,17 @@ class JadwalTest extends Component {
                 id: id
             }
             this.props.editJadwalTest(data);
-            window.location.reload();
         }
     }
 
     actionFormatter(e, row) {
         return (
             <div className="btn-group">
-                <Button white small xs onClick={()=>this.handleClickEdit("editJadwal",row)}>
+                <Button white small xs onClick={()=>this.handleClickButtonAction("editJadwal",row)}>
                     <img src={require("../../assets/images/edit.svg")} />
                     Edit
                 </Button>
-                <Button white small xs>
+                <Button white small xs onClick={()=>this.handleClickButtonAction("hapusJadwal",row)}>
                     <img src={require("../../assets/images/delete.svg")} />
                     Hapus
                 </Button>
@@ -172,7 +179,6 @@ class JadwalTest extends Component {
                 keterangan: (keterangan) ? keterangan : "-"
             };
             this.props.addJadwalTest(payload);
-            window.location.reload();
         }
     }
 
@@ -227,6 +233,15 @@ class JadwalTest extends Component {
                     />
                 );
                 break;
+            case "hapusJadwal" : 
+                return (
+                    <ModalHapus
+                        handleCloseModal={this.handleCloseModal}
+                        showModal={this.state.showModal}
+                        handleHapus={this.handleHapus}
+                    />
+                );
+                break;
             default:
                 return null
         }
@@ -264,6 +279,8 @@ const mapDispatch = dispatch => ({
         dispatch({ type: 'jadwalTest/addJadwalTest', payload: value }),
     editJadwalTest: (value) =>
         dispatch({ type: 'jadwalTest/editJadwalTest', payload: value }),
+    hapusJadwalTest: (value) =>
+        dispatch({ type: 'jadwalTest/hapusJadwalTest', payload: value }),
 });
 
 

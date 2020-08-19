@@ -1,8 +1,8 @@
-import { PostData, GetData, UpdateData } from "../services/Agent"
+import { PostData, GetData, UpdateData, DeleteData } from "../services/Agent"
 
 const jadwalTest = {
     state : {
-        data : [],
+        data : null,
         status : ""
     },
     reducers : {
@@ -27,6 +27,7 @@ const jadwalTest = {
                 .then((result)=>{
                     if(result.status === "OK") {
                         dispatch.jadwalTest.UPDATE_JADWAL_TEST({status : "add-jadwal-test"});
+                        window.location.reload();
                     }
                 })
         },
@@ -35,6 +36,16 @@ const jadwalTest = {
                 .then((result)=>{
                     if(result.status === "OK") {
                         dispatch.jadwalTest.UPDATE_JADWAL_TEST({status : "edit-jadwal-test"});
+                        window.location.reload();
+                    }
+                })
+        },
+        async hapusJadwalTest(id) {
+            await DeleteData('jadwal-test',id)
+                .then((result)=>{
+                    if(result.status === "OK") {
+                        dispatch.jadwalTest.UPDATE_JADWAL_TEST({status : "hapus-jadwal-test"});
+                        window.location.reload();
                     }
                 })
         }

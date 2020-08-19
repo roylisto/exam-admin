@@ -62,3 +62,24 @@ export function UpdateData (type, data) {
 		});
 	}); 
 }
+
+export function DeleteData (type, id) {
+
+	return  new Promise((resolve, reject) => {
+		fetch(process.env.REACT_APP_SERVER_URL+type+"/"+id, {
+			method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+			  'Accept': 'application/json',
+			  'x-access-token' : localStorage.getItem("token")
+            },
+		})
+		.then((response) => response.json())
+		.then((responseJson) => {
+			resolve(responseJson);
+		})
+		.catch((error) => {
+			reject(error);
+		});
+	}); 
+}
