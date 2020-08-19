@@ -109,7 +109,7 @@ class JadwalTest extends Component {
                     instansi: instansi,
                     waktu: dateFormatter(timeStart),
                     expired: dateFormatter(timeEnd),
-                    keterangan: keterangan,
+                    keterangan: (keterangan) ? keterangan : "-",
                 },
                 id: id
             }
@@ -169,7 +169,7 @@ class JadwalTest extends Component {
                 waktu: dateFormatter(timeStart),
                 expired: dateFormatter(timeEnd),
                 instansi: instansi,
-                keterangan: keterangan
+                keterangan: (keterangan) ? keterangan : "-"
             };
             this.props.addJadwalTest(payload);
             window.location.reload();
