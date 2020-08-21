@@ -21,6 +21,32 @@ module.exports = {
 
   get: async (req, res) => {
     try {
+      const account_peserta = await peserta.findByPk(req.params.id);
+      if(account_peserta==null) {
+        return res.status(404).json({
+          status: 'ERROR',
+          messages: 'Data not found.',
+          data: {}
+        });
+      }
+      const account = await peserta.getAccount(account_peserta.email, account_peserta.id);
+
+      return res.json({
+        status: 'OK',
+        messages: '',
+        data: account
+      });
+    } catch (err) {
+      res.status(500).json({
+        status: 'ERROR',
+        messages: err,
+        data: {}
+      });
+    }
+  },
+
+  getList: async (req, res) => {
+    try {
       const event_test = await jadwalTest.findByPk(req.params.id);    
       if(event_test === null) {
         return res.status(404).json({
@@ -75,6 +101,34 @@ module.exports = {
       res.json({
         status: 'OK',
         messages: 'Success insert data.',
+        data: {}
+      });
+    } catch (err) {
+      res.status(500).json({
+        status: 'ERROR',
+        messages: err,
+        data: {}
+      });
+    }
+  },
+
+  update: async (req, res) => {
+    try {
+      const query = await peserta.update({
+        valid: req.body.valid,
+        expired: req.body.expired
+      }, { where: {id: req.params.id} });
+      if(query==null) {
+        return res.status(400).json({
+          status: 'ERROR',
+          messages: 'field update not match',
+          data: {}
+        });
+      }
+
+      return res.json({
+        status: 'OK',
+        messages: 'Success update data.',
         data: {}
       });
     } catch (err) {
