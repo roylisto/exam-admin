@@ -74,7 +74,7 @@ class Peserta extends Component {
         ]
         if (prevProps.data !== this.props.data && this.props.data[0] !== null) {
             this.setState({
-                data: this.props.data.reverse(),
+                data: this.props.data,
                 columns : columns,
             });
         }
@@ -215,9 +215,11 @@ class Peserta extends Component {
                     </form>
                     <div>
                         <Button white>
+                            <img src={require("../../assets/images/save.svg")} />
                             Import list
                         </Button>
                         <Button onClick={this.handleClickModal}>
+                            <img src={require("../../assets/images/plus.svg")} />
                             Input Peserta
                         </Button>
                     </div>

@@ -16,7 +16,7 @@ const Button = styled.button`
     outline : none !important;
   }
   img {
-    width: 16px;
+    width : ${props => props.xs ? "16px" : "20px"};
     margin-right: 5px;
     margin-left: -5px;
   }
