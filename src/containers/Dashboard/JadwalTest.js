@@ -159,7 +159,6 @@ class JadwalTest extends Component {
         }
         if(timeEnd - timeStart <= 0) {
             valid = false;
-            error["timeEnd"] = true;
             error["timeEndError"] = true;
         }
 
@@ -257,6 +256,7 @@ class JadwalTest extends Component {
                     </Button>
                 </Header>
                 <TabelJadwal
+                    keyField='id'
                     data={this.state.data}
                     columns={this.state.columns}
                     tableName="tabel-jadwal"

@@ -1,10 +1,12 @@
 import { init } from "@rematch/core"
 import admin from "./Admin"
 import jadwalTest from "./JadwalTest"
+import peserta from "./Peserta"
 
 const models = {
     admin,
-    jadwalTest
+    jadwalTest,
+    peserta
 }
 
 const store = init ({

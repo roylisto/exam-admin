@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import styled from 'styled-components';
+import 'react-datepicker/dist/react-datepicker.css';
 // COMPONENTS
 import NavbarDashboard from '../../components/NavbarDashboard';
 import Sidebar from '../../components/Sidebar';
@@ -16,6 +17,7 @@ const ButtonSidebar = styled.button`{
     z-index: 20;
     background: transparent;
     border: none;
+    transition: all 0.5s;
     &:active,
     &:focus {
         outline: none !important;

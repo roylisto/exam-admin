@@ -20,12 +20,13 @@ const Tabel = (props) => {
     if(props.data) {
         return (
             <BootstrapTable 
-                keyField='id' 
+                keyField={props.keyField} 
                 data={ props.data } 
                 columns={ props.columns } 
                 bootstrap4
                 noDataIndication="Table is Empty"
                 classes={props.tableName}
+                wrapperClasses="table-wraper"
                 bordered={ false }
                 pagination={ paginationFactory(options)}
             />
