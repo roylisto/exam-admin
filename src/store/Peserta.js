@@ -20,7 +20,7 @@ const peserta = {
                 })
         },
         async addPeserta(payload) {
-            await PostData('users',payload)
+            await PostData('users/peserta',payload)
                 .then((result)=>{
                     if(result.status === "OK") {
                         window.location.reload();

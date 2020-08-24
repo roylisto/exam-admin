@@ -38,6 +38,7 @@ class Peserta extends Component {
             loading: true,
             jadwalTest : null,
             filter : '',
+            filterID : '',
             disabled: true,
             dataInput: {
                 nama : '',
@@ -51,6 +52,7 @@ class Peserta extends Component {
             errors: {},
         }
         this.handleChange = this.handleChange.bind(this);
+        this.handleChangeFilter = this.handleChangeFilter.bind(this);
         this.handleChangeDate = this.handleChangeDate.bind(this);
         this.handleClickModal = this.handleClickModal.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -103,20 +105,25 @@ class Peserta extends Component {
         })
     }
     
+    
+    handleChangeFilter({target}) {
+        let string = target.value;
+        let split = string.split(";");
+        
+        this.setState({
+            filterID : split[0],
+            filter: split[1]
+        })
+    }
+    
     handleChange({target}) {
-        if(target.id === "filter") {
-            this.setState({
-                [target.id]: target.value,
-            })
-        } else {
-            this.setState(prevState => ({
-                dataInput : { 
-                    ...prevState.dataInput,
-                    [target.id] : target.value
-                },
-                errors : {}
-            }))
-        }
+        this.setState(prevState => ({
+            dataInput : { 
+                ...prevState.dataInput,
+                [target.id] : target.value
+            },
+            errors : {}
+        }))
     }
 
     handleChangeDate(date) {
@@ -185,8 +192,10 @@ class Peserta extends Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        let { dataInput } = this.state
+        let { dataInput, filterID } = this.state
         
+        Object.assign(dataInput, {jadwal_test : filterID})
+
         if(this.formValidate()) {
             const payload = dataInput;
             this.props.addPeserta(payload);
@@ -204,11 +213,11 @@ class Peserta extends Component {
                         <select 
                             className="form-control" 
                             id="filter"
-                            onChange={this.handleChange}>
-                            <option>Jadwal Test</option>
+                            onChange={this.handleChangeFilter}>
+                            <option value="">Jadwal Test</option>
                             {
                                 this.state.jadwalTest.map((val,i)=>{
-                                    return <option key={i} value={val.instansi}>{val.instansi}</option>
+                                    return <option key={i} value={val.id+";"+val.instansi}>{val.instansi}</option>
                                 })
                             }
                         </select>
@@ -218,7 +227,7 @@ class Peserta extends Component {
                             <img src={require("../../assets/images/save.svg")} />
                             Import list
                         </Button>
-                        <Button onClick={this.handleClickModal}>
+                        <Button onClick={this.handleClickModal} disabled={this.state.filter === ""}>
                             <img src={require("../../assets/images/plus.svg")} />
                             Input Peserta
                         </Button>
@@ -228,12 +237,16 @@ class Peserta extends Component {
                     <h5><b>Jadwal Test : </b></h5>
                     <span>&emsp;{this.state.filter}</span>
                 </div>
-                <TabelPeserta
-                    keyField="email"
-                    data={this.state.data}
-                    columns={this.state.columns}
-                    tableName="tabel-peserta"
-                />
+                {
+                    (this.state.filter !== "") ? 
+                    <TabelPeserta
+                        keyField="email"
+                        data={this.state.data}
+                        columns={this.state.columns}
+                        tableName="tabel-peserta"
+                    />
+                    : ""
+                }
                 <Modal 
                     handleClickModal={this.handleClickModal}
                     showModal={this.state.showModal}
