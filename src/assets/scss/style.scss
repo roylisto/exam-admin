@@ -19,6 +19,7 @@
         padding-top: 5px;
         color: red;
         font-size: 12px;
+        margin-bottom: 0;
     }
 }
 
@@ -71,4 +72,15 @@ a {
 .sidebar-menu-link-active {
     background-color: #f6f9fc;
     color: #443c3c !important;
+}
+
+.alert-text {
+    color: red;
+    text-transform: capitalize;
+    font-size: 14px;
+    padding: 10px;
+    img {
+        margin-right: 5px;
+        margin-top: -5px;
+    }
 }
