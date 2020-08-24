@@ -20,10 +20,13 @@ export function PostData (type, data) {
 	}); 
 }
 
-export function GetData (type) {
-	
+export function GetData (type, params) {
+	let route = (params) ? 
+					process.env.REACT_APP_SERVER_URL+type+params : 
+					process.env.REACT_APP_SERVER_URL+type
+
 	return  new Promise((resolve, reject) => {
-		fetch(process.env.REACT_APP_SERVER_URL+type, {
+		fetch(route, {
 			method: 'GET',
             headers: {
               'Content-Type': 'application/json',

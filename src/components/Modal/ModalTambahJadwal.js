@@ -4,7 +4,6 @@ import "./Modal.scss"
 import Button from "../Button"
 import DatePicker from 'react-datepicker' // input type datetime local not support in safari or firefox
 // ASSETS
-import 'react-datepicker/dist/react-datepicker.css'
 import calendar from "../../assets/images/calendar.png"
 
 class ModalTambahJadwal extends Component {

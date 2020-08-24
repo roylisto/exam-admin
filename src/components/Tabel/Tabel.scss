@@ -1,14 +1,12 @@
-.tabel-jadwal {
+.table-wraper {
+    overflow-x: auto;
+}
+.tabel-jadwal,
+.tabel-peserta {
     width: 100%;
     font-family: 'Poppins';
     color: #484242;
     text-align: center;
-    td:nth-child(2){
-        text-align: left;
-    }
-    th:last-child{
-        width: 220px;
-    }
     td {
         border-top: none;
         border-bottom: 1px solid #f5f5f5;
@@ -22,6 +20,26 @@
         &:focus {
             outline: none;
         }
+    }
+}
+
+.tabel-jadwal {
+    td:nth-child(2){
+        text-align: left;
+    }
+    th:last-child{
+        width: 220px;
+    }
+}
+
+.tabel-peserta {
+    td:nth-child(1),
+    td:nth-child(2){
+        text-align: left;
+    }
+    th:nth-child(4),
+    th:nth-child(5){
+        width: 150px;
     }
 }
 

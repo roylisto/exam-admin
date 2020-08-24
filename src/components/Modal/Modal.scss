@@ -1,6 +1,5 @@
-
 .background {
-    position : fixed;
+    position: fixed;
     top: 0;
     left: 0;
     z-index: -1;
@@ -9,9 +8,11 @@
 }
 
 .modal-content {
-    font-family: 'Roboto';
+    font-family: "Roboto";
     padding: 20px;
     text-align: center;
+    max-height: 90vh;
+    overflow-y: auto;
     .form-group {
         color: #8b8585;
         text-align: left;
@@ -24,21 +25,21 @@
         }
     }
     input {
-        border: .5px solid #8b8585;
+        border: 0.5px solid #8b8585;
         margin: 0;
     }
     .react-datepicker-wrapper {
         display: block;
     }
     .input-icon {
-        padding: .65rem 1rem .65rem 2.5rem;
+        padding: 0.65rem 1rem 0.65rem 2.5rem;
     }
 }
 
 .modal-hapus {
     padding: 35px 50px;
     text-align: center;
-    font-family: 'Poppins';
+    font-family: "Poppins";
     p {
         margin-bottom: 50px;
         font-size: 18px;
@@ -46,4 +47,18 @@
     button {
         margin: 0 15px;
     }
+}
+
+.modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+/* Track */
+.modal-content::-webkit-scrollbar-track {
+    background-color: #ffffff;
+    border-radius: 5px;
+}
+/* Handle */
+.modal-content::-webkit-scrollbar-thumb {
+    background: #d8d6da;
+    border-radius: 5px;
 }
