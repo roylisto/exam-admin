@@ -121,7 +121,7 @@ class Peserta extends Component {
                 filter: ""
             })
         }
-        if(split[0] !== ""){
+        else {
             this.props.fetchPesertaList(split[0]);
             this.setState({
                 filterID : split[0],
