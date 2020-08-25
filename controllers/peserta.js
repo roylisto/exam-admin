@@ -1,4 +1,5 @@
-const { peserta, jadwalTest } = require('../database/models/index.js');
+const { peserta, jadwalTest, sequelize } = require('../database/models/index.js');
+// const { QueryTypes } = require('sequelize');
 const randomstring = require("randomstring");
 const moment = require('moment');
 
@@ -54,10 +55,11 @@ module.exports = {
         });
       }
 
-      const list_peserta = await peserta.findAll({
-        where: { jadwal_test: event_test.id }
+      const list_peserta = await sequelize.query("SELECT * FROM user JOIN peserta ON user.email=peserta.email WHERE peserta.jadwal_test=?", {
+        replacements: [event_test.id],
+        type: sequelize.QueryTypes.SELECT
       });
-
+            
       const jumlah_peserta = await peserta.count({
         where: { jadwal_test: event_test.id }
       });
