@@ -61,7 +61,6 @@ class Peserta extends Component {
     
     componentDidMount() {
         this.props.fetchJadwalTest();
-        this.props.fetchPesertaList();
     }
 
     componentDidUpdate(prevProps) {
@@ -116,10 +115,20 @@ class Peserta extends Component {
         let string = target.value;
         let split = string.split(";");
         
-        this.setState({
-            filterID : split[0],
-            filter: split[1]
-        })
+        if(string === ""){
+            this.setState({
+                filterID : "",
+                filter: ""
+            })
+        }
+        if(split[0] !== ""){
+            this.props.fetchPesertaList(split[0]);
+            this.setState({
+                filterID : split[0],
+                filter: split[1]
+            })
+        }
+        
     }
     
     handleChange({target}) {
