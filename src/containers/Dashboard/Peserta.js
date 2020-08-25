@@ -6,7 +6,7 @@ import Button from '../../components/Button';
 import TabelPeserta from "../../components/Tabel/Tabel";
 import Modal from "../../components/Modal/ModalInputPeserta";
 import Loading from "../../components/Loading";
-import { dateFormatter } from "../../js/Formatter";
+import { emailFormatter, phoneNumberFormatter } from "../../js/Formatter";
 
 const Header = styled.div`{
     display : flex;
@@ -86,6 +86,11 @@ class Peserta extends Component {
                 loading: false
             });
         }
+        if (prevProps.errorMsg !== this.props.errorMsg && this.props.errorMsg !== "") {
+            this.setState({
+                errorMsg: this.props.errorMsg,
+            });
+        }
     }
 
     handleClickModal() {
@@ -93,6 +98,7 @@ class Peserta extends Component {
             showModal : !this.state.showModal,
             disabled: true,
             errors: {},
+            errorMsg : "",
             dataInput: {
                 nama : '',
                 email : '',
@@ -122,7 +128,8 @@ class Peserta extends Component {
                 ...prevState.dataInput,
                 [target.id] : target.value
             },
-            errors : {}
+            errors : {},
+            errorMsg : ""
         }))
     }
 
@@ -132,7 +139,8 @@ class Peserta extends Component {
                 ...prevState.dataInput,
                 tanggal_lahir : date
             },
-            errors : {}
+            errors : {},
+            errorMsg : ""
         }))
     }
 
@@ -142,8 +150,14 @@ class Peserta extends Component {
 
         if(dataInput.email === ""){
             this.setState({ 
-                errors: { email : true }
+                errors: { email : true },
+                errorMsg : "Data tidak boleh kosong."
             });
+        }
+        else if(!emailFormatter(dataInput.email)){
+            this.setState({
+                errors: { email : "Format email salah !"}
+            })
         }
         else {
             let dataPeserta =  data.filter(function(val) {
@@ -167,7 +181,17 @@ class Peserta extends Component {
                 }));
             }
             else {
-                this.setState({disabled: false});
+                this.setState({
+                    disabled: false,
+                    dataInput: {
+                        nama : '',
+                        no_hp : '',
+                        jenis_kelamin : '',
+                        tanggal_lahir : '',
+                        kelompok : '',
+                        instansi : '',
+                    }
+                });
             }
         }
     }
@@ -182,11 +206,19 @@ class Peserta extends Component {
         for(let i = 0; i<propertyNames.length; i++){
             if(propertyValues[i] === ""){
                 valid = false;
-                error[propertyNames[i]] = true
+                error[propertyNames[i]] = true;
             }
         }
 
-        this.setState({ errors: error });
+        if(!phoneNumberFormatter(dataInput.no_hp)){
+            valid = false;
+            error["no_hp"] = "Format input salah !";
+        }
+
+        this.setState({ 
+            errors: error,
+            errorMsg : (valid) ? "" : "Data tidak boleh kosong."
+        });
         return valid
     }
 
@@ -257,6 +289,7 @@ class Peserta extends Component {
                     disabled={this.state.disabled}
                     handleSubmit={this.handleSubmit}
                     handleChangeDate={this.handleChangeDate}
+                    errorMsg={this.state.errorMsg}
                 />
             </React.Fragment>
         )
@@ -267,6 +300,7 @@ class Peserta extends Component {
 const mapState = state => ({
     data: state.peserta.data,
     jadwalTest: state.jadwalTest.data,
+    errorMsg: state.peserta.errorMsg,
 })
 
 const mapDispatch = dispatch => ({

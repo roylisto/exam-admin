@@ -25,3 +25,23 @@ export function numberFormatter(id,data) {
     }
     return number
 }
+
+export function emailFormatter(input) {
+    let reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+            
+    if (reg.test(input) === false) {  
+        return false; 
+    } else {
+        return true;
+    }
+}
+
+export function phoneNumberFormatter(input) {
+    let reg = /^(^\+62\s?|^0)(\d{3,4}-?){2}\d{3,4}$/g;
+            
+    if (reg.test(input) === false) {  
+        return false; 
+    } else {
+        return true;
+    }
+}

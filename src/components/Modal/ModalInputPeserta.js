@@ -12,6 +12,13 @@ const ModalInputPeserta = props => {
             <div className="modal-dialog modal-dialog-centered" role="document">
                 <div className="modal-content ">
                     <h5>Input Peserta</h5>
+                    {
+                        (props.errorMsg) ?
+                        <div className="alert-text" role="alert">
+                            <img src={require("../../assets/images/error.svg")} alt="" />
+                            {props.errorMsg}
+                        </div> : ""
+                    }
                     <form>
                         <div className="form-group mb-5">
                             <label>Email</label>
@@ -22,7 +29,8 @@ const ModalInputPeserta = props => {
                                 value={props.dataInput.email}
                                 onChange={props.handleChange}
                             />
-                            <Button small xs className="float-right mt-2" onClick={props.handleCek}>
+                            <p>{props.errors.email}</p>
+                            <Button small xs className="float-right" onClick={props.handleCek}>
                                 Cek
                             </Button>
                         </div>
@@ -47,6 +55,7 @@ const ModalInputPeserta = props => {
                                 onChange={props.handleChange}
                                 disabled={props.disabled}
                             />
+                            <p>{props.errors.no_hp}</p>
                         </div>
                         <div className="form-group">
                             <label>Jenis Kelamin</label>
@@ -58,7 +67,7 @@ const ModalInputPeserta = props => {
                                 onChange={props.handleChange}
                                 disabled={props.disabled}
                             >
-                                <option>-</option>
+                                <option value="">-</option>
                                 <option value="pria">Pria</option>
                                 <option value="wanita">Wanita</option>
                             </select>

@@ -69,7 +69,7 @@ class Login extends Component {
         return (
             <Container>
                 <div className='d-flex align-items-center justify-content-end h-100'>
-                    <ContentForm>
+                    <ContentForm onSubmit={this.handleLogin}>
                         <p>Welcome to Admin Page</p>
                         <h3>Login To your Account</h3>
                         {
