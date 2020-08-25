@@ -67,7 +67,7 @@ const ModalInputPeserta = props => {
                                 onChange={props.handleChange}
                                 disabled={props.disabled}
                             >
-                                <option>-</option>
+                                <option value="">-</option>
                                 <option value="pria">Pria</option>
                                 <option value="wanita">Wanita</option>
                             </select>
