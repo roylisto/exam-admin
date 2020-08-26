@@ -56,22 +56,32 @@ a {
     display: block;
     color: #fff;
     margin-top: 20px;
+    transition: display 1s ease;
     &:hover {
         color: #443c3c !important;
     }
     &.dropdown {
         color: #bbb7b7;
         background-color: #f6f9fc;
+        img {
+            filter: invert(49%) sepia(37%) saturate(3037%) hue-rotate(328deg) brightness(108%) contrast(94%);
+        }
     }
     &.sub-menu {
         padding-left: 35px;
         margin-top: 0;
+    }
+    &.hide {
+        display: none;
     }
 }
 
 .sidebar-menu-link-active {
     background-color: #f6f9fc;
     color: #443c3c !important;
+    img {
+        filter: invert(49%) sepia(37%) saturate(3037%) hue-rotate(328deg) brightness(108%) contrast(94%);
+    }
 }
 
 .alert-text {

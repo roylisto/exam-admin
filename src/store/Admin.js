@@ -1,9 +1,10 @@
-import { PostData } from "../services/Agent"
+import { PostData, GetData } from "../services/Agent"
 
 const admin = {
     state : {
         token : '',
-        error : false
+        error : false,
+        userAdminList : []
     },
     reducers : {
         updatetoken(state, payload) {
@@ -11,10 +12,13 @@ const admin = {
         },
         updateError(state, payload) {
             return { ...state, ...payload };
+        },
+        SET_LIST_ADMIN(state, payload) {
+            return { ...state, ...payload };
         }
     },
     effects: dispatch => ({
-        async login(payload, rootState) {
+        async login(payload) {
             await PostData('login',payload)
                 .then((result)=>{
                     if(result.token) {
@@ -23,6 +27,14 @@ const admin = {
                     }
                     else {
                         dispatch.admin.updateError({error : true});
+                    }
+                })
+        },
+        async fetchListAdmin() {
+            await GetData('admin',)
+                .then((result)=>{
+                    if(result.status === "OK") {
+                        dispatch.admin.SET_LIST_ADMIN({userAdminList : result.data});
                     }
                 })
         }
