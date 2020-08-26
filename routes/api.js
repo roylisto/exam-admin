@@ -12,7 +12,7 @@ const user = require('../controllers/user.js');
 const peserta = require('../controllers/peserta.js');
 const jadwalTest = require('../controllers/jadwalTest.js');
 const hasil = require('../controllers/hasil.js');
-
+const reset = require('../controllers/reset.js');
 module.exports = (router) => {
 
   router.post('/login', AuthController.login);
@@ -61,6 +61,11 @@ module.exports = (router) => {
   //delete files
   router.delete('/files', [IsAuthenticated], file.hasil);
   router.delete('/uploads', [IsAuthenticated], file.uploads);
+
+  //reset route
+  router.delete('/reset/test/:id', [IsAuthenticated], reset.test); //reset seluruh peserta by id jadwaltest
+  router.delete('/reset/peserta/:id_peserta', [IsAuthenticated], reset.peserta); //reset satu peserta by id_peserta
+  router.delete('/reset/peserta/:id_peserta/subtest/:code_subtest', [IsAuthenticated], reset.subtest); //reset subtest satu peserta by code subtest
 
   router.get('/test', (req, res) => {
     res.send('test ci/cd');
