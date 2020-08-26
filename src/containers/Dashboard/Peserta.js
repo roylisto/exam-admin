@@ -61,7 +61,6 @@ class Peserta extends Component {
     
     componentDidMount() {
         this.props.fetchJadwalTest();
-        this.props.fetchPesertaList();
     }
 
     componentDidUpdate(prevProps) {
@@ -116,10 +115,21 @@ class Peserta extends Component {
         let string = target.value;
         let split = string.split(";");
         
-        this.setState({
-            filterID : split[0],
-            filter: split[1]
-        })
+        if(string === ""){
+            this.setState({
+                filterID : "",
+                filter: ""
+            })
+        }
+        else {
+            this.props.fetchPesertaList(split[0]);
+            this.setState({
+                filterID : split[0],
+                filter: split[1],
+                data: null
+            })
+        }
+        
     }
     
     handleChange({target}) {
@@ -272,7 +282,7 @@ class Peserta extends Component {
                 {
                     (this.state.filter !== "") ? 
                     <TabelPeserta
-                        keyField="email"
+                        keyField="id"
                         data={this.state.data}
                         columns={this.state.columns}
                         tableName="tabel-peserta"

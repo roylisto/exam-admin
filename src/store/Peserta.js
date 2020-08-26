@@ -15,11 +15,11 @@ const peserta = {
         },
     },
     effects: dispatch => ({
-        async fetchPesertaList() {
-            await GetData('users')
+        async fetchPesertaList(params) {
+            await GetData('peserta/test/',params)
                 .then((result)=>{
                     if(result.status === "OK") {
-                        dispatch.peserta.SET_PESERTALIST({data : result.data});
+                        dispatch.peserta.SET_PESERTALIST({data : result.data.peserta});
                     }
                 })
         },
