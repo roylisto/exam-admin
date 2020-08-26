@@ -125,7 +125,8 @@ class Peserta extends Component {
             this.props.fetchPesertaList(split[0]);
             this.setState({
                 filterID : split[0],
-                filter: split[1]
+                filter: split[1],
+                data: null
             })
         }
         
@@ -281,7 +282,7 @@ class Peserta extends Component {
                 {
                     (this.state.filter !== "") ? 
                     <TabelPeserta
-                        keyField="email"
+                        keyField="id"
                         data={this.state.data}
                         columns={this.state.columns}
                         tableName="tabel-peserta"
