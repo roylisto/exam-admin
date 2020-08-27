@@ -29,6 +29,21 @@ module.exports = function(sequelize, DataTypes) {
     underscored: true,
     timestamps: false,
   });
+
+  peserta.getAccount = async (email, id) => {
+    const user = await sequelize.query(
+      'SELECT * FROM user JOIN peserta ON peserta.email = user.email WHERE user.email = ? AND peserta.id = ?',
+      {
+        replacements: [email, id],
+        type: sequelize.QueryTypes.SELECT
+      }
+    );
+    if(user==null) {
+      return false;
+    }
+    return user[0];
+  }
+
   peserta.associate = function(models) {
     peserta.hasMany(models.scorePeserta, {
       foreignKey: 'peserta_id'
