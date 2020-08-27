@@ -1,10 +1,17 @@
-import { PostData, GetData } from "../services/Agent"
+import { 
+    PostData, 
+    GetData,
+    DeleteData,
+    UpdateData
+} from "../services/Agent"
 
 const admin = {
     state : {
         token : '',
         error : false,
-        userAdminList : []
+        userAdminList : [],
+        message : '',
+        errorMsg : ''
     },
     reducers : {
         updatetoken(state, payload) {
@@ -35,6 +42,43 @@ const admin = {
                 .then((result)=>{
                     if(result.status === "OK") {
                         dispatch.admin.SET_LIST_ADMIN({userAdminList : result.data});
+                    }
+                    else {
+                        dispatch.admin.updateError({errorMsg : result.error});
+                    }
+                })
+        },
+        async addUserAdmin(payload) {
+            await PostData('admin',payload)
+                .then((result)=>{
+                    if(result.status === "OK") {
+                        dispatch.admin.SET_LIST_ADMIN({message : result.message});
+                        window.location.reload();
+                    }
+                    else {
+                        dispatch.admin.updateError({errorMsg : "Internal Server Error"});
+                    }
+                })
+        },
+        async editUserAdmin(data) {
+            await UpdateData('admin',data)
+                .then((result)=>{
+                    if(result.status === "OK") {
+                        window.location.reload();
+                    }
+                    else {
+                        dispatch.admin.updateError({errorMsg :result.message});
+                    }
+                })
+        },
+        async hapusUserAdmin(id) {
+            await DeleteData('admin',id)
+                .then((result)=>{
+                    if(result.status === "OK") {
+                        window.location.reload();
+                    }
+                    else {
+                        dispatch.admin.updateError({errorMsg :"Internal Server Error"});
                     }
                 })
         }

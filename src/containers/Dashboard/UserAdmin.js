@@ -9,7 +9,7 @@ import Button from '../../components/Button';
 import Modal from "../../components/Modal/ModalUserAdmin";
 import ModalHapus from '../../components/Modal/ModalHapus';
 // MODULS
-import { numberFormatter } from "../../js/Formatter";
+import { numberFormatter, emailFormatter, formatPassword } from "../../js/Formatter";
 
 const Header = styled.div`{
     display : flex;
@@ -36,13 +36,14 @@ class UserAdmin extends Component {
             nama: '',
             email : '',
             password : '',
-            oldPassword: '',
             newPassword: '',
+            errorMsg: '',
+            id: ''
         }
         this.handleClickModal = this.handleClickModal.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleAddUserAdmin = this.handleAddUserAdmin.bind(this);
-        this.handleUbahPassword = this.handleUbahPassword.bind(this);
+        this.handleEditAdmin = this.handleEditAdmin.bind(this);
         this.actionFormatter = this.actionFormatter.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
         this.switchModal = this.switchModal.bind(this);
@@ -66,6 +67,11 @@ class UserAdmin extends Component {
             this.setState({
                 data: this.props.data,
                 columns: columns
+            });
+        }
+        if (prevProps.errorMsg !== this.props.errorMsg && this.props.errorMsg !== "") {
+            this.setState({
+                errorMsg: this.props.errorMsg,
             });
         }
     }
@@ -95,94 +101,99 @@ class UserAdmin extends Component {
             nama: '',
             email : '',
             password : '',
-            oldPassword: '',
             newPassword: '',
+            errorMsg: ''
         })
     }
     
-    formValidate() {
-        let { showModal, nama, email, password, oldPassword, newPassword } = this.state;
+    formValidate(dataInput) {
+        let { showModal } = this.state;
+        
+        let propertyNames = Object.keys(dataInput);
+        let propertyValues = Object.values(dataInput);
         let error = {};
         let valid = true;
+        let empty = false;
         
-        if (nama === "") {
-            valid = false;
-            error["nama"] = true;
-        }
-        if (email === "") {
-            valid = false;
-            error["email"] = true;
-        }
-        if(showModal === "addUserAdmin"){
-            // Condition form modal add user admin
-            if (password === "") {
+        for(let i = 0; i<propertyNames.length; i++){
+            if(propertyValues[i] === ""){
                 valid = false;
-                error["password"] = true;
+                empty = true;
+                error[propertyNames[i]] = true;
+            }
+        }
+        
+        if(!emailFormatter(dataInput.email)){
+            valid = false;
+            error["email"] = "Format email salah !";
+        }
+
+        if(showModal === "addUserAdmin"){
+            // Condition for add user admin
+            if(!formatPassword(dataInput.password)){
+                valid = false;
+                error["password"] = "Format password salah ! Password minimal terdiri dari 8 karakter, merupakan gabungan angka dan huruf";
             }
         }
         else {
-            // Condition form modal input ubah password
-            if (oldPassword === "") {
+            if(!formatPassword(dataInput.newPassword)){
                 valid = false;
-                error["oldPassword"] = true;
-            }
-            if (newPassword === "") {
-                valid = false;
-                error["newPassword"] = true;
+                error["newPassword"] = "Format password salah ! Password minimal terdiri dari 8 karakter, merupakan gabungan angka dan huruf";
             }
         }
 
-        this.setState({ errors: error });
+        this.setState({ 
+            errors: error,
+            errorMsg : (empty) ? "Data tidak boleh kosong." : ""
+        });
         return valid
     }
 
     handleAddUserAdmin(e) {
         e.preventDefault();
         let { nama, email, password } = this.state
+        let dataInput = { nama, email, password }
 
-        if (this.formValidate()) {
-            const payload = {
-                name: nama,
-                email: email,
-                password: password,
-            };
-            console.log(payload);
-            
-            // this.props.addJadwalTest(payload);
-        }
+        if(!this.formValidate(dataInput)) return;
+
+        const payload = {
+            name: nama,
+            email: email,
+            password: password,
+        };
+        this.props.addUserAdmin(payload);
     }
 
-    handleUbahPassword(e) {
+    handleEditAdmin(e) {
         e.preventDefault();
-        let { nama, email, oldPassword, newPassword } = this.state
-        if(this.formValidate()) {
-            const data = {
-                payload: {
-                    name: nama,
-                    email: email,
-                    oldPassword: oldPassword,
-                    newPassword: newPassword,
-                },
-                id: id
-            }
-            console.log(data);
-            alert("Ubah Password");
-            // this.props.editJadwalTest(data);
+        let { nama, email, newPassword, id} = this.state
+        let dataInput = { nama, email, newPassword }
+        
+        if(!this.formValidate(dataInput)) return;
+        
+        const data = {
+            payload: {
+                name: nama,
+                email: email,
+                password: newPassword,
+            },
+            id: id
         }
+        this.props.editUserAdmin(data);
     }
     
     handleHapus() {
         let { id } = this.state;
-        alert("Hapus");
-        // this.props.hapusJadwalTest(id);
+        
+        this.props.hapusUserAdmin(id);
     }
     
     actionFormatter(e, row) {
         return (
             <div className="btn-group">
-                <Button white xs onClick={()=>this.handleClickModal("ubahPassword",row)}>
+                <Button white xs onClick={()=>this.handleClickModal("editUserAdmin",row)}>
                     <img src={require("../../assets/images/edit.svg")} />
-                    Ubah Password
+                    Edit User Admin
                 </Button>
                 <Button white small xs onClick={()=>this.handleClickModal("hapusUserAdmin",row)}>
                     <img src={require("../../assets/images/delete.svg")} />
@@ -202,23 +213,24 @@ class UserAdmin extends Component {
                         handleChange={this.handleChange}
                         handleSubmit={this.handleAddUserAdmin}
                         errors={this.state.errors}
-                        title="Tambah User Admin"
+                        title="Tambah"
+                        errorMsg={this.state.errorMsg}
                     />
                 );
                 break;
-            case "ubahPassword" : 
+            case "editUserAdmin" : 
                 return (
                     <Modal
                         handleCloseModal={this.handleCloseModal}
                         showModal={this.state.showModal}
                         handleChange={this.handleChange}
-                        handleSubmit={this.handleUbahPassword}
+                        handleSubmit={this.handleEditAdmin}
                         errors={this.state.errors}
-                        title="Ubah Password"
+                        title="Edit"
                         nama={this.state.nama}
                         email={this.state.email}
-                        oldPassword={this.state.oldPassword}
                         newPassword={this.state.newPassword}
+                        errorMsg={this.state.errorMsg}
                     />
                 );
                 break;
@@ -261,17 +273,18 @@ class UserAdmin extends Component {
 
 const mapState = state => ({
     data: state.admin.userAdminList,
+    errorMsg: state.admin.errorMsg,
 })
 
 const mapDispatch = dispatch => ({
     fetchListAdmin: () =>
         dispatch({ type: 'admin/fetchListAdmin' }),
-    addJadwalTest: value =>
-        dispatch({ type: 'jadwalTest/addJadwalTest', payload: value }),
-    editJadwalTest: (value) =>
-        dispatch({ type: 'jadwalTest/editJadwalTest', payload: value }),
-    hapusJadwalTest: (value) =>
-        dispatch({ type: 'jadwalTest/hapusJadwalTest', payload: value }),
+    addUserAdmin: value =>
+        dispatch({ type: 'admin/addUserAdmin', payload: value }),
+    editUserAdmin: (value) =>
+        dispatch({ type: 'admin/editUserAdmin', payload: value }),
+    hapusUserAdmin: (value) =>
+        dispatch({ type: 'admin/hapusUserAdmin', payload: value }),
 });
 
 export default connect(mapState, mapDispatch)(UserAdmin)

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import "./Modal.scss"
 // COMPONENTS
 import Button from "../Button"
@@ -8,8 +8,14 @@ const ModalUserAdmin = (props) => {
         <div className="modal" style={{display: (props.showModal) ? "block" : "none"}}>
             <div className="modal-dialog modal-dialog-centered" role="document">
                 <div className="modal-content ">
-                    <h5>{props.title}</h5>
-                    
+                    <h5>{props.title} User Admin</h5>
+                    {
+                        (props.errorMsg) ?
+                        <div className="alert-text" role="alert">
+                            <img src={require("../../assets/images/error.svg")} alt="" />
+                            {props.errorMsg}
+                        </div> : ""
+                    }
                     <form>
                         <div className="form-group">
                             <label>Nama</label>
@@ -30,41 +36,33 @@ const ModalUserAdmin = (props) => {
                                 value={props.email}
                                 onChange={props.handleChange}
                             />
+                            <p>{props.errors.email}</p>
                         </div>
                         {
-                            (props.title !== "Ubah Password") ?
+                            (props.title !== "Edit") ?
                             <div className="form-group">
                                 <label>Password</label>
                                 <input
                                     className={`form-control ${props.errors.password ? "invalid" : ""}`}
                                     id="password"
-                                    type="text"
+                                    type="password"
                                     value={props.password}
                                     onChange={props.handleChange}
                                 />
-                            </div> :
-                            <React.Fragment>
-                                <div className="form-group">
-                                    <label>Password Lama</label>
-                                    <input
-                                        className={`form-control ${props.errors.oldPassword ? "invalid" : ""}`}
-                                        id="oldPassword"
-                                        type="text"
-                                        value={props.oldPassword}
-                                        onChange={props.handleChange}
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label>Password</label>
-                                    <input
-                                        className={`form-control ${props.errors.newPassword ? "invalid" : ""}`}
-                                        id="newPassword"
-                                        type="text"
-                                        value={props.newPassword}
-                                        onChange={props.handleChange}
-                                    />
-                                </div>
-                            </React.Fragment>
+                                <p>{props.errors.password}</p>
+                            </div> 
+                            :
+                            <div className="form-group">
+                                <label>Password Baru</label>
+                                <input
+                                    className={`form-control ${props.errors.newPassword ? "invalid" : ""}`}
+                                    id="newPassword"
+                                    type="password"
+                                    value={props.newPassword}
+                                    onChange={props.handleChange}
+                                />
+                                <p>{props.errors.newPassword}</p>
+                            </div>
                         }
                         <Button small onClick={props.handleSubmit}>
                             Selesai
