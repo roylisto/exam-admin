@@ -385,7 +385,7 @@ module.exports = {
       }
 
       const peserta = await db.sequelize.query('SELECT user.nama, user.tanggal_lahir, \
-        user.email, peserta.password, peserta.valid, peserta.expired FROM peserta\
+        user.email, user.no_hp, peserta.password, peserta.valid, peserta.expired FROM peserta\
         JOIN user on user.email = peserta.email WHERE jadwal_test = ?',
         {
           replacements: [event_test.id],
@@ -415,6 +415,7 @@ module.exports = {
         { header: 'Nama', key: 'nama', width: 32 },
         { header: 'Tanggal lahir', key: 'tanggal_lahir', width: 15 },
         { header: 'Email', key: 'email', width: 32 },
+        { header: 'No HP', key: 'no_hp', width: 15 },
         { header: 'Password', key: 'password', width: 15 },
         { header: 'Valid', key: 'valid', width: 15 },
         { header: 'Expired', key: 'expired', width: 15 },
@@ -426,6 +427,7 @@ module.exports = {
         row.nama = peserta[i].nama;
         row.tanggal_lahir = peserta[i].tanggal_lahir;
         row.email = peserta[i].email;
+        row.no_hp = peserta[i].no_hp;
         row.password = peserta[i].password;
         row.valid = moment(event_test.valid).format('YYYY-MM-DD HH:mm');
         row.expired = moment(event_test.expired).format('YYYY-MM-DD HH:mm');

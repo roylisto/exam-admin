@@ -25,7 +25,7 @@ module.exports = (router) => {
   router.put('/users/:id', [IsAuthenticated], UserController.update);
   router.delete('/users/:id', [IsAuthenticated], UserController.delete);
   router.post('/users/peserta/', [IsAuthenticated], UserController.userPeserta);
-  router.post('/users/excel', [IsAuthenticated], multer.single('user'), user.import);
+  router.post('/users/excel',  multer.single('user'), user.import);
   
   //admin account route
   router.get('/admin', [IsAuthenticated], AdminController.list);
@@ -53,7 +53,7 @@ module.exports = (router) => {
   //route hasil
   router.get('/hasil-test/:id', [IsAuthenticated], hasil.list);
   router.get('/jawaban-test/:id', [IsAuthenticated], hasil.list_jawaban);
-  router.get('/peserta-test/:id', [IsAuthenticated], hasil.list_peserta);
+  router.get('/peserta-test/:id', hasil.list_peserta);
 
   //download
   router.get('/download', [IsAuthenticated], download.get);
