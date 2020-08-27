@@ -81,14 +81,25 @@ module.exports = {
             instansi: row.values[8]
           };
           
-          user.create(data).then(calon_peserta => {            
+          user.findOrCreate({
+            defaults: data,
+            where: {
+              email: data.email
+            }
+          }).then(calon_peserta => {            
             if(test) {
-              peserta.create({
-                email: calon_peserta.email,
-                password: randomstring.generate(8),
-                valid: test.waktu,
-                expired: moment(test.waktu).add(1, 'days').format('YYYY-MM-DD HH:mm:ss'),
-                jadwal_test: jadwal_test
+              peserta.findOrCreate({
+                defaults: {
+                  email: calon_peserta.email,
+                  password: randomstring.generate(8),
+                  valid: test.waktu,
+                  expired: moment(test.expired).add(1, 'days').format('YYYY-MM-DD HH:mm:ss'),
+                  jadwal_test: jadwal_test
+                },
+                where: {
+                  email: calon_peserta.email,
+                  jadwal_test: jadwal_test
+                }
               }).then(result => {
                 return result;
               });

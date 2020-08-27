@@ -86,7 +86,7 @@ module.exports = {
         worksheet2.addRow(row);
       }
 
-      let nameFile = `jawaban_${moment(event_test.waktu).format('YYYY-MM-DD')}_${event_test.instansi}`;
+      let nameFile = `jawaban_${moment(event_test.waktu).format('YYYY-MM-DD')}_${event_test.instansi}_${event_test.keterangan}`;
       nameFile = nameFile.replace(/ /g,"_").replace(/:/g,"-") +'-'+event_test.id;
 
       await workbook.xlsx.writeFile(`./files/${nameFile}.xlsx`);
@@ -358,7 +358,7 @@ module.exports = {
         worksheet2.addRow(row2);
       }
 
-      let nameFile = `${moment(event_test.waktu).format('YYYY-MM-DD')}_${event_test.instansi}`;
+      let nameFile = `${moment(event_test.waktu).format('YYYY-MM-DD')}_${event_test.instansi}_${event_test.keterangan}`;
       nameFile = nameFile.replace(/ /g,"_").replace(/:/g,"-") +'-'+event_test.id;
 
       await workbook.xlsx.writeFile(`./files/${nameFile}.xlsx`);
@@ -427,13 +427,13 @@ module.exports = {
         row.tanggal_lahir = peserta[i].tanggal_lahir;
         row.email = peserta[i].email;
         row.password = peserta[i].password;
-        row.valid = moment(peserta[i].valid).format('YYYY-MM-DD HH:mm');
-        row.expired = moment(peserta[i].expired).format('YYYY-MM-DD HH:mm');
+        row.valid = moment(event_test.valid).format('YYYY-MM-DD HH:mm');
+        row.expired = moment(event_test.expired).format('YYYY-MM-DD HH:mm');
 
         worksheet.addRow(row);
       }
 
-      let nameFile = `peserta_${moment(event_test.waktu).format('YYYY-MM-DD')}_${event_test.instansi}`;
+      let nameFile = `peserta_${moment(event_test.waktu).format('YYYY-MM-DD')}_${event_test.instansi}_${event_test.keterangan}`;
       nameFile = nameFile.replace(/ /g,"_").replace(/:/g,"-") +'-'+event_test.id;
 
       await workbook.xlsx.writeFile(`./files/${nameFile}.xlsx`);
