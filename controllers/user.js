@@ -58,7 +58,7 @@ module.exports = {
   import: async (req, res) => {    
     try {      
       const { jadwal_test } = req.body;
-      const test = await jadwalTest.findByPk(jadwal_test);      
+      const test = await jadwalTest.findByPk(jadwal_test);
       if(jadwal_test && test==null) {
         return res.status(404).json({
           status: 'ERROR',
@@ -69,32 +69,38 @@ module.exports = {
       const workbook = new Excel.Workbook();
       await workbook.xlsx.readFile(req.file.path);
       const worksheet = workbook.worksheets[0];
-      worksheet.eachRow(function(row, rowNumber) {
+
+      const expired = moment(test.expired).add(1, 'days').format('YYYY-MM-DD HH:mm:ss');
+      worksheet.eachRow(async (row, rowNumber) => {
         if(rowNumber > 1) {
-          const data = {
-            nama: row.values[2],
-            email: row.values[3],
-            no_hp: row.values[4],
-            tanggal_lahir: moment(row.values[5]).format('YYYY-MM-DD'),
-            jenis_kelamin: row.values[6],
-            kelompok: row.values[7],
-            instansi: row.values[8]
-          };
-          
-          user.create(data).then(calon_peserta => {            
-            if(test) {
-              peserta.create({
-                email: calon_peserta.email,
+          await user.findOrCreate({
+            defaults: {
+              nama: row.values[2],
+              email: row.values[3],
+              no_hp: row.values[4],
+              tanggal_lahir: moment(row.values[5]).format('YYYY-MM-DD'),
+              jenis_kelamin: row.values[6],
+              kelompok: row.values[7],
+              instansi: row.values[8]
+            },
+            where: {
+              email: row.values[3],
+            }
+          }).then(result => {
+            return peserta.findOrCreate({
+              defaults: {
+                email: row.values[3],
                 password: randomstring.generate(8),
                 valid: test.waktu,
-                expired: moment(test.waktu).add(1, 'days').format('YYYY-MM-DD HH:mm:ss'),
+                expired: expired,
                 jadwal_test: jadwal_test
-              }).then(result => {
-                return result;
-              });
-            }
-          }).catch(err => {
-          });          
+              },
+              where: {
+                email: row.values[3],
+                jadwal_test: jadwal_test
+              }
+            });     
+          });    
         }        
       });      
 
