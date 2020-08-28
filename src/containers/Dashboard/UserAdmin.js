@@ -38,7 +38,8 @@ class UserAdmin extends Component {
             password : '',
             newPassword: '',
             errorMsg: '',
-            id: ''
+            id: '',
+            type:"password"
         }
         this.handleClickModal = this.handleClickModal.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -48,6 +49,7 @@ class UserAdmin extends Component {
         this.handleCloseModal = this.handleCloseModal.bind(this);
         this.switchModal = this.switchModal.bind(this);
         this.handleHapus = this.handleHapus.bind(this);
+        this.showHide = this.showHide.bind(this);
     }
 
     componentDidMount() {
@@ -102,7 +104,8 @@ class UserAdmin extends Component {
             email : '',
             password : '',
             newPassword: '',
-            errorMsg: ''
+            errorMsg: '',
+            type: "password"
         })
     }
     
@@ -187,6 +190,12 @@ class UserAdmin extends Component {
         
         this.props.hapusUserAdmin(id);
     }
+        
+    showHide() {
+        this.setState({
+          type: this.state.type === "text" ? "password" : "text"
+        });
+    }
     
     actionFormatter(e, row) {
         return (
@@ -215,6 +224,8 @@ class UserAdmin extends Component {
                         errors={this.state.errors}
                         title="Tambah"
                         errorMsg={this.state.errorMsg}
+                        showHide={this.showHide}
+                        type={this.state.type}
                     />
                 );
                 break;
@@ -231,6 +242,8 @@ class UserAdmin extends Component {
                         email={this.state.email}
                         newPassword={this.state.newPassword}
                         errorMsg={this.state.errorMsg}
+                        showHide={this.showHide}
+                        type={this.state.type}
                     />
                 );
                 break;

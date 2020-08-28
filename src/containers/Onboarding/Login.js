@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
+import eye from "../../assets/images/eye.svg"
+import eyeoff from "../../assets/images/eye-closed.svg"
 
 const Container = styled.div`
     width: 100%;
@@ -29,6 +31,22 @@ const ContentForm = styled.form`
     h3 {
         color: #839dcf;
     }
+    .alert {
+        img {
+            max-width: 18px;
+            margin-left: -10px;
+            margin-right: 10px;
+        }
+    }
+`;
+
+const ContentEye = styled.span`
+    cursor: pointer;
+    border-radius: 0;
+    float: right;
+    margin-right: 15px;
+    margin-top: -48px;
+    z-index: 2;
 `;
 
 class Login extends Component {
@@ -36,10 +54,12 @@ class Login extends Component {
         super(props)
         this.state = {
             emailAdmin : '',
-            passwordAdmin : ''
+            passwordAdmin : '',
+            type: "password"
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
+        this.showHide = this.showHide.bind(this);
     }
 
     componentDidUpdate(prevProps) {
@@ -64,6 +84,12 @@ class Login extends Component {
         }
         this.props.login(payload);
     }
+        
+    showHide() {
+        this.setState({
+          type: this.state.type === "text" ? "password" : "text"
+        });
+    }
 
     render() {
         return (
@@ -75,6 +101,7 @@ class Login extends Component {
                         {
                             (this.props.error) ?
                                 <div className="alert" role="alert">
+                                    <img src={require("../../assets/images/error.svg")} alt="" />
                                     Login Gagal !
                                 </div>
                                 : ""
@@ -92,12 +119,15 @@ class Login extends Component {
                             <input
                                 className="form-control"
                                 id="passwordAdmin"
-                                type="password"
+                                type={this.state.type}
                                 placeholder="Password"
                                 onChange={this.handleChange}
                                 required
                             />
                         </div>
+                        <ContentEye onClick={this.showHide}>
+                            <img src={(this.state.type === "text") ? eye : eyeoff} alt="eye"/>
+                        </ContentEye>
                         <button
                             className="btn btn-primary btn-admin pink"
                             onClick={this.handleLogin}
