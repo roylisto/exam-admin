@@ -1,5 +1,6 @@
 /** Middlewares */
 const IsAuthenticated = require('../middlewares/isAuthenticated');
+const IsSuperAdmin = require('../middlewares/isSuperAdmin');
 
 /** Controllers */
 const AuthController = require('../controllers/auth');
@@ -28,11 +29,11 @@ module.exports = (router) => {
   router.post('/users/excel', [IsAuthenticated], multer.single('user'), user.import);
   
   //admin account route
-  router.get('/admin', [IsAuthenticated], AdminController.list);
-  router.get('/admin/:id', [IsAuthenticated], AdminController.get);
-  router.post('/admin', [IsAuthenticated], AdminController.create);
-  router.put('/admin/:id', [IsAuthenticated], AdminController.update);
-  router.delete('/admin/:id', [IsAuthenticated], AdminController.delete);
+  router.get('/admin', [IsSuperAdmin], AdminController.list);
+  router.get('/admin/:id', [IsSuperAdmin], AdminController.get);
+  router.post('/admin', [IsSuperAdmin], AdminController.create);
+  router.put('/admin/:id', [IsSuperAdmin], AdminController.update);
+  router.delete('/admin/:id', [IsSuperAdmin], AdminController.delete);
   router.post('/admin/reset-password', [IsAuthenticated], AdminController.reset_password);
 
   //peserta route
