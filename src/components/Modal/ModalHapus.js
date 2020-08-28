@@ -9,7 +9,7 @@ const ModalHapus = (props) => {
         <div className="modal" style={{display: (props.showModal) ? "block" : "none"}}>
             <div className="modal-dialog modal-dialog-centered " role="document">
                 <div className="modal-content modal-hapus">
-                    <p>Anda yakin akan menghapus<br /> jadwal ini ? </p>
+                    <p>Anda yakin akan menghapus<br /> {props.type} ini ? </p>
                     <div>
                         <Button white small xs onClick={props.handleHapus}>
                             Ya

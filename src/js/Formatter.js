@@ -45,3 +45,13 @@ export function phoneNumberFormatter(input) {
         return true;
     }
 }
+
+export function formatPassword(input) {
+    let reg = /^(?=.*[0-9])([a-zA-Z0-9]{8,})$/;
+            
+    if (reg.test(input) === false) {  
+        return false; 
+    } else {
+        return true;
+    }
+}

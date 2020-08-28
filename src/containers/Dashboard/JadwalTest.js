@@ -235,6 +235,7 @@ class JadwalTest extends Component {
             case "hapusJadwal" : 
                 return (
                     <ModalHapus
+                        type="jadwal"
                         handleCloseModal={this.handleCloseModal}
                         showModal={this.state.showModal}
                         handleHapus={this.handleHapus}
