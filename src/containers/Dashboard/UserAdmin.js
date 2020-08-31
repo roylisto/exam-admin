@@ -107,7 +107,7 @@ class UserAdmin extends Component {
     }
     
     formValidate(dataInput) {
-        let { showModal } = this.state;
+        let { showModal, email, newPassword, password, } = this.state;
         
         let propertyNames = Object.keys(dataInput);
         let propertyValues = Object.values(dataInput);
@@ -123,20 +123,20 @@ class UserAdmin extends Component {
             }
         }
         
-        if(!emailFormatter(dataInput.email)){
+        if(!emailFormatter(email)){
             valid = false;
             error["email"] = "Format email salah !";
         }
 
         if(showModal === "addUserAdmin"){
             // Condition for add user admin
-            if(!formatPassword(dataInput.password)){
+            if(!formatPassword(password)){
                 valid = false;
                 error["password"] = "Format password salah ! Password minimal terdiri dari 8 karakter, merupakan gabungan angka dan huruf";
             }
         }
         else {
-            if(!formatPassword(dataInput.newPassword)){
+            if(!formatPassword(newPassword) && newPassword !== ""){
                 valid = false;
                 error["newPassword"] = "Format password salah ! Password minimal terdiri dari 8 karakter, merupakan gabungan angka dan huruf";
             }
@@ -155,7 +155,7 @@ class UserAdmin extends Component {
         let dataInput = { nama, email, password }
 
         if(!this.formValidate(dataInput)) return;
-
+        
         const payload = {
             name: nama,
             email: email,
@@ -167,18 +167,26 @@ class UserAdmin extends Component {
     handleEditAdmin(e) {
         e.preventDefault();
         let { nama, email, newPassword, id} = this.state
-        let dataInput = { nama, email, newPassword }
+        let password = newPassword;
+        let name = nama;
+        let dataInput = {name, email, password};
+        let propertyNames = Object.keys(dataInput);
+        let propertyValues = Object.values(dataInput);
+        let payload = {}
         
-        if(!this.formValidate(dataInput)) return;
+        if(!this.formValidate({})) return;
         
+        for(let i = 0; i<propertyNames.length; i++){
+            if(propertyValues[i] !== ""){
+                payload[propertyNames[i]] = propertyValues[i];
+            }
+        }
         const data = {
-            payload: {
-                name: nama,
-                email: email,
-                password: newPassword,
-            },
+            payload,
             id: id
         }
+        console.log(data);
+        
         this.props.editUserAdmin(data);
     }
     
