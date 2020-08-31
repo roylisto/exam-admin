@@ -1,5 +1,8 @@
 import React from 'react';
+// ASEETS
 import "./Modal.scss"
+import eye from "../../assets/images/eye.svg"
+import eyeoff from "../../assets/images/eye-closed.svg"
 // COMPONENTS
 import Button from "../Button"
 
@@ -45,10 +48,13 @@ const ModalUserAdmin = (props) => {
                                 <input
                                     className={`form-control ${props.errors.password ? "invalid" : ""}`}
                                     id="password"
-                                    type="password"
+                                    type={props.type}
                                     value={props.password}
                                     onChange={props.handleChange}
                                 />
+                                <span className="show-hide" onClick={props.showHide}>
+                                    <img src={(props.type === "text") ? eye : eyeoff} alt="eye"/>
+                                </span>
                                 <p>{props.errors.password}</p>
                             </div> 
                             :
@@ -57,10 +63,13 @@ const ModalUserAdmin = (props) => {
                                 <input
                                     className={`form-control ${props.errors.newPassword ? "invalid" : ""}`}
                                     id="newPassword"
-                                    type="password"
+                                    type={props.type}
                                     value={props.newPassword}
                                     onChange={props.handleChange}
                                 />
+                                <div className="show-hide" onClick={props.showHide}>
+                                    <img src={(props.type === "text") ? eye : eyeoff} alt="eye"/>
+                                </div>
                                 <p>{props.errors.newPassword}</p>
                             </div>
                         }

@@ -67,7 +67,7 @@ const admin = {
                         window.location.reload();
                     }
                     else {
-                        dispatch.admin.updateError({errorMsg :result.message});
+                        dispatch.admin.updateError({errorMsg :"Internal Server Error"});
                     }
                 })
         },
