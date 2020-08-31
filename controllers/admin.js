@@ -65,17 +65,12 @@ module.exports = {
 
   update: async (req, res) => {
     try {
-      let data_admin = {
-        name: req.body.name,
-        email: req.body.email,
-      }
-
       if(req.body.password) {
-        data_admin.password = bcrypt.hashSync(req.body.password, salt);
-        data_admin.change_password = moment().format('YYYY-MM-DD HH:mm:ss');
+        req.body.password = bcrypt.hashSync(req.body.password, salt);
+        req.body.change_password = moment().format('YYYY-MM-DD HH:mm:ss');
       }
 
-      const admin = await db.admin.update(data_admin, {
+      const admin = await db.admin.update(req.body, {
         where: {
           id: req.params.id
         }
@@ -84,7 +79,7 @@ module.exports = {
       res.json({
         status: 'OK',
         message: 'Success update admin',
-        data: admin
+        data: req.params.id
       });
     } catch (err) {
       res.status(500).json({
