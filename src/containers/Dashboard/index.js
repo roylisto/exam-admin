@@ -8,6 +8,7 @@ import Sidebar from '../../components/Sidebar';
 import JadwalTest from "./JadwalTest";
 import SidebarIcon from "../../assets/images/sidebarmenu.svg";
 import Peserta from './Peserta';
+import UserAdmin from "./UserAdmin"
 
 const ButtonSidebar = styled.button`{
     transform: rotate(90deg) scaleY(-1);
@@ -69,6 +70,7 @@ class Dashboard extends Component {
                         <Route exact path="/dashboard" component={JadwalTest}  />
                         <Route path="/dashboard/jadwaltest" component={JadwalTest}  />
                         <Route path="/dashboard/peserta" component={Peserta}  />
+                        <Route path="/dashboard/useradmin" component={UserAdmin}  />
                     </Switch>
                 </Container>
 
