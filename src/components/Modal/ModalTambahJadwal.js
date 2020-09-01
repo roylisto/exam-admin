@@ -35,8 +35,8 @@ class ModalTambahJadwal extends Component {
                             <div className="form-group">
                                 <label>Waktu Mulai</label>
                                 <DatePicker
-                                    showTimeSelect
-                                    timeIntervals={15}
+                                    showTimeInput
+                                    shouldCloseOnSelect={false}
                                     dateFormat="MM/dd/yyyy hh:mm aa"
                                     className={`form-control input-icon ${this.props.errors.timeStart ? "invalid" : ""}`}
                                     id="timeStart"
@@ -49,8 +49,8 @@ class ModalTambahJadwal extends Component {
                             <div className="form-group">
                                 <label>Waktu Berakhir</label>
                                 <DatePicker
-                                    showTimeSelect
-                                    timeIntervals={15}
+                                    showTimeInput
+                                    shouldCloseOnSelect={false}
                                     dateFormat="MM/dd/yyyy hh:mm aa"
                                     className={`form-control input-icon ${this.props.errors.timeEnd ? "invalid" : ""}`}
                                     id="timeEnd"
