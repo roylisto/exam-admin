@@ -6,7 +6,7 @@ import TabelJadwal from "../../components/Tabel/Tabel";
 import Button from '../../components/Button';
 import Modal from "../../components/Modal/ModalTambahJadwal";
 import ModalHapus from '../../components/Modal/ModalHapus';
-import { dateFormatter, numberFormatter } from "../../js/Formatter";
+import { dateFormatter, numberFormatter } from "../../modules/Formatter";
 
 const Header = styled.div`{
     display : flex;

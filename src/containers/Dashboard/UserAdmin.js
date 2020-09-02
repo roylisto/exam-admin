@@ -9,7 +9,7 @@ import Button from '../../components/Button';
 import Modal from "../../components/Modal/ModalUserAdmin";
 import ModalHapus from '../../components/Modal/ModalHapus';
 // MODULS
-import { numberFormatter, emailFormatter, formatPassword } from "../../js/Formatter";
+import { numberFormatter, emailFormatter, formatPassword } from "../../modules/Formatter";
 
 const Header = styled.div`{
     display : flex;

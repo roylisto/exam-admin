@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`{
@@ -34,25 +34,17 @@ const ImageWrapper = styled.div`{
     margin-right: 15px;
 }`
 
-class NavbarDashboard extends Component {
-    constructor(){
-        super()
-        this.state = {
-            show : false
-        }
-    }
-    render() {
-        return (
-            <Container>
-                <LogoAdmin>
-                    <ImageWrapper>
-                        <img src="https://cdn.zeplin.io/5f281c5cde10f72079056c76/assets/d3e880b8-0e46-42e0-a243-4a073b3f9b86.png" alt=""/>
-                    </ImageWrapper>
-                    Admin
-                </LogoAdmin>
-            </Container>
-        )
-    }
+const NavbarDashboard = (props) => {
+    return (
+        <Container>
+            <LogoAdmin>
+                <ImageWrapper>
+                    <img src="https://cdn.zeplin.io/5f281c5cde10f72079056c76/assets/d3e880b8-0e46-42e0-a243-4a073b3f9b86.png" alt=""/>
+                </ImageWrapper>
+                {props.username}
+            </LogoAdmin>
+        </Container>
+    )
 }
 
 export default NavbarDashboard

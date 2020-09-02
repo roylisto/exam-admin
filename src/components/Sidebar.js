@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { NavLink } from 'react-router-dom'
+import { NavLink } from 'react-router-dom';
 // ASSETS
 import logout from '../assets/images/logout.png';
 import home from '../assets/images/home.png';
 import people from '../assets/images/people.png';
 import pluspeople from '../assets/images/pluspeople.svg';
 import calendar from '../assets/images/calendar.png';
+// Utils
+import { clearLocalStorage } from "../modules/utils"
 
 const Container = styled.div`{
     width : ${props => props.minimize ? "0" : "200px"};
@@ -77,18 +79,21 @@ const SidebarNew = (props) => {
                 <Image src={people}/>
                 Peserta 
             </NavLink>
-            <NavLink
-                to="/dashboard/useradmin"
-                activeClassName="sidebar-menu-link-active"
-                className="sidebar-menu-link"
-            >
-                <Image src={pluspeople}/>
-                Add User Admin 
-            </NavLink>
+            {
+                (props.role === "superadmin") ? 
+                <NavLink
+                    to="/dashboard/useradmin"
+                    activeClassName="sidebar-menu-link-active"
+                    className="sidebar-menu-link"
+                >
+                    <Image src={pluspeople}/>
+                    Add User Admin 
+                </NavLink> : ""
+            }
             <NavLink
                 to="/"
                 className="sidebar-menu-link"
-                onClick={()=>localStorage.removeItem("token")}
+                onClick={()=>clearLocalStorage()}
             >
                 <Image src={logout} />
                 Log Out 
