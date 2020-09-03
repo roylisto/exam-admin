@@ -4,6 +4,7 @@ import {
     DeleteData,
     UpdateData
 } from "../services/Agent"
+import { parseJwt } from "../modules/utils"
 
 const admin = {
     state : {
@@ -11,10 +12,21 @@ const admin = {
         error : false,
         userAdminList : [],
         message : '',
-        errorMsg : ''
+        errorMsg : '',
+        role : '',
+        username : 'Admin'
     },
     reducers : {
         updatetoken(state, payload) {
+            state.token = payload;
+            return { ...state, ...payload };
+        },
+        updateRole(state, payload) {
+            state.role = payload;
+            return { ...state, ...payload };
+        },
+        updateUsername(state, payload) {
+            state.username = payload;
             return { ...state, ...payload };
         },
         updateError(state, payload) {
@@ -29,8 +41,15 @@ const admin = {
             await PostData('login',payload)
                 .then((result)=>{
                     if(result.token) {
-                        dispatch.admin.updatetoken({token : result.token});
-                        localStorage.setItem("token",result.token)
+                        let jwtParse  = parseJwt(result.token)
+
+                        dispatch.admin.updatetoken(result.token);
+                        dispatch.admin.updateRole(jwtParse.data.role);
+                        dispatch.admin.updateUsername(jwtParse.data.name);
+                        
+                        localStorage.setItem("token",result.token);
+                        localStorage.setItem("role",jwtParse.data.role);
+                        localStorage.setItem("username",jwtParse.data.name);
                     }
                     else {
                         dispatch.admin.updateError({error : true});

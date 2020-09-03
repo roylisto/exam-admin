@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import styled from 'styled-components';
 import 'react-datepicker/dist/react-datepicker.css';
+import { connect } from 'react-redux';
 // COMPONENTS
 import NavbarDashboard from '../../components/NavbarDashboard';
 import Sidebar from '../../components/Sidebar';
@@ -56,13 +57,17 @@ class Dashboard extends Component {
             <React.Fragment>
                 <ButtonSidebar
                     minimize={this.state.minimize}
-                    onClick={this.handleMinimize}>
+                    onClick={this.handleMinimize}
+                    >
                     <img src={SidebarIcon} />
                 </ButtonSidebar>
                 <Sidebar 
                     minimize={this.state.minimize}
+                    role={this.props.role}
                 />
-                <NavbarDashboard />
+                <NavbarDashboard 
+                    username={this.props.username}
+                />
 
                 <Container 
                     minimize={this.state.minimize}>
@@ -79,4 +84,10 @@ class Dashboard extends Component {
     }
 }
 
-export default Dashboard
+
+const mapState = state => ({
+	role: state.admin.role,
+	username: state.admin.username,
+})
+
+export default connect(mapState)(Dashboard)

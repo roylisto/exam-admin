@@ -1,7 +1,7 @@
 import { init } from "@rematch/core"
-import admin from "./Admin"
-import jadwalTest from "./JadwalTest"
-import peserta from "./Peserta"
+import admin from "./AdminReducers"
+import jadwalTest from "./JadwalTestReducers"
+import peserta from "./PesertaReducers"
 
 const models = {
     admin,
@@ -14,3 +14,5 @@ const store = init ({
 })
 
 export default store
+
+export const { dispatch } = store

@@ -6,7 +6,7 @@ import Button from '../../components/Button';
 import TabelPeserta from "../../components/Tabel/Tabel";
 import Modal from "../../components/Modal/ModalInputPeserta";
 import Loading from "../../components/Loading";
-import { emailFormatter, phoneNumberFormatter } from "../../js/Formatter";
+import { emailFormatter, phoneNumberFormatter } from "../../modules/Formatter";
 
 const Header = styled.div`{
     display : flex;
