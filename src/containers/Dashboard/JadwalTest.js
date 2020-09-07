@@ -23,8 +23,19 @@ class JadwalTest extends Component {
         super(props)
 
         this.state = {
-            data: null,
-            columns: [],
+            data: this.props.data,
+            columns: [
+                { dataField: 'id', text: 'ID',
+                    formatter: (data) => numberFormatter(data, this.props.data) },
+                { dataField: 'instansi', text: 'Instansi' },
+                { dataField: 'waktu', text: 'Waktu Mulai',
+                    formatter: dateFormatter },
+                { dataField: 'expired', text: 'Waktu Berakhir',
+                    formatter: dateFormatter },
+                { dataField: 'keterangan', text: 'Keterangan' },
+                { dataField: '', text: 'Action',
+                    formatter: this.actionFormatter },
+            ],
             showModal: '',
             timeStart: '',
             timeEnd: '',
@@ -49,22 +60,9 @@ class JadwalTest extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        const columns = [
-            { dataField: 'id', text: 'ID',
-                formatter: (data) => numberFormatter(data, this.props.data) },
-            { dataField: 'instansi', text: 'Instansi' },
-            { dataField: 'waktu', text: 'Waktu Mulai',
-                formatter: dateFormatter },
-            { dataField: 'expired', text: 'Waktu Berakhir',
-                formatter: dateFormatter },
-            { dataField: 'keterangan', text: 'Keterangan' },
-            { dataField: '', text: 'Action',
-                formatter: this.actionFormatter },
-        ]
         if (prevProps.data !== this.props.data && this.props.data[0] !== null) {
             this.setState({
                 data: this.props.data,
-                columns: columns
             });
         }
     }

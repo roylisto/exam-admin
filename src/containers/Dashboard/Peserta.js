@@ -33,7 +33,15 @@ class Peserta extends Component {
         this.state = {
             showModal: false,
             data: null,
-            columns: [],
+            columns: [
+                { dataField: 'email', text: 'Email' },
+                { dataField: 'nama', text: 'Nama' },
+                { dataField: 'no_hp', text: 'No HP' },
+                { dataField: 'jenis_kelamin', text: 'Jenis Kelamin' },
+                { dataField: 'tanggal_lahir', text: 'Tanggal Lahir' },
+                { dataField: 'kelompok', text: 'Kelompok' },
+                { dataField: 'instansi', text: 'Instansi' },
+            ],
             namaInstansi : '',
             loading: true,
             jadwalTest : null,
@@ -57,6 +65,7 @@ class Peserta extends Component {
         this.handleClickModal = this.handleClickModal.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleCek = this.handleCek.bind(this);
+        this.handleExport = this.handleExport.bind(this);
     }
     
     componentDidMount() {
@@ -64,19 +73,9 @@ class Peserta extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        const columns  = [
-            { dataField: 'email', text: 'Email' },
-            { dataField: 'nama', text: 'Nama' },
-            { dataField: 'no_hp', text: 'No HP' },
-            { dataField: 'jenis_kelamin', text: 'Jenis Kelamin' },
-            { dataField: 'tanggal_lahir', text: 'Tanggal Lahir' },
-            { dataField: 'kelompok', text: 'Kelompok' },
-            { dataField: 'instansi', text: 'Instansi' },
-        ]
         if (prevProps.data !== this.props.data && this.props.data[0] !== null) {
             this.setState({
                 data: this.props.data,
-                columns : columns,
             });
         }
         if (prevProps.jadwalTest !== this.props.jadwalTest && this.props.jadwalTest[0] !== null) {
@@ -244,6 +243,11 @@ class Peserta extends Component {
         }
     }
 
+    handleExport() {
+        let { filterID } = this.state;
+        this.props.exportPeserta(filterID);
+    }
+
     render() {
         if(this.state.loading) {
             return <Loading />
@@ -265,9 +269,9 @@ class Peserta extends Component {
                         </select>
                     </form>
                     <div>
-                        <Button white>
+                        <Button white onClick={this.handleExport} disabled={this.state.filterID === ""}>
                             <img src={require("../../assets/images/save.svg")} />
-                            Import list
+                            Export list
                         </Button>
                         <Button onClick={this.handleClickModal} disabled={this.state.filter === ""}>
                             <img src={require("../../assets/images/plus.svg")} />
@@ -320,6 +324,8 @@ const mapDispatch = dispatch => ({
         dispatch({ type: 'peserta/fetchPesertaList', payload: value }),
     addPeserta: value =>
         dispatch({ type: 'peserta/addPeserta', payload: value }),
+    exportPeserta: value =>
+        dispatch({ type: 'peserta/exportPeserta', payload: value }),
 });
 
 
