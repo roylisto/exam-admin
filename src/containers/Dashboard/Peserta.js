@@ -36,6 +36,7 @@ class Peserta extends Component {
             columns: [
                 { dataField: 'email', text: 'Email' },
                 { dataField: 'nama', text: 'Nama' },
+                { dataField: 'password', text: 'Password' },
                 { dataField: 'no_hp', text: 'No HP' },
                 { dataField: 'jenis_kelamin', text: 'Jenis Kelamin' },
                 { dataField: 'tanggal_lahir', text: 'Tanggal Lahir' },
