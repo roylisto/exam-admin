@@ -440,9 +440,7 @@ module.exports = {
 
       await workbook.xlsx.writeFile(`./files/${nameFile}.xlsx`);
       res.json({
-        download:`${process.env.API_URL}download?file=${nameFile}.xlsx`,
-        peserta,
-        jumlah_peserta
+        download:`${process.env.API_URL}download?file=${nameFile}.xlsx`
       });
     } catch (err) {
       res.status(500).json({
