@@ -20,6 +20,9 @@ const Button = styled.button`
     margin-right: 5px;
     margin-left: -5px;
   }
+  &:disabled {
+    opacity : 0.5;
+  }
 `;
 
 export default Button;

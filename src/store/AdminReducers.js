@@ -10,7 +10,7 @@ const admin = {
     state : {
         token : '',
         error : false,
-        userAdminList : [],
+        userAdminList : null,
         message : '',
         errorMsg : '',
         role : '',

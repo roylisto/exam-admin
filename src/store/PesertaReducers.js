@@ -4,7 +4,7 @@ const peserta = {
     state : {
         data : [], // all data peserta
         status : "",
-        errorMsg : ""
+        errorMsg : "",
     },
     reducers : {
         SET_PESERTALIST(state, payload) { // list peserta
@@ -31,6 +31,30 @@ const peserta = {
                     }
                     else if (result.status === "ERROR") {
                         dispatch.peserta.SET_ERROR_STATUS({errorMsg : result.messages})
+                    }
+                })
+        },
+        async exportPeserta(params) {
+            await GetData('peserta-test/',params)
+                .then((result)=>{
+                    if(result.download !== undefined) {
+                        let string = result.download.search("file="),
+                            filename = result.download.substring(string+5,string.length);
+
+                        fetch(result.download, {
+                            method: 'GET',
+                            headers: {
+                            'x-access-token' : localStorage.getItem("token")
+                            },
+                        })
+                        .then((response) => response.blob())
+                        .then(blob => {
+                            let url = window.URL.createObjectURL(blob);
+                            let a = document.createElement('a');
+                            a.href = url;
+                            a.download = filename;
+                            a.click();
+                        })
                     }
                 })
         },

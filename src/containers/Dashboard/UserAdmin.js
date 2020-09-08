@@ -29,8 +29,15 @@ class UserAdmin extends Component {
         super(props)
 
         this.state = {
-            data: null,
-            columns: [],
+            data: this.props.data,
+            columns: [
+                { dataField: 'id', text: 'ID',
+                    formatter: (data) => numberFormatter(data, this.props.data) },
+                { dataField: 'name', text: 'Nama' },
+                { dataField: 'email', text: 'Email' },
+                { dataField: '', text: 'Action',
+                    formatter: this.actionFormatter },
+            ],
             showModal: '',
             errors: {},
             nama: '',
@@ -57,18 +64,18 @@ class UserAdmin extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        const columns = [
-            { dataField: 'id', text: 'ID',
-                formatter: (data) => numberFormatter(data, this.props.data) },
-            { dataField: 'name', text: 'Nama' },
-            { dataField: 'email', text: 'Email' },
-            { dataField: '', text: 'Action',
-                formatter: this.actionFormatter },
-        ]
+        // const columns = [
+        //     { dataField: 'id', text: 'ID',
+        //         formatter: (data) => numberFormatter(data, this.props.data) },
+        //     { dataField: 'name', text: 'Nama' },
+        //     { dataField: 'email', text: 'Email' },
+        //     { dataField: '', text: 'Action',
+        //         formatter: this.actionFormatter },
+        // ]
         if (prevProps.data !== this.props.data && this.props.data.length !== 0) {
             this.setState({
                 data: this.props.data,
-                columns: columns
+                // columns: columns
             });
         }
         if (prevProps.errorMsg !== this.props.errorMsg && this.props.errorMsg !== "") {
