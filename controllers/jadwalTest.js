@@ -74,6 +74,7 @@ module.exports = {
           }
         }
       } 
+      query.order = [['id', 'DESC']];
       const event = await jadwalTest.findAll(query);
 
       return res.json({
