@@ -30,14 +30,7 @@ class UserAdmin extends Component {
 
         this.state = {
             data: this.props.data,
-            columns: [
-                { dataField: 'id', text: 'ID',
-                    formatter: (data) => numberFormatter(data, this.props.data) },
-                { dataField: 'name', text: 'Nama' },
-                { dataField: 'email', text: 'Email' },
-                { dataField: '', text: 'Action',
-                    formatter: this.actionFormatter },
-            ],
+            columns: null,
             showModal: '',
             errors: {},
             nama: '',
@@ -60,22 +53,22 @@ class UserAdmin extends Component {
     }
 
     componentDidMount() {
+        const columns = [
+            { dataField: 'id', text: 'ID',
+                formatter: (data) => numberFormatter(data, this.props.data) },
+            { dataField: 'name', text: 'Nama' },
+            { dataField: 'email', text: 'Email' },
+            { dataField: '', text: 'Action',
+                formatter: this.actionFormatter },
+        ]
+        this.setState({ columns });
         this.props.fetchListAdmin();
     }
 
     componentDidUpdate(prevProps) {
-        // const columns = [
-        //     { dataField: 'id', text: 'ID',
-        //         formatter: (data) => numberFormatter(data, this.props.data) },
-        //     { dataField: 'name', text: 'Nama' },
-        //     { dataField: 'email', text: 'Email' },
-        //     { dataField: '', text: 'Action',
-        //         formatter: this.actionFormatter },
-        // ]
         if (prevProps.data !== this.props.data && this.props.data.length !== 0) {
             this.setState({
                 data: this.props.data,
-                // columns: columns
             });
         }
         if (prevProps.errorMsg !== this.props.errorMsg && this.props.errorMsg !== "") {
@@ -195,7 +188,6 @@ class UserAdmin extends Component {
             payload,
             id: id
         }
-        console.log(data);
         
         this.props.editUserAdmin(data);
     }
