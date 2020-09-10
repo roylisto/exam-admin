@@ -24,18 +24,7 @@ class JadwalTest extends Component {
 
         this.state = {
             data: this.props.data,
-            columns: [
-                { dataField: 'id', text: 'ID',
-                    formatter: (data) => numberFormatter(data, this.props.data) },
-                { dataField: 'instansi', text: 'Instansi' },
-                { dataField: 'waktu', text: 'Waktu Mulai',
-                    formatter: dateFormatter },
-                { dataField: 'expired', text: 'Waktu Berakhir',
-                    formatter: dateFormatter },
-                { dataField: 'keterangan', text: 'Keterangan' },
-                { dataField: '', text: 'Action',
-                    formatter: this.actionFormatter },
-            ],
+            columns: null,
             showModal: '',
             timeStart: '',
             timeEnd: '',
@@ -56,6 +45,19 @@ class JadwalTest extends Component {
     }
 
     componentDidMount() {
+        const columns = [
+            { dataField: 'id', text: 'ID',
+                formatter: (data) => numberFormatter(data, this.props.data) },
+            { dataField: 'instansi', text: 'Instansi' },
+            { dataField: 'waktu', text: 'Waktu Mulai',
+                formatter: dateFormatter },
+            { dataField: 'expired', text: 'Waktu Berakhir',
+                formatter: dateFormatter },
+            { dataField: 'keterangan', text: 'Keterangan' },
+            { dataField: '', text: 'Action',
+                formatter: this.actionFormatter },
+        ]
+        this.setState({ columns })
         this.props.fetchJadwalTest();
     }
 
@@ -100,10 +102,11 @@ class JadwalTest extends Component {
             timeStart: waktu,
             timeEnd: expired,
             instansi: row.instansi,
-            keterangan: row.keterangan,
+            keterangan: (row.keterangan) ? row.keterangan : "",
             id: row.id,
             errors: {},
         });
+        
     }
 
     handleEditSubmit(e) {

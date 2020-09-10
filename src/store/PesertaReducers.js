@@ -34,8 +34,8 @@ const peserta = {
                     }
                 })
         },
-        async exportPeserta(params) {
-            await GetData('peserta-test/',params)
+        async exportPeserta(payload) {
+            await GetData(payload.route, payload.params)
                 .then((result)=>{
                     if(result.download !== undefined) {
                         let string = result.download.search("file="),
