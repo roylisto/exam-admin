@@ -7,6 +7,10 @@ import TabelPeserta from "../../components/Tabel/Tabel";
 import Modal from "../../components/Modal/ModalInputPeserta";
 import Loading from "../../components/Loading";
 import { emailFormatter, phoneNumberFormatter } from "../../modules/Formatter";
+// ASSETS 
+import download from "../../assets/images/save.svg"
+import plus from "../../assets/images/plus.svg"
+import { filter } from 'lodash';
 
 const Header = styled.div`{
     display : flex;
@@ -22,7 +26,7 @@ const Header = styled.div`{
         border-radius: 0;
     }
     button {
-        width: 150px;
+        font-size: 15px;
     }
 }`;
 
@@ -194,6 +198,7 @@ class Peserta extends Component {
                 this.setState({
                     disabled: false,
                     dataInput: {
+                        email : dataInput.email,
                         nama : '',
                         no_hp : '',
                         jenis_kelamin : '',
@@ -244,9 +249,13 @@ class Peserta extends Component {
         }
     }
 
-    handleExport() {
+    handleExport(route) {
         let { filterID } = this.state;
-        this.props.exportPeserta(filterID);
+        let payload = {
+            route : route,
+            params : filterID
+        }
+        this.props.exportPeserta(payload);
     }
 
     render() {
@@ -270,12 +279,23 @@ class Peserta extends Component {
                         </select>
                     </form>
                     <div>
-                        <Button white onClick={this.handleExport} disabled={this.state.filterID === ""}>
-                            <img src={require("../../assets/images/save.svg")} />
-                            Export list
+                        <Button white 
+                            onClick={()=>this.handleExport("jawaban-test/")} 
+                            disabled={this.state.filterID === ""}>
+                            <img src={download} />
+                            Export Jawaban
                         </Button>
-                        <Button onClick={this.handleClickModal} disabled={this.state.filter === ""}>
-                            <img src={require("../../assets/images/plus.svg")} />
+                        <Button white 
+                            onClick={()=>this.handleExport("peserta-test/")} 
+                            disabled={this.state.filterID === ""}>
+                            <img src={download} />
+                            Export Peserta
+                        </Button>
+                        <Button 
+                            style={{width:"150px"}}
+                            onClick={this.handleClickModal} 
+                            disabled={this.state.filter === ""}>
+                            <img src={plus} />
                             Input Peserta
                         </Button>
                     </div>
