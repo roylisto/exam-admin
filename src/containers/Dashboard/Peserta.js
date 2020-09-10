@@ -10,7 +10,6 @@ import { emailFormatter, phoneNumberFormatter } from "../../modules/Formatter";
 // ASSETS 
 import download from "../../assets/images/save.svg"
 import plus from "../../assets/images/plus.svg"
-import { filter } from 'lodash';
 
 const Header = styled.div`{
     display : flex;
@@ -94,6 +93,26 @@ class Peserta extends Component {
                 errorMsg: this.props.errorMsg,
             });
         }
+        // saat ada update data peserta by email
+        if (prevProps.dataPeserta !== this.props.dataPeserta && this.props.dataPeserta !== null) {
+            
+            let dataPeserta =  this.props.dataPeserta
+            let tanggal_lahir = new Date(dataPeserta.tanggal_lahir);
+            let jenis_kelamin = (dataPeserta.jenis_kelamin) ? dataPeserta.jenis_kelamin.toLowerCase() : "pria"
+            
+            this.setState(prevState => ({
+                disabled : false,
+                dataInput: {
+                    ...prevState.dataInput,
+                    nama : dataPeserta.nama,
+                    no_hp : dataPeserta.no_hp,
+                    jenis_kelamin,
+                    tanggal_lahir,
+                    kelompok : dataPeserta.kelompok,
+                    instansi : dataPeserta.instansi,
+                }
+            }));
+        }
     }
 
     handleClickModal() {
@@ -158,9 +177,9 @@ class Peserta extends Component {
         }))
     }
 
-    handleCek(e) {
+    async handleCek(e) {
         e.preventDefault();
-        let { data, dataInput } = this.state;
+        let { dataInput } = this.state;
 
         if(dataInput.email === ""){
             this.setState({ 
@@ -174,40 +193,10 @@ class Peserta extends Component {
             })
         }
         else {
-            let dataPeserta =  data.filter(function(val) {
-                return val.email === dataInput.email;
-            });
-            
-            if(dataPeserta[0] !== undefined){
-                let tanggal_lahir = new Date(dataPeserta[0].tanggal_lahir);
-                
-                this.setState(prevState => ({
-                    disabled : false,
-                    dataInput: {
-                        ...prevState.dataInput,
-                        nama : dataPeserta[0].nama,
-                        no_hp : dataPeserta[0].no_hp,
-                        jenis_kelamin : (dataPeserta[0].jenis_kelamin) ? dataPeserta[0].jenis_kelamin : "pria",
-                        tanggal_lahir,
-                        kelompok : dataPeserta[0].kelompok,
-                        instansi : dataPeserta[0].instansi,
-                    }
-                }));
-            }
-            else {
-                this.setState({
-                    disabled: false,
-                    dataInput: {
-                        email : dataInput.email,
-                        nama : '',
-                        no_hp : '',
-                        jenis_kelamin : '',
-                        tanggal_lahir : '',
-                        kelompok : '',
-                        instansi : '',
-                    }
-                });
-            }
+            await this.props.getPesertaByEmail(dataInput.email)
+            this.setState({
+                disabled : false
+            })
         }
     }
     
@@ -336,6 +325,7 @@ const mapState = state => ({
     data: state.peserta.data,
     jadwalTest: state.jadwalTest.data,
     errorMsg: state.peserta.errorMsg,
+    dataPeserta: state.peserta.dataPeserta
 })
 
 const mapDispatch = dispatch => ({
@@ -347,6 +337,8 @@ const mapDispatch = dispatch => ({
         dispatch({ type: 'peserta/addPeserta', payload: value }),
     exportPeserta: value =>
         dispatch({ type: 'peserta/exportPeserta', payload: value }),
+    getPesertaByEmail: value =>
+        dispatch({ type: 'peserta/getPesertaByEmail', payload: value }),
 });
 
 

@@ -5,6 +5,7 @@ const peserta = {
         data : [], // all data peserta
         status : "",
         errorMsg : "",
+        dataPeserta : null // data find peserta by email
     },
     reducers : {
         SET_PESERTALIST(state, payload) { // list peserta
@@ -55,6 +56,14 @@ const peserta = {
                             a.download = filename;
                             a.click();
                         })
+                    }
+                })
+        },
+        async getPesertaByEmail(params) {
+            await GetData('users?email=',params)
+                .then((result)=>{
+                    if(result.status === "OK" && Object.keys(result.data).length !== 0) {
+                        dispatch.peserta.SET_PESERTALIST({dataPeserta : result.data});
                     }
                 })
         },
