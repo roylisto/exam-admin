@@ -36,10 +36,15 @@ class ModalInputPeserta extends React.Component {
                                     type="email"
                                     value={this.props.dataInput.email}
                                     onChange={this.props.handleChange}
+                                    onFocus={this.props.onFocus}
                                 />
                                 <p>{this.props.errors.email}</p>
                                 <Button small xs className="float-right" onClick={this.props.handleCek}>
-                                    Cek
+                                    {
+                                        (this.props.isLoading) ? 
+                                        <div className="spinner-border spinner-border-sm" role="status"></div> 
+                                        : "Cek"
+                                    }
                                 </Button>
                             </div>
                             <div className="form-group">

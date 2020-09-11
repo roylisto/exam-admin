@@ -10,7 +10,6 @@ import { emailFormatter, phoneNumberFormatter } from "../../modules/Formatter";
 // ASSETS 
 import download from "../../assets/images/save.svg"
 import plus from "../../assets/images/plus.svg"
-import { filter } from 'lodash';
 
 const Header = styled.div`{
     display : flex;
@@ -71,6 +70,7 @@ class Peserta extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleCek = this.handleCek.bind(this);
         this.handleExport = this.handleExport.bind(this);
+        this.handleOnFocusEmail = this.handleOnFocusEmail.bind(this);
     }
     
     componentDidMount() {
@@ -89,10 +89,31 @@ class Peserta extends Component {
                 loading: false
             });
         }
-        if (prevProps.errorMsg !== this.props.errorMsg && this.props.errorMsg !== "") {
+        if (prevProps.errorMsg !== this.state.errorMsg && this.props.errorMsg !== "") {
             this.setState({
                 errorMsg: this.props.errorMsg,
             });
+        }
+        // saat ada update data peserta by email
+        if (prevProps.dataPeserta !== this.props.dataPeserta && this.props.dataPeserta !== null) {
+            
+            let dataPeserta =  this.props.dataPeserta
+            let tanggal_lahir = new Date(dataPeserta.tanggal_lahir);
+            let jenis_kelamin = (dataPeserta.jenis_kelamin) ? dataPeserta.jenis_kelamin.toLowerCase() : "pria"
+            
+            this.setState(prevState => ({
+                disabled : false,
+                isLoading : false,
+                dataInput: {
+                    ...prevState.dataInput,
+                    nama : dataPeserta.nama,
+                    no_hp : dataPeserta.no_hp,
+                    jenis_kelamin,
+                    tanggal_lahir,
+                    kelompok : dataPeserta.kelompok,
+                    instansi : dataPeserta.instansi,
+                }
+            }));
         }
     }
 
@@ -110,7 +131,8 @@ class Peserta extends Component {
                 tanggal_lahir : '',
                 kelompok : '',
                 instansi : '',
-            }
+            },
+            isLoading : false
         })
     }
     
@@ -158,10 +180,11 @@ class Peserta extends Component {
         }))
     }
 
-    handleCek(e) {
+    async handleCek(e) {
         e.preventDefault();
-        let { data, dataInput } = this.state;
+        let { dataInput } = this.state;
 
+        this.setState({isLoading: true})
         if(dataInput.email === ""){
             this.setState({ 
                 errors: { email : true },
@@ -174,40 +197,11 @@ class Peserta extends Component {
             })
         }
         else {
-            let dataPeserta =  data.filter(function(val) {
-                return val.email === dataInput.email;
-            });
-            
-            if(dataPeserta[0] !== undefined){
-                let tanggal_lahir = new Date(dataPeserta[0].tanggal_lahir);
-                
-                this.setState(prevState => ({
-                    disabled : false,
-                    dataInput: {
-                        ...prevState.dataInput,
-                        nama : dataPeserta[0].nama,
-                        no_hp : dataPeserta[0].no_hp,
-                        jenis_kelamin : (dataPeserta[0].jenis_kelamin) ? dataPeserta[0].jenis_kelamin : "pria",
-                        tanggal_lahir,
-                        kelompok : dataPeserta[0].kelompok,
-                        instansi : dataPeserta[0].instansi,
-                    }
-                }));
-            }
-            else {
-                this.setState({
-                    disabled: false,
-                    dataInput: {
-                        email : dataInput.email,
-                        nama : '',
-                        no_hp : '',
-                        jenis_kelamin : '',
-                        tanggal_lahir : '',
-                        kelompok : '',
-                        instansi : '',
-                    }
-                });
-            }
+            await this.props.getPesertaByEmail(dataInput.email)
+            this.setState({
+                disabled : false,
+                isLoading : false
+            })
         }
     }
     
@@ -256,6 +250,24 @@ class Peserta extends Component {
             params : filterID
         }
         this.props.exportPeserta(payload);
+    }
+
+    handleOnFocusEmail() {
+        this.setState({
+            disabled: true,
+            errors: {},
+            errorMsg : "",
+            dataInput: {
+                nama : '',
+                email : '',
+                no_hp : '',
+                jenis_kelamin : '',
+                tanggal_lahir : '',
+                kelompok : '',
+                instansi : '',
+            }
+        })
+        this.props.SET_ERROR_STATUS({errorMsg : ""})
     }
 
     render() {
@@ -325,6 +337,8 @@ class Peserta extends Component {
                     handleSubmit={this.handleSubmit}
                     handleChangeDate={this.handleChangeDate}
                     errorMsg={this.state.errorMsg}
+                    onFocus={this.handleOnFocusEmail}
+                    isLoading={this.state.isLoading}
                 />
             </React.Fragment>
         )
@@ -336,6 +350,7 @@ const mapState = state => ({
     data: state.peserta.data,
     jadwalTest: state.jadwalTest.data,
     errorMsg: state.peserta.errorMsg,
+    dataPeserta: state.peserta.dataPeserta
 })
 
 const mapDispatch = dispatch => ({
@@ -347,6 +362,10 @@ const mapDispatch = dispatch => ({
         dispatch({ type: 'peserta/addPeserta', payload: value }),
     exportPeserta: value =>
         dispatch({ type: 'peserta/exportPeserta', payload: value }),
+    getPesertaByEmail: value =>
+        dispatch({ type: 'peserta/getPesertaByEmail', payload: value }),
+    SET_ERROR_STATUS: value =>
+        dispatch({ type: 'peserta/SET_ERROR_STATUS', payload: value }),
 });
 
 
