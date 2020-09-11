@@ -62,9 +62,6 @@ const admin = {
                     if(result.status === "OK") {
                         dispatch.admin.SET_LIST_ADMIN({userAdminList : result.data});
                     }
-                    else {
-                        dispatch.admin.updateError({errorMsg : result.error});
-                    }
                 })
         },
         async addUserAdmin(payload) {
@@ -72,7 +69,7 @@ const admin = {
                 .then((result)=>{
                     if(result.status === "OK") {
                         dispatch.admin.SET_LIST_ADMIN({message : result.message});
-                        window.location.reload();
+                        dispatch.admin.fetchListAdmin();
                     }
                     else {
                         dispatch.admin.updateError({errorMsg : "Internal Server Error"});
@@ -83,7 +80,7 @@ const admin = {
             await UpdateData('admin',data)
                 .then((result)=>{
                     if(result.status === "OK") {
-                        window.location.reload();
+                        dispatch.admin.fetchListAdmin();
                     }
                     else {
                         dispatch.admin.updateError({errorMsg :"Internal Server Error"});
@@ -94,7 +91,7 @@ const admin = {
             await DeleteData('admin',id)
                 .then((result)=>{
                     if(result.status === "OK") {
-                        window.location.reload();
+                        dispatch.admin.fetchListAdmin();
                     }
                     else {
                         dispatch.admin.updateError({errorMsg :"Internal Server Error"});

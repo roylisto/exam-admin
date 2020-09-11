@@ -74,7 +74,10 @@ const ModalUserAdmin = (props) => {
                             </div>
                         }
                         <Button small onClick={props.handleSubmit}>
-                            Selesai
+                            {
+                                (props.isLoading) ? 
+                                <div className="spinner-border spinner-border-sm" role="status"></div> : "Selesai"
+                            }
                         </Button>
                     </form>
                 </div>

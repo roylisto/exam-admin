@@ -27,7 +27,6 @@ const jadwalTest = {
                 .then((result)=>{
                     if(result.status === "OK") {
                         dispatch.jadwalTest.UPDATE_JADWAL_TEST({status : "add-jadwal-test"});
-                        // window.location.reload();
                         dispatch.jadwalTest.fetchJadwalTest()
                     }
                 })
@@ -37,7 +36,6 @@ const jadwalTest = {
                 .then((result)=>{
                     if(result.status === "OK") {
                         dispatch.jadwalTest.UPDATE_JADWAL_TEST({status : "edit-jadwal-test"});
-                        // window.location.reload();
                         dispatch.jadwalTest.fetchJadwalTest()
                     }
                 })
@@ -47,7 +45,6 @@ const jadwalTest = {
                 .then((result)=>{
                     if(result.status === "OK") {
                         dispatch.jadwalTest.UPDATE_JADWAL_TEST({status : "hapus-jadwal-test"});
-                        // window.location.reload();
                         dispatch.jadwalTest.fetchJadwalTest()
                     }
                 })
