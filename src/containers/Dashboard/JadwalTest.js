@@ -31,6 +31,7 @@ class JadwalTest extends Component {
             instansi: '',
             keterangan: '',
             errors: {},
+            isLoading: false
         }
         this.handleClickModal = this.handleClickModal.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -64,14 +65,15 @@ class JadwalTest extends Component {
     componentDidUpdate(prevProps) {
         if (prevProps.data !== this.props.data && this.props.data[0] !== null) {
             this.setState({
-                data: this.props.data,
+                data: this.props.data
             });
+            this.handleCloseModal();
         }
     }
 
     handleHapus() {
         let { id } = this.state;
-
+        this.setState({isLoading:true})
         this.props.hapusJadwalTest(id);
     }
 
@@ -84,6 +86,7 @@ class JadwalTest extends Component {
 
     handleCloseModal() {
         this.setState({
+            isLoading: false,
             showModal: false,
             timeStart: '',
             timeEnd: '',
@@ -122,6 +125,7 @@ class JadwalTest extends Component {
                 },
                 id: id
             }
+            this.setState({isLoading : true})
             this.props.editJadwalTest(data);
         }
     }
@@ -178,6 +182,7 @@ class JadwalTest extends Component {
                 instansi: instansi,
                 keterangan: (keterangan) ? keterangan : "-"
             };
+            this.setState({isLoading : true})
             this.props.addJadwalTest(payload);
         }
     }
@@ -213,6 +218,7 @@ class JadwalTest extends Component {
                         handleSubmit={this.handleSubmit}
                         errors={this.state.errors}
                         title="Add"
+                        isLoading={this.state.isLoading}
                     />
                 );
                 break;
@@ -230,6 +236,7 @@ class JadwalTest extends Component {
                         handleSubmit={this.handleEditSubmit}
                         errors={this.state.errors}
                         title="Edit"
+                        isLoading={this.state.isLoading}
                     />
                 );
                 break;
@@ -240,6 +247,7 @@ class JadwalTest extends Component {
                         handleCloseModal={this.handleCloseModal}
                         showModal={this.state.showModal}
                         handleHapus={this.handleHapus}
+                        isLoading={this.state.isLoading}
                     />
                 );
                 break;
