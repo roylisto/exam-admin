@@ -70,6 +70,7 @@ class Peserta extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleCek = this.handleCek.bind(this);
         this.handleExport = this.handleExport.bind(this);
+        this.handleOnFocusEmail = this.handleOnFocusEmail.bind(this);
     }
     
     componentDidMount() {
@@ -88,7 +89,7 @@ class Peserta extends Component {
                 loading: false
             });
         }
-        if (prevProps.errorMsg !== this.props.errorMsg && this.props.errorMsg !== "") {
+        if (prevProps.errorMsg !== this.state.errorMsg && this.props.errorMsg !== "") {
             this.setState({
                 errorMsg: this.props.errorMsg,
             });
@@ -102,6 +103,7 @@ class Peserta extends Component {
             
             this.setState(prevState => ({
                 disabled : false,
+                isLoading : false,
                 dataInput: {
                     ...prevState.dataInput,
                     nama : dataPeserta.nama,
@@ -129,7 +131,8 @@ class Peserta extends Component {
                 tanggal_lahir : '',
                 kelompok : '',
                 instansi : '',
-            }
+            },
+            isLoading : false
         })
     }
     
@@ -181,6 +184,7 @@ class Peserta extends Component {
         e.preventDefault();
         let { dataInput } = this.state;
 
+        this.setState({isLoading: true})
         if(dataInput.email === ""){
             this.setState({ 
                 errors: { email : true },
@@ -195,7 +199,8 @@ class Peserta extends Component {
         else {
             await this.props.getPesertaByEmail(dataInput.email)
             this.setState({
-                disabled : false
+                disabled : false,
+                isLoading : false
             })
         }
     }
@@ -245,6 +250,24 @@ class Peserta extends Component {
             params : filterID
         }
         this.props.exportPeserta(payload);
+    }
+
+    handleOnFocusEmail() {
+        this.setState({
+            disabled: true,
+            errors: {},
+            errorMsg : "",
+            dataInput: {
+                nama : '',
+                email : '',
+                no_hp : '',
+                jenis_kelamin : '',
+                tanggal_lahir : '',
+                kelompok : '',
+                instansi : '',
+            }
+        })
+        this.props.SET_ERROR_STATUS({errorMsg : ""})
     }
 
     render() {
@@ -314,6 +337,8 @@ class Peserta extends Component {
                     handleSubmit={this.handleSubmit}
                     handleChangeDate={this.handleChangeDate}
                     errorMsg={this.state.errorMsg}
+                    onFocus={this.handleOnFocusEmail}
+                    isLoading={this.state.isLoading}
                 />
             </React.Fragment>
         )
@@ -339,6 +364,8 @@ const mapDispatch = dispatch => ({
         dispatch({ type: 'peserta/exportPeserta', payload: value }),
     getPesertaByEmail: value =>
         dispatch({ type: 'peserta/getPesertaByEmail', payload: value }),
+    SET_ERROR_STATUS: value =>
+        dispatch({ type: 'peserta/SET_ERROR_STATUS', payload: value }),
 });
 
 

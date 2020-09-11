@@ -64,6 +64,10 @@ const peserta = {
                 .then((result)=>{
                     if(result.status === "OK" && Object.keys(result.data).length !== 0) {
                         dispatch.peserta.SET_PESERTALIST({dataPeserta : result.data});
+                        return;
+                    }
+                    if(result.messages !== "") {
+                        dispatch.peserta.SET_ERROR_STATUS({errorMsg : result.messages})
                     }
                 })
         },
