@@ -163,9 +163,11 @@ module.exports = {
   },
 
   welcomeEmail: async (req, res) => {
+    const to = req.params.email;
+    
     const data = {
       from: "support-staging@educasia.id", // sender address
-      to: email, // list of receivers
+      to: to, // list of receivers
       subject: `Selamat datang peserta ${process.env.APP_NAME}`, // Subject line
       text: "Selamat anda telah ditambahkan dalam ujian tes minat bakat.", // plain text body
       html: "<b>Hello world?</b>", // html body
