@@ -91,7 +91,6 @@ class ModalInputPeserta extends React.Component {
                                     showMonthDropdown
                                     showYearDropdown
                                     dropdownMode="select"
-                                    shouldCloseOnSelect={false}
                                     dateFormat="MM/dd/yyyy"
                                     className={`form-control input-icon ${this.props.errors.tanggal_lahir ? "invalid" : ""}`}
                                     id="tanggal_lahir"

@@ -28,10 +28,10 @@ const peserta = {
             await PostData('users/peserta',payload)
                 .then((result)=>{
                     if(result.status === "OK") {
-                        window.location.reload();
+                        dispatch.peserta.fetchPesertaList(payload.jadwal_test);
                     }
-                    else if (result.status === "ERROR") {
-                        dispatch.peserta.SET_ERROR_STATUS({errorMsg : result.messages})
+                    else {
+                        dispatch.peserta.SET_ERROR_STATUS({errorMsg : "Internal Server Error"});
                     }
                 })
         },

@@ -81,6 +81,7 @@ class Peserta extends Component {
         if (prevProps.data !== this.props.data && this.props.data[0] !== null) {
             this.setState({
                 data: this.props.data,
+                showModal: false,
             });
         }
         if (prevProps.jadwalTest !== this.props.jadwalTest && this.props.jadwalTest[0] !== null) {
@@ -89,7 +90,7 @@ class Peserta extends Component {
                 loading: false
             });
         }
-        if (prevProps.errorMsg !== this.state.errorMsg && this.props.errorMsg !== "") {
+        if (prevProps.errorMsg !== this.props.errorMsg && this.props.errorMsg !== "") {
             this.setState({
                 errorMsg: this.props.errorMsg,
             });
@@ -188,12 +189,14 @@ class Peserta extends Component {
         if(dataInput.email === ""){
             this.setState({ 
                 errors: { email : true },
-                errorMsg : "Data tidak boleh kosong."
+                errorMsg : "Data tidak boleh kosong.",
+                isLoading: false
             });
         }
         else if(!emailFormatter(dataInput.email)){
             this.setState({
-                errors: { email : "Format email salah !"}
+                errors: { email : "Format email salah !"},
+                isLoading: false
             })
         }
         else {
