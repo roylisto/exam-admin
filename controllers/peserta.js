@@ -1,5 +1,5 @@
 const { peserta, jadwalTest, sequelize } = require('../database/models/index.js');
-// const { QueryTypes } = require('sequelize');
+const email_helper = require('../helpers/email');
 const randomstring = require("randomstring");
 const moment = require('moment');
 
@@ -160,5 +160,19 @@ module.exports = {
         data: {}
       });
     });
+  },
+
+  welcomeEmail: async (req, res) => {
+    const data = {
+      from: "support-staging@educasia.id", // sender address
+      to: email, // list of receivers
+      subject: `Selamat datang peserta ${process.env.APP_NAME}`, // Subject line
+      text: "Selamat anda telah ditambahkan dalam ujian tes minat bakat.", // plain text body
+      html: "<b>Hello world?</b>", // html body
+    }
+
+    email_helper.sendEmail(data).catch(console.error);
+
+    res.send('ok')
   }
 }
