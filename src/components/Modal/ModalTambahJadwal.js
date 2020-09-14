@@ -36,7 +36,7 @@ class ModalTambahJadwal extends Component {
                                 <label>Waktu Mulai</label>
                                 <DatePicker
                                     showTimeInput
-                                    shouldCloseOnSelect={false}
+                                    // shouldCloseOnSelect={false}
                                     dateFormat="MM/dd/yyyy hh:mm aa"
                                     className={`form-control input-icon ${this.props.errors.timeStart ? "invalid" : ""}`}
                                     id="timeStart"
@@ -50,7 +50,7 @@ class ModalTambahJadwal extends Component {
                                 <label>Waktu Berakhir</label>
                                 <DatePicker
                                     showTimeInput
-                                    shouldCloseOnSelect={false}
+                                    // shouldCloseOnSelect={false}
                                     dateFormat="MM/dd/yyyy hh:mm aa"
                                     className={`form-control input-icon ${this.props.errors.timeEnd ? "invalid" : ""}`}
                                     id="timeEnd"
@@ -72,7 +72,10 @@ class ModalTambahJadwal extends Component {
                                 />
                             </div>
                             <Button small onClick={this.props.handleSubmit}>
-                                Selesai
+                                {
+                                    (this.props.isLoading) ? 
+                                    <div className="spinner-border spinner-border-sm" role="status"></div> : "Selesai"
+                                }
                             </Button>
                         </form>
                     </div>

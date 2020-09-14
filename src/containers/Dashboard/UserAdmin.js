@@ -39,7 +39,8 @@ class UserAdmin extends Component {
             newPassword: '',
             errorMsg: '',
             id: '',
-            type:"password"
+            type:"password",
+            isLoading: false
         }
         this.handleClickModal = this.handleClickModal.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -70,11 +71,14 @@ class UserAdmin extends Component {
             this.setState({
                 data: this.props.data,
             });
+            this.handleCloseModal()
         }
         if (prevProps.errorMsg !== this.props.errorMsg && this.props.errorMsg !== "") {
             this.setState({
                 errorMsg: this.props.errorMsg,
+                isLoading: false
             });
+            this.props.updateError({errorMsg : ""})
         }
     }
 
@@ -98,6 +102,7 @@ class UserAdmin extends Component {
 
     handleCloseModal() {
         this.setState({
+            isLoading: false,
             showModal: false,
             errors: {},
             nama: '',
@@ -159,6 +164,7 @@ class UserAdmin extends Component {
 
         if(!this.formValidate(dataInput)) return;
         
+        this.setState({isLoading:true});
         const payload = {
             name: nama,
             email: email,
@@ -179,6 +185,7 @@ class UserAdmin extends Component {
         
         if(!this.formValidate({})) return;
         
+        this.setState({isLoading:true});
         for(let i = 0; i<propertyNames.length; i++){
             if(propertyValues[i] !== ""){
                 payload[propertyNames[i]] = propertyValues[i];
@@ -194,7 +201,7 @@ class UserAdmin extends Component {
     
     handleHapus() {
         let { id } = this.state;
-        
+        this.setState({isLoading:true});
         this.props.hapusUserAdmin(id);
     }
         
@@ -233,6 +240,7 @@ class UserAdmin extends Component {
                         errorMsg={this.state.errorMsg}
                         showHide={this.showHide}
                         type={this.state.type}
+                        isLoading={this.state.isLoading}
                     />
                 );
                 break;
@@ -251,6 +259,7 @@ class UserAdmin extends Component {
                         errorMsg={this.state.errorMsg}
                         showHide={this.showHide}
                         type={this.state.type}
+                        isLoading={this.state.isLoading}
                     />
                 );
                 break;
@@ -261,6 +270,7 @@ class UserAdmin extends Component {
                         handleCloseModal={this.handleCloseModal}
                         showModal={this.state.showModal}
                         handleHapus={this.handleHapus}
+                        isLoading={this.state.isLoading}
                     />
                 );
                 break;
@@ -305,6 +315,8 @@ const mapDispatch = dispatch => ({
         dispatch({ type: 'admin/editUserAdmin', payload: value }),
     hapusUserAdmin: (value) =>
         dispatch({ type: 'admin/hapusUserAdmin', payload: value }),
+    updateError: (value) =>
+        dispatch({ type: 'admin/updateError', payload: value }),
 });
 
 export default connect(mapState, mapDispatch)(UserAdmin)

@@ -12,7 +12,10 @@ const ModalHapus = (props) => {
                     <p>Anda yakin akan menghapus<br /> {props.type} ini ? </p>
                     <div>
                         <Button white small xs onClick={props.handleHapus}>
-                            Ya
+                            {
+                                (props.isLoading) ? 
+                                <div className="spinner-border spinner-border-sm mb-1" role="status"></div> : "Ya"
+                            }
                         </Button>
                         <Button white small xs onClick={props.handleCloseModal}>
                             Tidak
