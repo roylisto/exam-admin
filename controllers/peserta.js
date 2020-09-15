@@ -54,12 +54,12 @@ module.exports = {
           message: 'Jadwal test not found!'
         });
       }
-
+      
       const list_peserta = await db.sequelize.query("SELECT * FROM user JOIN peserta ON user.email=peserta.email WHERE peserta.jadwal_test=?", {
         replacements: [event_test.id],
-        type: sequelize.QueryTypes.SELECT
+        type: db.sequelize.QueryTypes.SELECT
       });
-            
+      
       const jumlah_peserta = await db.peserta.count({
         where: { jadwal_test: event_test.id }
       });
