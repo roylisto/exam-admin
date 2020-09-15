@@ -43,7 +43,7 @@ module.exports = (router) => {
   router.get('/peserta/test/:id', [IsAuthenticated], peserta.getList); //list get peserta with params id jadwal test
   router.post('/peserta', [IsAuthenticated], peserta.create);
   router.delete('/peserta/:id', [IsAuthenticated], peserta.delete);
-  router.post('/peserta/welcome-email/:jadwaltest/:email', peserta.welcomeEmail); //send welcome email to peserta
+  router.post('/peserta/welcome-email/:jadwaltest/:email', [IsAuthenticated], peserta.welcomeEmail); //send welcome email to peserta
 
   //route jadwal test
   router.get('/jadwal-test', [IsAuthenticated], jadwalTest.list);
