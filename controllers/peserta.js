@@ -1,11 +1,14 @@
-const { peserta, jadwalTest, sequelize } = require('../database/models/index.js');
-// const { QueryTypes } = require('sequelize');
+const db = require('../database/models/index.js');
+const email_helper = require('../helpers/email');
 const randomstring = require("randomstring");
 const moment = require('moment');
 
+const welcomeEmailTemplate = data => {
+  return ``
+}
 module.exports = {
   list: (req, res) => {
-    peserta.findAll().then( result => {
+    db.peserta.findAll().then( result => {
       res.json({
           status: 'OK',
           messages: '',
@@ -22,7 +25,7 @@ module.exports = {
 
   get: async (req, res) => {
     try {
-      const account_peserta = await peserta.findByPk(req.params.id);
+      const account_peserta = await db.peserta.findByPk(req.params.id);
       if(account_peserta==null) {
         return res.status(404).json({
           status: 'ERROR',
@@ -30,7 +33,7 @@ module.exports = {
           data: {}
         });
       }
-      const account = await peserta.getAccount(account_peserta.email, account_peserta.id);
+      const account = await db.peserta.getAccount(account_peserta.email, account_peserta.id);
 
       return res.json({
         status: 'OK',
@@ -48,19 +51,19 @@ module.exports = {
 
   getList: async (req, res) => {
     try {
-      const event_test = await jadwalTest.findByPk(req.params.id);    
+      const event_test = await db.jadwalTest.findByPk(req.params.id);    
       if(event_test === null) {
         return res.status(404).json({
           message: 'Jadwal test not found!'
         });
       }
 
-      const list_peserta = await sequelize.query("SELECT * FROM user JOIN peserta ON user.email=peserta.email WHERE peserta.jadwal_test=?", {
+      const list_peserta = await db.sequelize.query("SELECT * FROM user JOIN peserta ON user.email=peserta.email WHERE peserta.jadwal_test=?", {
         replacements: [event_test.id],
         type: sequelize.QueryTypes.SELECT
       });
             
-      const jumlah_peserta = await peserta.count({
+      const jumlah_peserta = await db.peserta.count({
         where: { jadwal_test: event_test.id }
       });
       
@@ -86,7 +89,7 @@ module.exports = {
       let { user_email, jadwal_test } = req.body
       let calon_peseta = []
 
-      let test = await jadwalTest.findByPk(jadwal_test);
+      let test = await db.jadwalTest.findByPk(jadwal_test);
 
       user_email.forEach(row => {
         calon_peseta.push({
@@ -98,7 +101,7 @@ module.exports = {
         });
       });
 
-      peserta.bulkCreate(calon_peseta);
+      db.peserta.bulkCreate(calon_peseta);
 
       res.json({
         status: 'OK',
@@ -116,7 +119,7 @@ module.exports = {
 
   update: async (req, res) => {
     try {
-      const query = await peserta.update({
+      const query = await db.peserta.update({
         valid: req.body.valid,
         expired: req.body.expired
       }, { where: {id: req.params.id} });
@@ -143,7 +146,7 @@ module.exports = {
   },
 
   delete: (req, res) => {
-    peserta.destroy({
+    db.peserta.destroy({
       where: {
         id: req.params.id
       }
@@ -160,5 +163,54 @@ module.exports = {
         data: {}
       });
     });
+  },
+
+  welcomeEmail: async (req, res) => {
+    try {
+      const to = req.params.email;
+      const id_jadwaltest = req.params.jadwaltest;
+      
+      const event = await db.jadwalTest.findByPk(id_jadwaltest);
+      const peserta = await db.peserta.findOne({where: {email: to, jadwal_test: id_jadwaltest}});
+
+      if(!event || !peserta) {
+        return res.status(404).json({
+          messages: 'jadwal test atau email peserta tidak ditemukan!',
+          data: {}
+        })
+      }
+
+      const user = await db.user.findOne({where: {email: to}});
+
+      const data = {
+        tanggal: moment(event.waktu).format('DD-MM-YYYY [jam] HH:mm [WIB]'),
+        nama: user.nama,
+        password: peserta.password
+      }
+      
+      const html = email_helper.welcomeTemplate(data);
+      
+      const data_email = {
+        from: process.env.EMAIL_USER, // sender address
+        to: to, // list of receivers
+        subject: `Selamat datang peserta ${process.env.APP_NAME}`, // Subject line
+        text: `Selamat anda telah ditambahkan dalam ujian tes minat bakat ${process.env.APP_NAME}.`, // plain text body
+        html: html, // html body
+      }
+
+      email_helper.sendEmail(data_email);
+
+      res.json({
+        status: 'OK',
+        messages: 'Email terkirim.',
+        data: {}
+      });
+    } catch (err) {
+      res.status(500).json({
+        status: 'ERROR',
+        messages: err,
+        data: {}
+      });
+    }
   }
 }
