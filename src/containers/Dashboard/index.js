@@ -9,7 +9,8 @@ import Sidebar from '../../components/Sidebar';
 import JadwalTest from "./JadwalTest";
 import SidebarIcon from "../../assets/images/sidebarmenu.svg";
 import Peserta from './Peserta';
-import UserAdmin from "./UserAdmin"
+import UserAdmin from "./UserAdmin";
+import { NotificationContainer } from 'react-notifications';
 
 const ButtonSidebar = styled.button`{
     transform: rotate(90deg) scaleY(-1);
@@ -55,6 +56,7 @@ class Dashboard extends Component {
     render() {
         return (
             <React.Fragment>
+                <NotificationContainer />
                 <ButtonSidebar
                     minimize={this.state.minimize}
                     onClick={this.handleMinimize}
