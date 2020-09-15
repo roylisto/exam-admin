@@ -4,7 +4,7 @@ import {
     DeleteData,
     UpdateData
 } from "../services/Agent"
-import { parseJwt } from "../modules/utils"
+import { parseJwt, alertNotification } from "../modules/utils"
 
 const admin = {
     state : {
@@ -70,9 +70,19 @@ const admin = {
                     if(result.status === "OK") {
                         dispatch.admin.SET_LIST_ADMIN({message : result.message});
                         dispatch.admin.fetchListAdmin();
+                        alertNotification(
+                            "success",
+                            "",
+                            "Data Berhasil Ditambahkan"
+                        );
                     }
                     else {
-                        dispatch.admin.updateError({errorMsg : "Internal Server Error"});
+                        dispatch.admin.updateError({errorMsg : "Data Input Tidak Valid"});
+                        alertNotification(
+                            "error",
+                            "",
+                            "Data Input Tidak Valid"
+                        );
                     }
                 })
         },
@@ -81,9 +91,19 @@ const admin = {
                 .then((result)=>{
                     if(result.status === "OK") {
                         dispatch.admin.fetchListAdmin();
+                        alertNotification(
+                            "success",
+                            "",
+                            "Perubahan data disimpan."
+                        );
                     }
                     else {
-                        dispatch.admin.updateError({errorMsg :"Internal Server Error"});
+                        dispatch.admin.updateError({errorMsg :"Data Input Tidak Valid"});
+                        alertNotification(
+                            "error",
+                            "",
+                            "Data Input Tidak Valid"
+                        );
                     }
                 })
         },
@@ -92,9 +112,18 @@ const admin = {
                 .then((result)=>{
                     if(result.status === "OK") {
                         dispatch.admin.fetchListAdmin();
+                        alertNotification(
+                            "success",
+                            "",
+                            "Data berhasil di Hapus."
+                        );
                     }
                     else {
-                        dispatch.admin.updateError({errorMsg :"Internal Server Error"});
+                        alertNotification(
+                            "error",
+                            "",
+                            "Internal Server Error"
+                        );
                     }
                 })
         }

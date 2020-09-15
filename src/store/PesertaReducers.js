@@ -1,4 +1,5 @@
 import { GetData, PostData } from "../services/Agent"
+import { alertNotification } from "../modules/utils"
 
 const peserta = {
     state : {
@@ -29,9 +30,19 @@ const peserta = {
                 .then((result)=>{
                     if(result.status === "OK") {
                         dispatch.peserta.fetchPesertaList(payload.jadwal_test);
+                        alertNotification(
+                            "success",
+                            "",
+                            "Data Berhasil Ditambahkan"
+                        );
                     }
                     else {
-                        dispatch.peserta.SET_ERROR_STATUS({errorMsg : "Internal Server Error"});
+                        dispatch.peserta.SET_ERROR_STATUS({errorMsg : "Data input tidak valid"});
+                        alertNotification(
+                            "Error",
+                            "",
+                            "Internal Server Error"
+                        );
                     }
                 })
         },
@@ -68,6 +79,11 @@ const peserta = {
                     }
                     if(result.messages !== "") {
                         dispatch.peserta.SET_ERROR_STATUS({errorMsg : result.messages})
+                        alertNotification(
+                            "error",
+                            "",
+                            "Data Tidak Ditemukan"
+                        );
                     }
                 })
         },

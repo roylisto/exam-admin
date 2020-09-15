@@ -6,10 +6,12 @@ import {
   Route
 } from 'react-router-dom';
 import routes from './routes';
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./assets/scss/style.scss";
 import { connect } from 'react-redux';
 import { dispatch } from "./store";
+// ASSETS 
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./assets/scss/style.scss";
+import 'react-notifications/lib/notifications.css';
 // COMPONENTS
 import Loading from './components/Loading';
 import ProtectedRoute from './modules/ProtectedRoute'
