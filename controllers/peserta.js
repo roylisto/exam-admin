@@ -169,9 +169,9 @@ module.exports = {
     try {
       const to = req.params.email;
       const id_jadwaltest = req.params.jadwaltest;
-
-      const event = db.jadwalTest.findOne({id: id_jadwaltest});
-      const peserta = db.peserta.findOne({email: to, jadwal_test: id_jadwaltest});
+      
+      const event = await db.jadwalTest.findByPk(id_jadwaltest);
+      const peserta = await db.peserta.findOne({where: {email: to, jadwal_test: id_jadwaltest}});
 
       if(!event || !peserta) {
         return res.status(404).json({
@@ -180,23 +180,25 @@ module.exports = {
         })
       }
 
+      const user = await db.user.findOne({where: {email: to}});
+
       const data = {
         tanggal: moment(event.waktu).format('DD-MM-YYYY [jam] HH:mm [WIB]'),
-        nama: peserta.nama,
+        nama: user.nama,
         password: peserta.password
       }
-
+      
       const html = email_helper.welcomeTemplate(data);
-      return res.send(html)
+      
       const data_email = {
-        from: "support-staging@educasia.id", // sender address
+        from: process.env.EMAIL_USER, // sender address
         to: to, // list of receivers
         subject: `Selamat datang peserta ${process.env.APP_NAME}`, // Subject line
         text: `Selamat anda telah ditambahkan dalam ujian tes minat bakat ${process.env.APP_NAME}.`, // plain text body
         html: html, // html body
       }
 
-      email_helper.sendEmail(data_email).catch(console.error);
+      email_helper.sendEmail(data_email);
 
       res.json({
         status: 'OK',

@@ -17,19 +17,20 @@ module.exports = {
     //   },
     // });
     let transporter = nodemailer.createTransport({
-      host: "smtp.yandex.ru",
-      port: 465,
-      secure: true, // true for 465, false for other ports
+      host: process.env.EMAIL_HOST,
+      port: process.env.EMAIL_PORT,
+      secure: process.env.EMAIL_SECURE, 
       auth: {
-        user: "support-staging@educasia.id", // generated ethereal user
-        pass: "Palembang#2020", // generated ethereal password
+        user: process.env.EMAIL_USER, 
+        pass: process.env.EMAIL_PASSWORD, 
       },
     });
 
     // send mail with defined transport object
-    let info = await transporter.sendMail(data);
+    // let info = await transporter.sendMail(data);
+    transporter.sendMail(data).catch(console.error);
 
-    console.log("Message sent: %s", info.messageId);
+    // console.log("Message sent: %s", info.messageId);
     // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 
     // Preview only available when sending through an Ethereal account
@@ -325,7 +326,7 @@ module.exports = {
     <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
     <td class="logo" style="text-align: center;">
-    <h1><a href="#">${process.env.APP_NAME}</a></h1>
+    <h1><a href="${process.env.APP_TEST_URL}">${process.env.APP_NAME}</a></h1>
     </td>
     </tr>
     </table>
