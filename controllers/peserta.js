@@ -3,9 +3,6 @@ const email_helper = require('../helpers/email');
 const randomstring = require("randomstring");
 const moment = require('moment');
 
-const welcomeEmailTemplate = data => {
-  return ``
-}
 module.exports = {
   list: (req, res) => {
     db.peserta.findAll().then( result => {
