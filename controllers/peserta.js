@@ -116,17 +116,17 @@ module.exports = {
 
   update: async (req, res) => {
     try {
-      const query = await db.peserta.update({
-        valid: req.body.valid,
-        expired: req.body.expired
-      }, { where: {id: req.params.id} });
-      if(query==null) {
-        return res.status(400).json({
+      const peserta = await db.peserta.findByPk(req.params.id);
+
+      if(!peserta)
+        return res.status(404).json({
           status: 'ERROR',
-          messages: 'field update not match',
+          messages: 'Data not found!',
           data: {}
         });
-      }
+        
+      await db.peserta.update(req.body, { where: {id: req.params.id} });
+      await db.user.update(req.body, {where: {email: peserta.email}});
 
       return res.json({
         status: 'OK',
@@ -142,24 +142,51 @@ module.exports = {
     }
   },
 
-  delete: (req, res) => {
-    db.peserta.destroy({
-      where: {
-        id: req.params.id
+  delete: async (req, res) => {
+    try {
+      const peserta = await db.peserta.findByPk(req.params.id);
+      
+      if(!peserta) {
+        return res.status(404).json({
+          messages: 'Peserta not found!',
+          data: {}
+        })
       }
-    }).then( result => {
-      res.json({
-        status: 'OK',
-        messages: 'Success delete data.',
-        data: {}
-      });
-    }).catch( err => {
+      console.log("id:", peserta.jadwal_test)
+      const jadwaltest = await db.jadwalTest.findByPk(peserta.jadwal_test);
+      
+      if(!jadwaltest) {
+        return res.status(404).json({
+          messages: 'Data not found!',
+          data: {}
+        })
+      }
+      
+      if(moment().isSameOrBefore(jadwaltest.waktu)) {
+        await db.peserta.destroy({
+          where: {
+            id: req.params.id
+          }
+        });
+        res.json({
+          status: 'OK',
+          messages: 'Success delete data.',
+          data: {}
+        });
+      } else {
+        res.json({
+          status: 'ERROR',
+          messages: 'delete peserta gagal.',
+          data: {}
+        });
+      }
+    } catch (err) {
       res.status(500).json({
         status: 'ERROR',
         messages: err,
         data: {}
       });
-    });
+    }
   },
 
   welcomeEmail: async (req, res) => {
