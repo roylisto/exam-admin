@@ -61,8 +61,8 @@ module.exports = (router) => {
   router.get('/download', [IsAuthenticated], download.get);
 
   //delete files
-  router.delete('/files', [IsAuthenticated], file.hasil);
-  router.delete('/uploads', [IsAuthenticated], file.uploads);
+  router.delete('/files', [IsSuperAdmin], file.hasil);
+  router.delete('/uploads', [IsSuperAdmin], file.uploads);
 
   //reset route
   router.delete('/reset/test/:id', [IsAuthenticated], reset.test); //reset seluruh peserta by id jadwaltest
