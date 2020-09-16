@@ -263,6 +263,11 @@ class Peserta extends Component {
             error["no_hp"] = "Format input salah !";
         }
 
+        if(!emailFormatter(dataInput.email)){
+            valid = false;
+            error["email"] = "Format email salah !";
+        }
+
         this.setState({ 
             errors: error,
             errorMsg : (valid) ? "" : "Data tidak boleh kosong."
