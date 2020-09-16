@@ -7,11 +7,13 @@ import DatePicker from 'react-datepicker'
 import calendar from "../../assets/images/calendar.png"
 
 class ModalInputPeserta extends React.Component { 
-    // constructor(props) {
-    //     super(props);
-    // }
+
     componentDidMount() {
         document.getElementById("tanggal_lahir").setAttribute("autocomplete","off");
+        if(this.props.showModal === "editPeserta"){
+            document.getElementById("valid").setAttribute("autocomplete","off");
+            document.getElementById("expired").setAttribute("autocomplete","off");
+        }
     }
     render(){
 
@@ -28,7 +30,7 @@ class ModalInputPeserta extends React.Component {
                             </div> : ""
                         }
                         <form>
-                            <div className="form-group mb-5">
+                            <div className={`form-group ${(this.props.handleCek)? "mb-5":""}`}>
                                 <label>Email</label>
                                 <input
                                     className={`form-control ${this.props.errors.email ? "invalid" : ""}`}
@@ -39,13 +41,16 @@ class ModalInputPeserta extends React.Component {
                                     onFocus={this.props.onFocus}
                                 />
                                 <p>{this.props.errors.email}</p>
-                                <Button small xs className="float-right" onClick={this.props.handleCek}>
-                                    {
-                                        (this.props.isLoading) ? 
-                                        <div className="spinner-border spinner-border-sm" role="status"></div> 
-                                        : "Cek"
-                                    }
-                                </Button>
+                                {
+                                    (this.props.handleCek) ? 
+                                    <Button small xs className="float-right" onClick={this.props.handleCek}>
+                                        {
+                                            (this.props.isLoading) ? 
+                                            <div className="spinner-border spinner-border-sm" role="status"></div> 
+                                            : "Cek"
+                                        }
+                                    </Button> : ""
+                                }
                             </div>
                             <div className="form-group">
                                 <label>Nama</label>
@@ -96,7 +101,7 @@ class ModalInputPeserta extends React.Component {
                                     id="tanggal_lahir"
                                     placeholderText="MM/DD/YYYY"
                                     selected={this.props.dataInput.tanggal_lahir}
-                                    onChange={date=>this.props.handleChangeDate(date)}
+                                    onChange={date=>this.props.handleChangeDate(date,"tanggal_lahir")}
                                     disabled={this.props.disabled}
                                 />
                                 <img src={calendar} />
@@ -123,8 +128,44 @@ class ModalInputPeserta extends React.Component {
                                     disabled={this.props.disabled}
                                 />
                             </div>
+                            {
+                                (this.props.showModal === "editPeserta") ?
+                                <React.Fragment>
+                                    <div className="form-group">
+                                        <label>Valid</label>
+                                        <DatePicker
+                                            showTimeInput
+                                            // shouldCloseOnSelect={false}
+                                            dateFormat="MM/dd/yyyy hh:mm aa"
+                                            className={`form-control input-icon ${this.props.errors.valid ? "invalid" : ""}`}
+                                            id="valid"
+                                            placeholderText="MM/DD/YYYY"
+                                            selected={this.props.dataInput.valid}
+                                            onChange={date=>this.props.handleChangeDate(date,"valid")}
+                                        />
+                                        <img src={calendar} />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Expired</label>
+                                        <DatePicker
+                                            showTimeInput
+                                            // shouldCloseOnSelect={false}
+                                            dateFormat="MM/dd/yyyy hh:mm aa"
+                                            className={`form-control input-icon ${this.props.errors.expired ? "invalid" : ""}`}
+                                            id="expired"
+                                            placeholderText="MM/DD/YYYY"
+                                            selected={this.props.dataInput.expired}
+                                            onChange={date=>this.props.handleChangeDate(date,"expired")}
+                                        />
+                                        <img src={calendar} />
+                                    </div> 
+                                </React.Fragment> : ""
+                            }
                             <Button small onClick={this.props.handleSubmit} disabled={this.props.disabled}>
-                                Selesai
+                                {
+                                    (this.props.isLoading) ? 
+                                    <div className="spinner-border spinner-border-sm" role="status"></div> : "Selesai"
+                                }
                             </Button>
                         </form>
                     </div>

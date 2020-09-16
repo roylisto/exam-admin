@@ -21,6 +21,13 @@ const jadwalTest = {
                     if(result.status === "OK") {
                         dispatch.jadwalTest.SET_JADWAL_TEST({data : result.data});
                     }
+                    else {
+                        alertNotification(
+                            "error",
+                            "",
+                            "Internal Server Error"
+                        );
+                    }
                 })
         },
         async addJadwalTest(payload) {

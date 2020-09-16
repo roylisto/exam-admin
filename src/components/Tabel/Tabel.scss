@@ -21,6 +21,9 @@
             outline: none;
         }
     }
+    thead th {
+        vertical-align: middle;
+    }
 }
 
 .tabel-jadwal {
@@ -33,13 +36,21 @@
 }
 
 .tabel-peserta {
+    td {
+        padding: 8px;
+    }
     td:nth-child(1),
     td:nth-child(2){
         text-align: left;
     }
-    th:nth-child(4),
-    th:nth-child(5){
-        width: 150px;
+    td:nth-child(1),
+    td:nth-child(2) {
+        min-width: 120px;
+    }
+    th:nth-child(6),
+    th:nth-child(9),
+    th:nth-child(10){
+        min-width: 125px;
     }
 }
 

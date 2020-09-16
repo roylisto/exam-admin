@@ -4,9 +4,10 @@ import { connect } from 'react-redux';
 // COMPONENTS
 import Button from '../../components/Button';
 import TabelPeserta from "../../components/Tabel/Tabel";
+import ModalHapus from '../../components/Modal/ModalHapus';
 import Modal from "../../components/Modal/ModalInputPeserta";
 import Loading from "../../components/Loading";
-import { emailFormatter, phoneNumberFormatter } from "../../modules/Formatter";
+import { emailFormatter, phoneNumberFormatter, dateFormatter } from "../../modules/Formatter";
 // ASSETS 
 import download from "../../assets/images/save.svg"
 import plus from "../../assets/images/plus.svg"
@@ -36,16 +37,7 @@ class Peserta extends Component {
         this.state = {
             showModal: false,
             data: null,
-            columns: [
-                { dataField: 'email', text: 'Email' },
-                { dataField: 'nama', text: 'Nama' },
-                { dataField: 'password', text: 'Password' },
-                { dataField: 'no_hp', text: 'No HP' },
-                { dataField: 'jenis_kelamin', text: 'Jenis Kelamin' },
-                { dataField: 'tanggal_lahir', text: 'Tanggal Lahir' },
-                { dataField: 'kelompok', text: 'Kelompok' },
-                { dataField: 'instansi', text: 'Instansi' },
-            ],
+            columns: null,
             namaInstansi : '',
             loading: true,
             jadwalTest : null,
@@ -60,8 +52,12 @@ class Peserta extends Component {
                 tanggal_lahir : '',
                 kelompok : '',
                 instansi : '',
+                password : '',
+                valid: '',
+                expired: ''
             },
             errors: {},
+            isLoadind: false
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeFilter = this.handleChangeFilter.bind(this);
@@ -71,9 +67,33 @@ class Peserta extends Component {
         this.handleCek = this.handleCek.bind(this);
         this.handleExport = this.handleExport.bind(this);
         this.handleOnFocusEmail = this.handleOnFocusEmail.bind(this);
+        this.actionFormatter = this.actionFormatter.bind(this);
+        this.switchModal = this.switchModal.bind(this);
+        this.handleClickButtonAction = this.handleClickButtonAction.bind(this);
+        this.handleCloseModal = this.handleCloseModal.bind(this);
+        this.handleHapus = this.handleHapus.bind(this);
+        this.handleEdit = this.handleEdit.bind(this);
     }
     
     componentDidMount() {
+        const columns = [
+            { id: "id", text: '', hidden:true},
+            { dataField: 'email', text: 'Email' },
+            { dataField: 'nama', text: 'Nama' },
+            { dataField: 'password', text: 'Password' },
+            { dataField: 'no_hp', text: 'No HP' },
+            { dataField: 'jenis_kelamin', text: 'Jenis Kelamin' },
+            { dataField: 'tanggal_lahir', text: 'Tanggal Lahir' },
+            { dataField: 'kelompok', text: 'Kelompok' },
+            { dataField: 'instansi', text: 'Instansi' },
+            { dataField: 'valid', text: 'Valid',
+                formatter: dateFormatter },
+            { dataField: 'expired', text: 'Expired',
+                formatter: dateFormatter },
+            { dataField: '', text: 'Action',
+                formatter: this.actionFormatter },
+        ]
+        this.setState({ columns })
         this.props.fetchJadwalTest();
     }
 
@@ -81,8 +101,9 @@ class Peserta extends Component {
         if (prevProps.data !== this.props.data && this.props.data[0] !== null) {
             this.setState({
                 data: this.props.data,
-                showModal: false,
+                showModal: false
             });
+            this.resetData();
         }
         if (prevProps.jadwalTest !== this.props.jadwalTest && this.props.jadwalTest[0] !== null) {
             this.setState({
@@ -93,6 +114,7 @@ class Peserta extends Component {
         if (prevProps.errorMsg !== this.props.errorMsg && this.props.errorMsg !== "") {
             this.setState({
                 errorMsg: this.props.errorMsg,
+                isLoading: false
             });
         }
         // saat ada update data peserta by email
@@ -120,7 +142,20 @@ class Peserta extends Component {
 
     handleClickModal() {
         this.setState({
-            showModal : !this.state.showModal,
+            showModal : "addPeserta"
+        })
+        this.resetData();
+    }
+    // close modal
+    handleCloseModal() {
+        this.setState({
+            showModal : false,
+        })
+        this.resetData();
+    }
+
+    resetData() {
+        this.setState({
             disabled: true,
             errors: {},
             errorMsg : "",
@@ -132,11 +167,12 @@ class Peserta extends Component {
                 tanggal_lahir : '',
                 kelompok : '',
                 instansi : '',
+                valid: '',
+                expired: ''
             },
             isLoading : false
         })
     }
-    
     
     handleChangeFilter({target}) {
         let string = target.value;
@@ -170,11 +206,11 @@ class Peserta extends Component {
         }))
     }
 
-    handleChangeDate(date) {
+    handleChangeDate(date, time) {
         this.setState(prevState => ({
             dataInput : { 
                 ...prevState.dataInput,
-                tanggal_lahir : date
+                [time] : date
             },
             errors : {},
             errorMsg : ""
@@ -241,8 +277,37 @@ class Peserta extends Component {
         Object.assign(dataInput, {jadwal_test : filterID})
 
         if(this.formValidate()) {
+            this.setState({isLoading:true});
             const payload = dataInput;
             this.props.addPeserta(payload);
+        }
+    }
+
+    handleHapus() {
+        let id = this.state.dataInput.id;
+        let payload = {
+            id_peserta : id,
+            id_jadwaltest : this.state.filterID
+        }
+        this.setState({isLoading:true})
+        this.props.hapusPeserta(payload);
+    }
+
+    handleEdit(e) {
+        e.preventDefault();
+        let { dataInput, filterID } = this.state
+        if(this.formValidate()) {
+            const payload = {
+                data: {
+                    payload: dataInput,
+                    id: dataInput.id
+                },
+                id_jadwaltest : filterID
+            }
+            console.log(JSON.stringify(payload.data.payload));
+            
+            this.setState({isLoading : true});
+            this.props.editPeserta(payload);
         }
     }
 
@@ -271,6 +336,98 @@ class Peserta extends Component {
             }
         })
         this.props.SET_ERROR_STATUS({errorMsg : ""})
+    }
+
+    handleClickButtonAction(modal, row) {
+        let tanggal_lahir = new Date(row.tanggal_lahir);
+        let valid = new Date(row.valid);
+        let expired = new Date(row.expired);
+
+        this.setState({
+            showModal : modal,
+            disabled : false,
+            dataInput: {
+                id: row.id,
+                nama : row.nama,
+                email : row.email,
+                no_hp : row.no_hp,
+                jenis_kelamin : row.jenis_kelamin,
+                tanggal_lahir,
+                kelompok : row.kelompok,
+                instansi : row.instansi,
+                valid,
+                expired,
+            },
+            errors: {},
+        });
+        
+    }
+
+    actionFormatter(e, row) {
+        return (
+            <div className="btn-group">
+                <Button white small xs onClick={()=>this.handleClickButtonAction("editPeserta",row)}>
+                    <img src={require("../../assets/images/edit.svg")} />
+                    Edit
+                </Button>
+                <Button white small xs onClick={()=>this.handleClickButtonAction("hapusPeserta",row)}>
+                    <img src={require("../../assets/images/delete.svg")} />
+                    Hapus
+                </Button>
+            </div>
+        )
+    }
+
+    switchModal() {
+        switch(this.state.showModal) {
+            case "addPeserta" : 
+                return (
+                    <Modal 
+                        handleClickModal={this.handleCloseModal}
+                        showModal={this.state.showModal}
+                        handleChange={this.handleChange}
+                        dataInput={this.state.dataInput}
+                        errors={this.state.errors}
+                        handleCek={this.handleCek}
+                        disabled={this.state.disabled}
+                        handleSubmit={this.handleSubmit}
+                        handleChangeDate={this.handleChangeDate}
+                        errorMsg={this.state.errorMsg}
+                        onFocus={this.handleOnFocusEmail}
+                        isLoading={this.state.isLoading}
+                    />
+                );
+                break;
+            case "editPeserta" : 
+                return (
+                    <Modal 
+                        handleClickModal={this.handleCloseModal}
+                        showModal={this.state.showModal}
+                        handleChange={this.handleChange}
+                        dataInput={this.state.dataInput}
+                        errors={this.state.errors}
+                        disabled={this.state.disabled}
+                        handleSubmit={this.handleEdit}
+                        handleChangeDate={this.handleChangeDate}
+                        errorMsg={this.state.errorMsg}
+                        isLoading={this.state.isLoading}
+                    />
+                );
+                break;
+            case "hapusPeserta" : 
+                return (
+                    <ModalHapus
+                        type="jadwal"
+                        handleCloseModal={this.handleCloseModal}
+                        showModal={this.state.showModal}
+                        handleHapus={this.handleHapus}
+                        isLoading={this.state.isLoading}
+                    />
+                );
+                break;
+            default:
+                return null
+        }
     }
 
     render() {
@@ -329,20 +486,7 @@ class Peserta extends Component {
                     />
                     : ""
                 }
-                <Modal 
-                    handleClickModal={this.handleClickModal}
-                    showModal={this.state.showModal}
-                    handleChange={this.handleChange}
-                    dataInput={this.state.dataInput}
-                    errors={this.state.errors}
-                    handleCek={this.handleCek}
-                    disabled={this.state.disabled}
-                    handleSubmit={this.handleSubmit}
-                    handleChangeDate={this.handleChangeDate}
-                    errorMsg={this.state.errorMsg}
-                    onFocus={this.handleOnFocusEmail}
-                    isLoading={this.state.isLoading}
-                />
+                {this.switchModal()}
             </React.Fragment>
         )
     }
@@ -369,6 +513,10 @@ const mapDispatch = dispatch => ({
         dispatch({ type: 'peserta/getPesertaByEmail', payload: value }),
     SET_ERROR_STATUS: value =>
         dispatch({ type: 'peserta/SET_ERROR_STATUS', payload: value }),
+    editPeserta: value =>
+        dispatch({ type: 'peserta/editPeserta', payload: value }),
+    hapusPeserta: value =>
+        dispatch({ type: 'peserta/hapusPeserta', payload: value })
 });
 
 
