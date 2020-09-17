@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const listReferences = sequelize.define('list_references', {
+  const listReferences = sequelize.define('listReferences', {
     code: {
       type: DataTypes.STRING,
       allowNull: false,

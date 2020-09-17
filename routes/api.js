@@ -14,6 +14,8 @@ const peserta = require('../controllers/peserta.js');
 const jadwalTest = require('../controllers/jadwalTest.js');
 const hasil = require('../controllers/hasil.js');
 const reset = require('../controllers/reset.js');
+const score = require('../controllers/score.js');
+
 module.exports = (router) => {
 
   router.post('/login', AuthController.login);
@@ -59,6 +61,9 @@ module.exports = (router) => {
 
   //download
   router.get('/download', [IsAuthenticated], download.get);
+
+  //score routes
+  router.get('/score-peserta/:id_test', score.resetAllPeserta);
 
   //delete files
   router.delete('/files', [IsSuperAdmin], file.hasil);
