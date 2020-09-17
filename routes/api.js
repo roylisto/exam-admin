@@ -63,8 +63,8 @@ module.exports = (router) => {
   router.get('/download', [IsAuthenticated], download.get);
 
   //score routes
-  router.get('/score-peserta/:id_test', score.resetScorePeserta);
-  router.get('/score-peserta/:id_test/:id_peserta', score.resetScorePeserta);
+  router.put('/score-peserta/:id_test', [IsAuthenticated], score.resetScorePeserta);
+  router.put('/score-peserta/:id_test/:id_peserta', [IsAuthenticated], score.resetScorePeserta);
 
   //delete files
   router.delete('/files', [IsSuperAdmin], file.hasil);
