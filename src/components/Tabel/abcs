@@ -1,6 +1,11 @@
 .table-wraper {
     overflow-x: auto;
+    .tabel-peserta {
+        overflow-x: hidden;
+    }
 }
+
+
 .tabel-jadwal,
 .tabel-peserta {
     width: 100%;
@@ -35,8 +40,10 @@
     }
 }
 
-
 .tabel-peserta {
+    td {
+        height: 35px;
+    }
     td:nth-child(1),
     td:nth-child(2){
         text-align: left;
@@ -56,12 +63,23 @@
     td:last-child{
         width: 220px;
         .btn-group {
-            position: absolute;
-            right: 0;
-            margin-top: -8px;
-            background-color: #fff;
+            &.btn-group-vertical{
+                position: absolute;
+                right: 0;
+                margin-top: -8px;
+                background-color: #fff;
+            }
         }
     }
+    // td:nth-child(1),
+    // td:nth-child(2) {
+    //     min-width: 120px;
+    // }
+    // th:nth-child(6),
+    // th:nth-child(9),
+    // th:nth-child(10){
+    //     min-width: 125px;
+    // }
 }
 
 .react-bs-table-no-data {

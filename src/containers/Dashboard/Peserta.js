@@ -90,6 +90,7 @@ class Peserta extends Component {
                 formatter: dateFormatter },
             { dataField: 'expired', text: 'Expired',
                 formatter: dateFormatter },
+            { dataField: '', text: ''},
             { dataField: '', text: 'Action',
                 formatter: this.actionFormatter },
         ]
@@ -309,7 +310,6 @@ class Peserta extends Component {
                 },
                 id_jadwaltest : filterID
             }
-            console.log(JSON.stringify(payload.data.payload));
             
             this.setState({isLoading : true});
             this.props.editPeserta(payload);
