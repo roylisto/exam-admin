@@ -52,8 +52,8 @@ const peserta = {
                         dispatch.peserta.SET_ERROR_STATUS({errorMsg : "Data input tidak valid"});
                         alertNotification(
                             "error",
-                            "",
-                            "Internal Server Error"
+                            "Gagal Tambah Peserta",
+                            "Data input harus unik."
                         );
                     }
                 })
@@ -102,6 +102,7 @@ const peserta = {
         async editPeserta(payload) {
             await UpdateData('peserta',payload.data)
                 .then((result)=>{
+                    console.log(result);
                     if(result.status === "OK") {
                         dispatch.peserta.fetchPesertaList(payload.id_jadwaltest);
                         alertNotification(
@@ -114,8 +115,8 @@ const peserta = {
                         dispatch.peserta.SET_ERROR_STATUS({errorMsg : "Data input tidak valid"});
                         alertNotification(
                             "error",
-                            "",
-                            "Internal Server Error"
+                            "Gagal Edit Peserta",
+                            "Data input harus unik."
                         );
                     }
                 })
