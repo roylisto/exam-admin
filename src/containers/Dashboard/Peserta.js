@@ -252,10 +252,12 @@ class Peserta extends Component {
         let propertyValues = Object.values(dataInput);
         let error = {};
         let valid = true;
+        let empty = false;
         
         for(let i = 0; i<propertyNames.length; i++){
             if(propertyValues[i] === ""){
                 valid = false;
+                empty = true;
                 error[propertyNames[i]] = true;
             }
         }
@@ -272,7 +274,7 @@ class Peserta extends Component {
 
         this.setState({ 
             errors: error,
-            errorMsg : (valid) ? "" : "Data tidak boleh kosong."
+            errorMsg : (empty) ? "Data tidak boleh kosong." : ""
         });
         return valid
     }
