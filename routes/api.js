@@ -14,6 +14,8 @@ const peserta = require('../controllers/peserta.js');
 const jadwalTest = require('../controllers/jadwalTest.js');
 const hasil = require('../controllers/hasil.js');
 const reset = require('../controllers/reset.js');
+const score = require('../controllers/score.js');
+
 module.exports = (router) => {
 
   router.post('/login', AuthController.login);
@@ -60,9 +62,13 @@ module.exports = (router) => {
   //download
   router.get('/download', [IsAuthenticated], download.get);
 
+  //score routes
+  router.put('/score-peserta/:id_test', [IsAuthenticated], score.resetScorePeserta);
+  router.put('/score-peserta/:id_test/:id_peserta', [IsAuthenticated], score.resetScorePeserta);
+
   //delete files
-  router.delete('/files', [IsAuthenticated], file.hasil);
-  router.delete('/uploads', [IsAuthenticated], file.uploads);
+  router.delete('/files', [IsSuperAdmin], file.hasil);
+  router.delete('/uploads', [IsSuperAdmin], file.uploads);
 
   //reset route
   router.delete('/reset/test/:id', [IsAuthenticated], reset.test); //reset seluruh peserta by id jadwaltest
