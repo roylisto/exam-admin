@@ -102,7 +102,12 @@ module.exports = {
           message: 'Jadwal test not found!',
           data: {}
         })
-      
+      if(moment().isSameOrBefore(event.waktu, 'day'))
+        return res.status(401).json({
+          status: 'ERROR',
+          message: 'Scoring hanya bisa dilakukan minimal 1 hari sesudah hari tes!',
+          data: {}
+        })
       let query = {where: {jadwal_test: id_jadwaltest}};
       if(id_peserta) {
         console.log('ada id')
