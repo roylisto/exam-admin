@@ -7,7 +7,7 @@ import TabelPeserta from "../../components/Tabel/Tabel";
 import ModalHapus from '../../components/Modal/ModalHapus';
 import Modal from "../../components/Modal/ModalInputPeserta";
 import Loading from "../../components/Loading";
-import { emailFormatter, phoneNumberFormatter, dateFormatter } from "../../modules/Formatter";
+import { emailFormatter, phoneNumberFormatter, dateFormatter, numberFormatter } from "../../modules/Formatter";
 // ASSETS 
 import download from "../../assets/images/save.svg"
 import plus from "../../assets/images/plus.svg"
@@ -77,7 +77,8 @@ class Peserta extends Component {
     
     componentDidMount() {
         const columns = [
-            { id: "id", text: '', hidden:true},
+            { dataField: 'id', text: 'ID',
+                formatter: (data) => numberFormatter(data, this.props.data) },
             { dataField: 'email', text: 'Email' },
             { dataField: 'nama', text: 'Nama' },
             { dataField: 'password', text: 'Password' },
@@ -91,7 +92,7 @@ class Peserta extends Component {
             { dataField: 'expired', text: 'Expired',
                 formatter: dateFormatter },
             { dataField: '', text: ''},
-            { dataField: '', text: 'Action',
+            { dataField: 'aksi', text: 'Action',
                 formatter: this.actionFormatter },
         ]
         this.setState({ columns })

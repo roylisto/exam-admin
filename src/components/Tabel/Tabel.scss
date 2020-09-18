@@ -37,15 +37,15 @@
 
 
 .tabel-peserta {
-    td:nth-child(1),
-    td:nth-child(2){
+    td:nth-child(2),
+    td:nth-child(3){
         text-align: left;
     }
     td, th {
         white-space: nowrap;
     }
-    th:nth-child(11),
-    td:nth-child(11){
+    th:nth-child(12),
+    td:nth-child(12){
         min-width: 170px;
     }
     th:last-child{
