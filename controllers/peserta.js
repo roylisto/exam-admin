@@ -124,7 +124,11 @@ module.exports = {
           messages: 'Data not found!',
           data: {}
         });
-        
+      
+      if(req.body.id) {
+        delete req.body.id
+      }
+      
       await db.peserta.update(req.body, { where: {id: req.params.id} });
       await db.user.update(req.body, {where: {email: peserta.email}});
 
