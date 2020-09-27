@@ -30,8 +30,8 @@ module.exports = {
           type: db.sequelize.QueryTypes.SELECT
         }
       );
-      
-      
+
+
       // return res.send(row);
       const workbook = new Excel.Workbook();
 
@@ -82,16 +82,16 @@ module.exports = {
         row.no = i+1;
         row.nama = peserta[i].nama;
         row.email = peserta[i].email;
-        
+
         const jawabanPeserta = await db.jawaban.findAll({
           where: {
             peserta_id: peserta[i].peserta_id
           }
-        }); 
+        });
         for(let j=0; j<jawabanPeserta.length; j++) {
           row[jawabanPeserta[j].paket_soal] = jawabanPeserta[j].getDataValue('jawaban_peserta');
         }
-        
+
         worksheet.addRow(row);
         worksheet2.addRow(row);
       }
@@ -101,7 +101,7 @@ module.exports = {
 
       await workbook.xlsx.writeFile(`./files/${nameFile}.xlsx`);
       res.json({
-        download:`${process.env.API_URL}download?file=${nameFile}.xlsx`,
+        download:`${process.env.REACT_APP_SERVER_URL}download?file=${nameFile}.xlsx`,
         peserta
       });
     } catch (err) {
@@ -134,7 +134,7 @@ module.exports = {
           raw: true
         }
       );
-      
+
       //init workbook
       const workbook = new Excel.Workbook();
 
@@ -313,7 +313,7 @@ module.exports = {
         peserta[i].iq = await db.scorePeserta.getIQ(peserta[i].id, umur);
         row.IQ = peserta[i].iq;
 
-        row.IQ_kategori = 'Mentally Defective'; 
+        row.IQ_kategori = 'Mentally Defective';
 
         if(row.IQ > 65 && row.IQ <= 79) {
           row.IQ_kategori = 'Borderline Defective';
@@ -361,7 +361,7 @@ module.exports = {
             peserta_id: peserta[i].id
           });
           row[check_code[l]+"_rw"] = 0;
-          row[check_code[l]+"_sw"] = sw.sw; 
+          row[check_code[l]+"_sw"] = sw.sw;
           row[check_code[l]+"_kategori"] = kategori;
         }
         row.dominasi = await db.scorePeserta.getJurusan(peserta[i].id);
@@ -374,7 +374,7 @@ module.exports = {
 
       await workbook.xlsx.writeFile(`./files/${nameFile}.xlsx`);
       res.json({
-        download:`${process.env.API_URL}download?file=${nameFile}.xlsx`,
+        download:`${process.env.REACT_APP_SERVER_URL}download?file=${nameFile}.xlsx`,
         peserta
       });
     } catch (err) {
@@ -410,7 +410,7 @@ module.exports = {
           jadwal_test: event_test.id
         }
       });
-    
+
       const workbook = new Excel.Workbook();
 
       workbook.creator = 'Bakatku.id';
@@ -452,7 +452,7 @@ module.exports = {
 
       await workbook.xlsx.writeFile(`./files/${nameFile}.xlsx`);
       res.json({
-        download:`${process.env.API_URL}download?file=${nameFile}.xlsx`
+        download:`${process.env.REACT_APP_SERVER_URL}download?file=${nameFile}.xlsx`
       });
     } catch (err) {
       res.status(500).json({
