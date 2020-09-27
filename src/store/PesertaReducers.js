@@ -1,5 +1,10 @@
-import { GetData, PostData } from "../services/Agent"
-import { alertNotification } from "../modules/utils"
+import { 
+    GetData, 
+    PostData, 
+    UpdateData,
+    DeleteData
+} from "../services/Agent";
+import { alertNotification } from "../modules/utils";
 
 const peserta = {
     state : {
@@ -23,6 +28,13 @@ const peserta = {
                     if(result.status === "OK") {
                         dispatch.peserta.SET_PESERTALIST({data : result.data.peserta});
                     }
+                    else {
+                        alertNotification(
+                            "error",
+                            "",
+                            "Internal Server Error"
+                        );
+                    }
                 })
         },
         async addPeserta(payload) {
@@ -39,9 +51,9 @@ const peserta = {
                     else {
                         dispatch.peserta.SET_ERROR_STATUS({errorMsg : "Data input tidak valid"});
                         alertNotification(
-                            "Error",
-                            "",
-                            "Internal Server Error"
+                            "error",
+                            "Gagal Tambah Peserta",
+                            "Data input harus unik."
                         );
                     }
                 })
@@ -78,7 +90,7 @@ const peserta = {
                         return;
                     }
                     if(result.messages !== "") {
-                        dispatch.peserta.SET_ERROR_STATUS({errorMsg : result.messages})
+                        dispatch.peserta.SET_ERROR_STATUS({errorMsg : result.messages});
                         alertNotification(
                             "error",
                             "",
@@ -87,6 +99,48 @@ const peserta = {
                     }
                 })
         },
+        async editPeserta(payload) {
+            await UpdateData('peserta',payload.data)
+                .then((result)=>{
+                    console.log(result);
+                    if(result.status === "OK") {
+                        dispatch.peserta.fetchPesertaList(payload.id_jadwaltest);
+                        alertNotification(
+                            "success",
+                            "",
+                            "Perubahan data disimpan."
+                        );
+                    }
+                    else {
+                        dispatch.peserta.SET_ERROR_STATUS({errorMsg : "Data input tidak valid"});
+                        alertNotification(
+                            "error",
+                            "Gagal Edit Peserta",
+                            "Data input harus unik."
+                        );
+                    }
+                })
+        },
+        async hapusPeserta(payload) {
+            await DeleteData('peserta',payload.id_peserta)
+                .then((result)=>{
+                    if(result.status === "OK") {
+                        dispatch.peserta.fetchPesertaList(payload.id_jadwaltest);
+                        alertNotification(
+                            "success",
+                            "",
+                            "Data berhasil di Hapus."
+                        );
+                    }
+                    else {
+                        alertNotification(
+                            "error",
+                            "",
+                            "Jadwal test belum dimulai."
+                        );
+                    }
+                })
+        }
     })
 }
 

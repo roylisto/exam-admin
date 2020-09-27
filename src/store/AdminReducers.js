@@ -62,6 +62,13 @@ const admin = {
                     if(result.status === "OK") {
                         dispatch.admin.SET_LIST_ADMIN({userAdminList : result.data});
                     }
+                    else {
+                        alertNotification(
+                            "error",
+                            "",
+                            "Internal Server Error"
+                        );
+                    }
                 })
         },
         async addUserAdmin(payload) {
