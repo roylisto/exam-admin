@@ -6,20 +6,20 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     const salt = bcrypt.genSaltSync(10);
     return queryInterface.bulkInsert('admin', [{
-      name: 'Admin Educasia',
-      email: 'exam.admin@educasia.id',
-      password: bcrypt.hashSync('helloworld', salt),      
+      name: 'Superadmin',
+      email: 'superadmin@educasia.id',
+      password: bcrypt.hashSync('Palembang#2021', salt),
       role: 'superadmin',
       created_at: new Date(),
       updated_at: new Date(),
     }, {
-      name: 'Admin satu',
-      email: 'ana@educasia.id',
-      password: bcrypt.hashSync('12345678', salt),      
+      name: 'Admin',
+      email: 'admin@bakatku.id',
+      password: bcrypt.hashSync('BinaHuman#2020', salt),
       role: 'admin',
       created_at: new Date(),
       updated_at: new Date(),
-    }], {});   
+    }], {});
   },
 
   down: (queryInterface, Sequelize) => {
