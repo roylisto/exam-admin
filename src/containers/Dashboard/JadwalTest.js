@@ -6,7 +6,7 @@ import TabelJadwal from "../../components/Tabel/Tabel";
 import Button from '../../components/Button';
 import Modal from "../../components/Modal/ModalTambahJadwal";
 import ModalHapus from '../../components/Modal/ModalHapus';
-import { dateFormatter, numberFormatter } from "../../js/Formatter";
+import { dateFormatter, numberFormatter } from "../../modules/Formatter";
 
 const Header = styled.div`{
     display : flex;
@@ -23,14 +23,15 @@ class JadwalTest extends Component {
         super(props)
 
         this.state = {
-            data: null,
-            columns: [],
+            data: this.props.data,
+            columns: null,
             showModal: '',
             timeStart: '',
             timeEnd: '',
             instansi: '',
             keterangan: '',
             errors: {},
+            isLoading: false
         }
         this.handleClickModal = this.handleClickModal.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -45,10 +46,6 @@ class JadwalTest extends Component {
     }
 
     componentDidMount() {
-        this.props.fetchJadwalTest();
-    }
-
-    componentDidUpdate(prevProps) {
         const columns = [
             { dataField: 'id', text: 'ID',
                 formatter: (data) => numberFormatter(data, this.props.data) },
@@ -61,17 +58,22 @@ class JadwalTest extends Component {
             { dataField: '', text: 'Action',
                 formatter: this.actionFormatter },
         ]
+        this.setState({ columns })
+        this.props.fetchJadwalTest();
+    }
+
+    componentDidUpdate(prevProps) {
         if (prevProps.data !== this.props.data && this.props.data[0] !== null) {
             this.setState({
-                data: this.props.data,
-                columns: columns
+                data: this.props.data
             });
+            this.handleCloseModal();
         }
     }
 
     handleHapus() {
         let { id } = this.state;
-
+        this.setState({isLoading:true})
         this.props.hapusJadwalTest(id);
     }
 
@@ -84,6 +86,7 @@ class JadwalTest extends Component {
 
     handleCloseModal() {
         this.setState({
+            isLoading: false,
             showModal: false,
             timeStart: '',
             timeEnd: '',
@@ -102,10 +105,11 @@ class JadwalTest extends Component {
             timeStart: waktu,
             timeEnd: expired,
             instansi: row.instansi,
-            keterangan: row.keterangan,
+            keterangan: (row.keterangan) ? row.keterangan : "",
             id: row.id,
             errors: {},
         });
+        
     }
 
     handleEditSubmit(e) {
@@ -121,6 +125,7 @@ class JadwalTest extends Component {
                 },
                 id: id
             }
+            this.setState({isLoading : true})
             this.props.editJadwalTest(data);
         }
     }
@@ -177,6 +182,7 @@ class JadwalTest extends Component {
                 instansi: instansi,
                 keterangan: (keterangan) ? keterangan : "-"
             };
+            this.setState({isLoading : true})
             this.props.addJadwalTest(payload);
         }
     }
@@ -212,6 +218,7 @@ class JadwalTest extends Component {
                         handleSubmit={this.handleSubmit}
                         errors={this.state.errors}
                         title="Add"
+                        isLoading={this.state.isLoading}
                     />
                 );
                 break;
@@ -229,15 +236,18 @@ class JadwalTest extends Component {
                         handleSubmit={this.handleEditSubmit}
                         errors={this.state.errors}
                         title="Edit"
+                        isLoading={this.state.isLoading}
                     />
                 );
                 break;
             case "hapusJadwal" : 
                 return (
                     <ModalHapus
+                        type="jadwal"
                         handleCloseModal={this.handleCloseModal}
                         showModal={this.state.showModal}
                         handleHapus={this.handleHapus}
+                        isLoading={this.state.isLoading}
                     />
                 );
                 break;

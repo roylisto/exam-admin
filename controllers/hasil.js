@@ -2,10 +2,20 @@ const db = require('../database/models/index.js');
 const Excel = require('exceljs');
 const moment = require('moment');
 const _ = require('lodash');
+const fs = require('fs');
+const path = require('path');
+
+const checkingDir = () => {
+  const filesDir = path.join("files");
+  if(!fs.existsSync(filesDir)){
+    fs.mkdirSync(filesDir);
+  }
+}
 
 module.exports = {
   list_jawaban: async (req, res) => {
     try {
+      checkingDir();
       const event_test = await db.jadwalTest.findByPk(req.params.id);
       if(event_test === null) {
         return res.status(404).json({
@@ -105,6 +115,7 @@ module.exports = {
 
   list: async (req, res) => {
     try {
+      checkingDir();
       let event_test = await db.jadwalTest.findByPk(req.params.id);
       if(event_test==null) {
         return res.status(404).json({
@@ -377,6 +388,7 @@ module.exports = {
 
   list_peserta: async (req, res) => {
     try {
+      checkingDir();
       const event_test = await db.jadwalTest.findByPk(req.params.id);
       if(event_test === null) {
         return res.status(404).json({
@@ -440,9 +452,7 @@ module.exports = {
 
       await workbook.xlsx.writeFile(`./files/${nameFile}.xlsx`);
       res.json({
-        download:`${process.env.API_URL}download?file=${nameFile}.xlsx`,
-        peserta,
-        jumlah_peserta
+        download:`${process.env.API_URL}download?file=${nameFile}.xlsx`
       });
     } catch (err) {
       res.status(500).json({

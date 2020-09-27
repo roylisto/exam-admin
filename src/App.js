@@ -6,19 +6,23 @@ import {
   Route
 } from 'react-router-dom';
 import routes from './routes';
+import { connect } from 'react-redux';
+import { dispatch } from "./store";
+// ASSETS 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/scss/style.scss";
-import { connect } from 'react-redux';
-import store from "./store";
+import 'react-notifications/lib/notifications.css';
 // COMPONENTS
 import Loading from './components/Loading';
-import ProtectedRoute from './js/ProtectedRoute'
+import ProtectedRoute from './modules/ProtectedRoute'
 
 const AppLayout = styled.div`  
   height: inherit;
 `;
 
-store.dispatch.admin.updatetoken({token : localStorage.getItem('token')});
+dispatch.admin.updatetoken(localStorage.getItem('token'));
+dispatch.admin.updateRole(localStorage.getItem('role'));
+dispatch.admin.updateUsername(localStorage.getItem('username'));
 
 class App extends Component {
   render() {

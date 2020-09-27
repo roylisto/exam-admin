@@ -1,4 +1,5 @@
 import { PostData, GetData, UpdateData, DeleteData } from "../services/Agent"
+import { alertNotification } from "../modules/utils"
 
 const jadwalTest = {
     state : {
@@ -20,6 +21,13 @@ const jadwalTest = {
                     if(result.status === "OK") {
                         dispatch.jadwalTest.SET_JADWAL_TEST({data : result.data});
                     }
+                    else {
+                        alertNotification(
+                            "error",
+                            "",
+                            "Internal Server Error"
+                        );
+                    }
                 })
         },
         async addJadwalTest(payload) {
@@ -27,7 +35,12 @@ const jadwalTest = {
                 .then((result)=>{
                     if(result.status === "OK") {
                         dispatch.jadwalTest.UPDATE_JADWAL_TEST({status : "add-jadwal-test"});
-                        window.location.reload();
+                        dispatch.jadwalTest.fetchJadwalTest();
+                        alertNotification(
+                            "success",
+                            "",
+                            "Data Berhasil Ditambahkan"
+                        );
                     }
                 })
         },
@@ -36,7 +49,12 @@ const jadwalTest = {
                 .then((result)=>{
                     if(result.status === "OK") {
                         dispatch.jadwalTest.UPDATE_JADWAL_TEST({status : "edit-jadwal-test"});
-                        window.location.reload();
+                        dispatch.jadwalTest.fetchJadwalTest();
+                        alertNotification(
+                            "success",
+                            "",
+                            "Perubahan data disimpan."
+                        );
                     }
                 })
         },
@@ -45,7 +63,12 @@ const jadwalTest = {
                 .then((result)=>{
                     if(result.status === "OK") {
                         dispatch.jadwalTest.UPDATE_JADWAL_TEST({status : "hapus-jadwal-test"});
-                        window.location.reload();
+                        dispatch.jadwalTest.fetchJadwalTest();
+                        alertNotification(
+                            "success",
+                            "",
+                            "Data berhasil di Hapus."
+                        );
                     }
                 })
         }

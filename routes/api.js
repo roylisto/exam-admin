@@ -1,5 +1,6 @@
 /** Middlewares */
 const IsAuthenticated = require('../middlewares/isAuthenticated');
+const IsSuperAdmin = require('../middlewares/isSuperAdmin');
 
 /** Controllers */
 const AuthController = require('../controllers/auth');
@@ -13,6 +14,8 @@ const peserta = require('../controllers/peserta.js');
 const jadwalTest = require('../controllers/jadwalTest.js');
 const hasil = require('../controllers/hasil.js');
 const reset = require('../controllers/reset.js');
+const score = require('../controllers/score.js');
+
 module.exports = (router) => {
 
   router.post('/login', AuthController.login);
@@ -28,11 +31,11 @@ module.exports = (router) => {
   router.post('/users/excel', [IsAuthenticated], multer.single('user'), user.import);
   
   //admin account route
-  router.get('/admin', [IsAuthenticated], AdminController.list);
-  router.get('/admin/:id', [IsAuthenticated], AdminController.get);
-  router.post('/admin', [IsAuthenticated], AdminController.create);
-  router.put('/admin/:id', [IsAuthenticated], AdminController.update);
-  router.delete('/admin/:id', [IsAuthenticated], AdminController.delete);
+  router.get('/admin', [IsSuperAdmin], AdminController.list);
+  router.get('/admin/:id', [IsSuperAdmin], AdminController.get);
+  router.post('/admin', [IsSuperAdmin], AdminController.create);
+  router.put('/admin/:id', [IsSuperAdmin], AdminController.update);
+  router.delete('/admin/:id', [IsSuperAdmin], AdminController.delete);
   router.post('/admin/reset-password', [IsAuthenticated], AdminController.reset_password);
 
   //peserta route
@@ -42,6 +45,7 @@ module.exports = (router) => {
   router.get('/peserta/test/:id', [IsAuthenticated], peserta.getList); //list get peserta with params id jadwal test
   router.post('/peserta', [IsAuthenticated], peserta.create);
   router.delete('/peserta/:id', [IsAuthenticated], peserta.delete);
+  router.post('/peserta/welcome-email/:jadwaltest/:email', [IsAuthenticated], peserta.welcomeEmail); //send welcome email to peserta
 
   //route jadwal test
   router.get('/jadwal-test', [IsAuthenticated], jadwalTest.list);
@@ -58,9 +62,13 @@ module.exports = (router) => {
   //download
   router.get('/download', [IsAuthenticated], download.get);
 
+  //score routes
+  router.put('/score-peserta/:id_test', [IsAuthenticated], score.resetScorePeserta);
+  router.put('/score-peserta/:id_test/:id_peserta', [IsAuthenticated], score.resetScorePeserta);
+
   //delete files
-  router.delete('/files', [IsAuthenticated], file.hasil);
-  router.delete('/uploads', [IsAuthenticated], file.uploads);
+  router.delete('/files', [IsSuperAdmin], file.hasil);
+  router.delete('/uploads', [IsSuperAdmin], file.uploads);
 
   //reset route
   router.delete('/reset/test/:id', [IsAuthenticated], reset.test); //reset seluruh peserta by id jadwaltest

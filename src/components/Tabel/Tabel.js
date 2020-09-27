@@ -17,7 +17,7 @@ const Tabel = (props) => {
         nextPageText: '>',
         disablePageTitle: true,
     };
-    if(props.data) {
+    if(props.data && props.columns) {
         return (
             <BootstrapTable 
                 keyField={props.keyField} 

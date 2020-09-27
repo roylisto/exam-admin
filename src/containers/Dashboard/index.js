@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import styled from 'styled-components';
 import 'react-datepicker/dist/react-datepicker.css';
+import { connect } from 'react-redux';
 // COMPONENTS
 import NavbarDashboard from '../../components/NavbarDashboard';
 import Sidebar from '../../components/Sidebar';
 import JadwalTest from "./JadwalTest";
 import SidebarIcon from "../../assets/images/sidebarmenu.svg";
 import Peserta from './Peserta';
+import UserAdmin from "./UserAdmin";
+import { NotificationContainer } from 'react-notifications';
 
 const ButtonSidebar = styled.button`{
     transform: rotate(90deg) scaleY(-1);
@@ -53,15 +56,20 @@ class Dashboard extends Component {
     render() {
         return (
             <React.Fragment>
+                <NotificationContainer />
                 <ButtonSidebar
                     minimize={this.state.minimize}
-                    onClick={this.handleMinimize}>
+                    onClick={this.handleMinimize}
+                    >
                     <img src={SidebarIcon} />
                 </ButtonSidebar>
                 <Sidebar 
                     minimize={this.state.minimize}
+                    role={this.props.role}
                 />
-                <NavbarDashboard />
+                <NavbarDashboard 
+                    username={this.props.username}
+                />
 
                 <Container 
                     minimize={this.state.minimize}>
@@ -69,6 +77,7 @@ class Dashboard extends Component {
                         <Route exact path="/dashboard" component={JadwalTest}  />
                         <Route path="/dashboard/jadwaltest" component={JadwalTest}  />
                         <Route path="/dashboard/peserta" component={Peserta}  />
+                        <Route path="/dashboard/useradmin" component={UserAdmin}  />
                     </Switch>
                 </Container>
 
@@ -77,4 +86,10 @@ class Dashboard extends Component {
     }
 }
 
-export default Dashboard
+
+const mapState = state => ({
+	role: state.admin.role,
+	username: state.admin.username,
+})
+
+export default connect(mapState)(Dashboard)
