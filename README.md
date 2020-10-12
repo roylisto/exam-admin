@@ -1,6 +1,5 @@
 # exam-admin
 Educasia Admin Application
-Version 1.0.0
 
 ## Doc API
 https://documenter.getpostman.com/view/11945786/T17Gf7yF?version=latest
