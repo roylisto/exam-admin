@@ -8,7 +8,7 @@ import ModalHapus from '../../components/Modal/ModalHapus';
 import Modal from "../../components/Modal/ModalInputPeserta";
 import Loading from "../../components/Loading";
 import { emailFormatter, phoneNumberFormatter, dateFormatter, numberFormatter } from "../../modules/Formatter";
-// ASSETS 
+// ASSETS
 import download from "../../assets/images/save.svg"
 import plus from "../../assets/images/plus.svg"
 
@@ -74,7 +74,7 @@ class Peserta extends Component {
         this.handleHapus = this.handleHapus.bind(this);
         this.handleEdit = this.handleEdit.bind(this);
     }
-    
+
     componentDidMount() {
         const columns = [
             { dataField: 'id', text: 'ID',
@@ -121,11 +121,11 @@ class Peserta extends Component {
         }
         // saat ada update data peserta by email
         if (prevProps.dataPeserta !== this.props.dataPeserta && this.props.dataPeserta !== null) {
-            
+
             let dataPeserta =  this.props.dataPeserta
             let tanggal_lahir = new Date(dataPeserta.tanggal_lahir);
             let jenis_kelamin = (dataPeserta.jenis_kelamin) ? dataPeserta.jenis_kelamin.toLowerCase() : "pria"
-            
+
             this.setState(prevState => ({
                 disabled : false,
                 isLoading : false,
@@ -175,11 +175,11 @@ class Peserta extends Component {
             isLoading : false
         })
     }
-    
+
     handleChangeFilter({target}) {
         let string = target.value;
         let split = string.split(";");
-        
+
         if(string === ""){
             this.setState({
                 filterID : "",
@@ -194,12 +194,12 @@ class Peserta extends Component {
                 data: null
             })
         }
-        
+
     }
-    
+
     handleChange({target}) {
         this.setState(prevState => ({
-            dataInput : { 
+            dataInput : {
                 ...prevState.dataInput,
                 [target.id] : target.value
             },
@@ -210,7 +210,7 @@ class Peserta extends Component {
 
     handleChangeDate(date, time) {
         this.setState(prevState => ({
-            dataInput : { 
+            dataInput : {
                 ...prevState.dataInput,
                 [time] : date
             },
@@ -225,7 +225,7 @@ class Peserta extends Component {
 
         this.setState({isLoading: true})
         if(dataInput.email === ""){
-            this.setState({ 
+            this.setState({
                 errors: { email : true },
                 errorMsg : "Data tidak boleh kosong.",
                 isLoading: false
@@ -245,7 +245,7 @@ class Peserta extends Component {
             })
         }
     }
-    
+
     formValidate() {
         let { dataInput } = this.state;
         let propertyNames = Object.keys(dataInput);
@@ -253,7 +253,7 @@ class Peserta extends Component {
         let error = {};
         let valid = true;
         let empty = false;
-        
+
         for(let i = 0; i<propertyNames.length; i++){
             if(propertyValues[i] === ""){
                 valid = false;
@@ -272,7 +272,7 @@ class Peserta extends Component {
             error["email"] = "Format email salah !";
         }
 
-        this.setState({ 
+        this.setState({
             errors: error,
             errorMsg : (empty) ? "Data tidak boleh kosong." : ""
         });
@@ -282,7 +282,7 @@ class Peserta extends Component {
     handleSubmit(e) {
         e.preventDefault();
         let { dataInput, filterID } = this.state
-        
+
         Object.assign(dataInput, {jadwal_test : filterID})
 
         if(this.formValidate()) {
@@ -313,7 +313,7 @@ class Peserta extends Component {
                 },
                 id_jadwaltest : filterID
             }
-            
+
             this.setState({isLoading : true});
             this.props.editPeserta(payload);
         }
@@ -368,7 +368,7 @@ class Peserta extends Component {
             },
             errors: {},
         });
-        
+
     }
 
     actionFormatter(e, row) {
@@ -388,9 +388,9 @@ class Peserta extends Component {
 
     switchModal() {
         switch(this.state.showModal) {
-            case "addPeserta" : 
+            case "addPeserta" :
                 return (
-                    <Modal 
+                    <Modal
                         handleClickModal={this.handleCloseModal}
                         showModal={this.state.showModal}
                         handleChange={this.handleChange}
@@ -406,9 +406,9 @@ class Peserta extends Component {
                     />
                 );
                 break;
-            case "editPeserta" : 
+            case "editPeserta" :
                 return (
-                    <Modal 
+                    <Modal
                         handleClickModal={this.handleCloseModal}
                         showModal={this.state.showModal}
                         handleChange={this.handleChange}
@@ -422,7 +422,7 @@ class Peserta extends Component {
                     />
                 );
                 break;
-            case "hapusPeserta" : 
+            case "hapusPeserta" :
                 return (
                     <ModalHapus
                         type="jadwal"
@@ -446,8 +446,8 @@ class Peserta extends Component {
             <React.Fragment>
                 <Header>
                     <form>
-                        <select 
-                            className="form-control" 
+                        <select
+                            className="form-control"
                             id="filter"
                             onChange={this.handleChangeFilter}>
                             <option value="">Jadwal Test</option>
@@ -459,21 +459,27 @@ class Peserta extends Component {
                         </select>
                     </form>
                     <div>
-                        <Button white 
-                            onClick={()=>this.handleExport("jawaban-test/")} 
+                        <Button white
+                          onClick={()=>this.handleExport("peserta-test/")}
+                          disabled={this.state.filterID === ""}>
+                          <img src={download} />
+                          Export Peserta
+                        </Button>
+                        <Button white
+                            onClick={()=>this.handleExport("jawaban-test/")}
                             disabled={this.state.filterID === ""}>
                             <img src={download} />
                             Export Jawaban
                         </Button>
-                        <Button white 
-                            onClick={()=>this.handleExport("peserta-test/")} 
-                            disabled={this.state.filterID === ""}>
-                            <img src={download} />
-                            Export Peserta
+                        <Button white
+                          onClick={()=>this.handleExport("hasil-test/")}
+                          disabled={this.state.filterID === ""}>
+                          <img src={download} />
+                          Export Hasil
                         </Button>
-                        <Button 
+                        <Button
                             style={{width:"150px"}}
-                            onClick={this.handleClickModal} 
+                            onClick={this.handleClickModal}
                             disabled={this.state.filter === ""}>
                             <img src={plus} />
                             Input Peserta
@@ -485,7 +491,7 @@ class Peserta extends Component {
                     <span>&emsp;{this.state.filter}</span>
                 </div>
                 {
-                    (this.state.filter !== "") ? 
+                    (this.state.filter !== "") ?
                     <TabelPeserta
                         keyField="id"
                         data={this.state.data}
