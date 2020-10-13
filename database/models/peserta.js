@@ -23,6 +23,16 @@ module.exports = function(sequelize, DataTypes) {
     },
     jadwal_test: {
       type: DataTypes.INTEGER
+    },
+    jenis_test: {
+      type: DataTypes.STRING,
+      get() {
+        const rawValue = this.getDataValue('jenis_test')
+        return rawValue? rawValue.split(",") : null
+      },
+      set(value) {
+        this.setDataValue('jenis_test', value.join(","))
+      }
     }
   }, {    
     tableName: 'peserta',
