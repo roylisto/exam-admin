@@ -46,7 +46,7 @@ module.exports = function(sequelize, DataTypes) {
       type: sequelize.QueryTypes.SELECT
     });
     
-    if(user==null || user[0].deleted_at) {
+    if(user===null || user[0].deleted_at) {
       return false;
     }
 
