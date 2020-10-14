@@ -82,10 +82,7 @@ module.exports = {
         });
       }
       
-      const list_peserta = await db.sequelize.query("SELECT * FROM user JOIN peserta ON user.email=peserta.email WHERE peserta.jadwal_test=?", {
-        replacements: [event_test.id],
-        type: db.sequelize.QueryTypes.SELECT
-      });
+      const list_peserta = await db.peserta.list(event_test.id);
       
       const jumlah_peserta = await db.peserta.count({
         where: { jadwal_test: event_test.id }
