@@ -4,6 +4,33 @@ const randomstring = require("randomstring");
 const moment = require('moment');
 
 module.exports = {
+  show_jawaban: async (req, res) => {
+    try {
+      const peserta_id = req.params.pesertaId;
+      const jenis_test = req.query.test;
+
+      const peserta = await db.peserta.findByPk(peserta_id);
+      if(!peserta)
+        return res.status(404).json({
+          status: 'ERROR',
+          message: 'Data not found!'
+        });
+      
+      
+      return res.json({
+        status: 'OK',
+        message: '',
+        data: peserta
+      });
+    } catch (err) {
+      res.status(500).json({
+        status: 'ERROR',
+        message: err,
+        data: {}
+      });
+    }
+  },
+
   list: (req, res) => {
     db.peserta.findAll().then( result => {
       res.json({
