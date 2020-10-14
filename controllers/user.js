@@ -37,7 +37,8 @@ module.exports = {
           password: randomstring.generate(8),
           valid: test.waktu,
           expired: moment(test.expired).add(1, 'days').format('YYYY-MM-DD HH:mm:ss'),
-          jadwal_test: test.id
+          jadwal_test: test.id,
+          jenis_test: req.body.jenis_test
         }); 
       }
       
