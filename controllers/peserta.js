@@ -7,20 +7,29 @@ module.exports = {
   show_jawaban: async (req, res) => {
     try {
       const peserta_id = req.params.pesertaId;
-      const jenis_test = req.query.test;
+      const jenis_soal = req.query.test;
 
       const peserta = await db.peserta.findByPk(peserta_id);
       if(!peserta)
         return res.status(404).json({
           status: 'ERROR',
-          message: 'Data not found!'
+          message: 'Data not found!',
+          data: {}
         });
       
-      
+      const jawaban = await db.jawaban.findAll({
+        attributes: ['jawaban_peserta', 'paket_soal'],
+        order: [['paket_soal', 'ASC']],
+        where: {
+          peserta_id: peserta_id,
+          jenis_soal: jenis_soal
+        }
+      });
+
       return res.json({
         status: 'OK',
         message: '',
-        data: peserta
+        data: jawaban
       });
     } catch (err) {
       res.status(500).json({
