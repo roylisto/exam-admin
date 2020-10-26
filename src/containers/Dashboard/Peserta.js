@@ -54,7 +54,8 @@ class Peserta extends Component {
                 instansi : '',
                 password : '',
                 valid: '',
-                expired: ''
+                expired: '',
+                jenis_test: [],
             },
             errors: {},
             isLoadind: false
@@ -62,6 +63,7 @@ class Peserta extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeFilter = this.handleChangeFilter.bind(this);
         this.handleChangeDate = this.handleChangeDate.bind(this);
+        this.handleChangeJenisTest = this.handleChangeJenisTest.bind(this);
         this.handleClickModal = this.handleClickModal.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleCek = this.handleCek.bind(this);
@@ -170,7 +172,8 @@ class Peserta extends Component {
                 kelompok : '',
                 instansi : '',
                 valid: '',
-                expired: ''
+                expired: '',
+                jenis_test: [],
             },
             isLoading : false
         })
@@ -217,6 +220,16 @@ class Peserta extends Component {
             errors : {},
             errorMsg : ""
         }))
+    }
+
+    handleChangeJenisTest({target}) {
+      const jenisTest = this.state.dataInput.jenis_test;
+      if (target.checked) {
+        jenisTest.push(target.name);
+      } else {
+        const index = jenisTest.indexOf(target.name);
+        jenisTest.splice(index, 1);
+      }
     }
 
     async handleCek(e) {
@@ -341,6 +354,7 @@ class Peserta extends Component {
                 tanggal_lahir : '',
                 kelompok : '',
                 instansi : '',
+                jenis_test: [],
             }
         })
         this.props.SET_ERROR_STATUS({errorMsg : ""})
@@ -394,6 +408,7 @@ class Peserta extends Component {
                         handleClickModal={this.handleCloseModal}
                         showModal={this.state.showModal}
                         handleChange={this.handleChange}
+                        handleChangeJenisTest={this.handleChangeJenisTest}
                         dataInput={this.state.dataInput}
                         errors={this.state.errors}
                         handleCek={this.handleCek}
@@ -405,7 +420,6 @@ class Peserta extends Component {
                         isLoading={this.state.isLoading}
                     />
                 );
-                break;
             case "editPeserta" :
                 return (
                     <Modal
@@ -421,7 +435,6 @@ class Peserta extends Component {
                         isLoading={this.state.isLoading}
                     />
                 );
-                break;
             case "hapusPeserta" :
                 return (
                     <ModalHapus
@@ -432,7 +445,6 @@ class Peserta extends Component {
                         isLoading={this.state.isLoading}
                     />
                 );
-                break;
             default:
                 return null
         }
