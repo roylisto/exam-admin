@@ -130,20 +130,21 @@ class ModalInputPeserta extends React.Component {
                             </div>
                             <div className="form-group">
                                 <label>Jenis Test</label>
+                                <p>{this.props.errors.jenis_test}</p>
                                 <div
                                   className={`form-control form-check form-check-inline ${this.props.errors.jenis_test ? "invalid" : ""}`}
                                 >
                                   <input type="checkbox" className="form-check-input"
                                     id="ist" disabled={this.props.disabled}
-                                    name="ist"
-                                    checked={this.props.dataInput.jenis_test.indexOf('ist') > -1}
+                                    name="IST"
+                                    defaultChecked={this.props.dataInput.jenis_test.indexOf('IST') > -1}
                                     onChange={this.props.handleChangeJenisTest}
                                     />
                                   <label className="form-check-label">IST</label>
                                   <input type="checkbox" className="form-check-input"
                                     id="mii" disabled={this.props.disabled}
-                                    name="mii"
-                                    checked={this.props.dataInput.jenis_test.indexOf('mii') > -1}
+                                    name="MII"
+                                    defaultChecked={this.props.dataInput.jenis_test.indexOf('MII') > -1}
                                     onChange={this.props.handleChangeJenisTest}
                                     />
                                   <label className="form-check-label">MII</label>

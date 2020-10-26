@@ -7,7 +7,8 @@ import TabelPeserta from "../../components/Tabel/Tabel";
 import ModalHapus from '../../components/Modal/ModalHapus';
 import Modal from "../../components/Modal/ModalInputPeserta";
 import Loading from "../../components/Loading";
-import { emailFormatter, phoneNumberFormatter, dateFormatter, numberFormatter } from "../../modules/Formatter";
+import { emailFormatter, phoneNumberFormatter, dateFormatter, numberFormatter, formatArray }
+  from "../../modules/Formatter";
 // ASSETS
 import download from "../../assets/images/save.svg"
 import plus from "../../assets/images/plus.svg"
@@ -89,6 +90,8 @@ class Peserta extends Component {
             { dataField: 'tanggal_lahir', text: 'Tanggal Lahir' },
             { dataField: 'kelompok', text: 'Kelompok' },
             { dataField: 'instansi', text: 'Instansi' },
+            { dataField: 'jenis_test', text: 'Jenis Test',
+              formatter: formatArray },
             { dataField: 'valid', text: 'Valid',
                 formatter: dateFormatter },
             { dataField: 'expired', text: 'Expired',
@@ -139,6 +142,7 @@ class Peserta extends Component {
                     tanggal_lahir,
                     kelompok : dataPeserta.kelompok,
                     instansi : dataPeserta.instansi,
+                    jenis_test : dataPeserta.jenis_test,
                 }
             }));
         }
@@ -285,6 +289,11 @@ class Peserta extends Component {
             error["email"] = "Format email salah !";
         }
 
+        if(dataInput.jenis_test.length < 1) {
+          valid = false;
+          error["jenis_test"] = "Jenis test harus dipilih !";
+        }
+
         this.setState({
             errors: error,
             errorMsg : (empty) ? "Data tidak boleh kosong." : ""
@@ -318,6 +327,7 @@ class Peserta extends Component {
     handleEdit(e) {
         e.preventDefault();
         let { dataInput, filterID } = this.state
+
         if(this.formValidate()) {
             const payload = {
                 data: {
@@ -377,6 +387,7 @@ class Peserta extends Component {
                 tanggal_lahir,
                 kelompok : row.kelompok,
                 instansi : row.instansi,
+                jenis_test: row.jenis_test,
                 valid,
                 expired,
             },
@@ -426,6 +437,7 @@ class Peserta extends Component {
                         handleClickModal={this.handleCloseModal}
                         showModal={this.state.showModal}
                         handleChange={this.handleChange}
+                        handleChangeJenisTest={this.handleChangeJenisTest}
                         dataInput={this.state.dataInput}
                         errors={this.state.errors}
                         disabled={this.state.disabled}

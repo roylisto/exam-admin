@@ -1,6 +1,6 @@
-import { 
-    GetData, 
-    PostData, 
+import {
+    GetData,
+    PostData,
     UpdateData,
     DeleteData
 } from "../services/Agent";
@@ -17,7 +17,7 @@ const peserta = {
         SET_PESERTALIST(state, payload) { // list peserta
             return { ...state, ...payload };
         },
-        SET_ERROR_STATUS(state, payload) { 
+        SET_ERROR_STATUS(state, payload) {
             return { ...state, ...payload };
         },
     },
@@ -89,20 +89,11 @@ const peserta = {
                         dispatch.peserta.SET_PESERTALIST({dataPeserta : result.data});
                         return;
                     }
-                    if(result.messages !== "") {
-                        dispatch.peserta.SET_ERROR_STATUS({errorMsg : result.messages});
-                        alertNotification(
-                            "error",
-                            "",
-                            "Data Tidak Ditemukan"
-                        );
-                    }
                 })
         },
         async editPeserta(payload) {
             await UpdateData('peserta',payload.data)
                 .then((result)=>{
-                    console.log(result);
                     if(result.status === "OK") {
                         dispatch.peserta.fetchPesertaList(payload.id_jadwaltest);
                         alertNotification(
