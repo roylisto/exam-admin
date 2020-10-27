@@ -47,8 +47,7 @@ class JadwalTest extends Component {
 
     componentDidMount() {
         const columns = [
-            { dataField: 'id', text: 'ID',
-                formatter: (data) => numberFormatter(data, this.props.data) },
+            { dataField: 'id', text: 'ID' },
             { dataField: 'instansi', text: 'Instansi' },
             { dataField: 'waktu', text: 'Waktu Mulai',
                 formatter: dateFormatter },
@@ -109,7 +108,7 @@ class JadwalTest extends Component {
             id: row.id,
             errors: {},
         });
-        
+
     }
 
     handleEditSubmit(e) {
@@ -149,7 +148,7 @@ class JadwalTest extends Component {
         let { timeStart, timeEnd, instansi } = this.state;
         let error = {};
         let valid = true;
-        
+
         if (timeStart === "") {
             valid = false;
             error["timeStart"] = true;
@@ -204,7 +203,7 @@ class JadwalTest extends Component {
 
     switchModal() {
         switch(this.state.showModal) {
-            case "addJadwal" : 
+            case "addJadwal" :
                 return (
                     <Modal
                         handleCloseModal={this.handleCloseModal}
@@ -222,7 +221,7 @@ class JadwalTest extends Component {
                     />
                 );
                 break;
-            case "editJadwal" : 
+            case "editJadwal" :
                 return (
                     <Modal
                         handleCloseModal={this.handleCloseModal}
@@ -240,7 +239,7 @@ class JadwalTest extends Component {
                     />
                 );
                 break;
-            case "hapusJadwal" : 
+            case "hapusJadwal" :
                 return (
                     <ModalHapus
                         type="jadwal"

@@ -4,10 +4,10 @@ const randomstring = require("randomstring");
 const moment = require('moment');
 
 module.exports = {
-  userPeserta: async (req, res) => {    
-    try {      
+  userPeserta: async (req, res) => {
+    try {
       const test = await jadwalTest.findByPk(req.body.jadwal_test);
-      
+
       if(test == null) {
         return res.status(404).json({
           status: 'ERROR',
@@ -15,7 +15,7 @@ module.exports = {
           data: {}
         });
       }
-      
+
       const account = await user.findOrCreate({
         where: {
           email: req.body.email
@@ -30,17 +30,18 @@ module.exports = {
           instansi: req.body.instansi
         }
       });
-      
-      if(account) {        
+
+      if(account) {
         await peserta.create({
           email: req.body.email,
           password: randomstring.generate(8),
           valid: test.waktu,
           expired: moment(test.expired).add(1, 'days').format('YYYY-MM-DD HH:mm:ss'),
-          jadwal_test: test.id
-        }); 
+          jadwal_test: test.id,
+          jenis_test: req.body.jenis_test
+        });
       }
-      
+
       res.json({
         status: 'OK',
         messages: 'Success insert data.',
@@ -55,8 +56,8 @@ module.exports = {
     }
   },
 
-  import: async (req, res) => {    
-    try {      
+  import: async (req, res) => {
+    try {
       const { jadwal_test } = req.body;
       const test = await jadwalTest.findByPk(jadwal_test);
       if(jadwal_test && test==null) {
@@ -99,10 +100,10 @@ module.exports = {
                 email: row.values[3],
                 jadwal_test: jadwal_test
               }
-            });     
-          });    
-        }        
-      });      
+            });
+          });
+        }
+      });
 
       return res.json({
         status: 'OK',
@@ -126,7 +127,7 @@ module.exports = {
             email: req.query.email
           }
         });
-        
+
         if(account_user) {
           return res.json({
             status: 'OK',
@@ -153,14 +154,14 @@ module.exports = {
         status: 'ERROR',
         messages: err,
         data: {}
-      }); 
+      });
     }
   },
 
   get: (req, res) => {
     user.findOne({
       where: { id: req.params.id }
-    }).then( users => {      
+    }).then( users => {
       if( users === null ) {
         return res.status(404).json({
           status: 'ERROR',

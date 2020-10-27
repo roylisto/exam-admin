@@ -7,7 +7,8 @@ import TabelPeserta from "../../components/Tabel/Tabel";
 import ModalHapus from '../../components/Modal/ModalHapus';
 import Modal from "../../components/Modal/ModalInputPeserta";
 import Loading from "../../components/Loading";
-import { emailFormatter, phoneNumberFormatter, dateFormatter, numberFormatter } from "../../modules/Formatter";
+import { emailFormatter, phoneNumberFormatter, dateFormatter, numberFormatter, formatArray }
+  from "../../modules/Formatter";
 // ASSETS
 import download from "../../assets/images/save.svg"
 import plus from "../../assets/images/plus.svg"
@@ -54,7 +55,8 @@ class Peserta extends Component {
                 instansi : '',
                 password : '',
                 valid: '',
-                expired: ''
+                expired: '',
+                jenis_test: [],
             },
             errors: {},
             isLoadind: false
@@ -62,6 +64,7 @@ class Peserta extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeFilter = this.handleChangeFilter.bind(this);
         this.handleChangeDate = this.handleChangeDate.bind(this);
+        this.handleChangeJenisTest = this.handleChangeJenisTest.bind(this);
         this.handleClickModal = this.handleClickModal.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleCek = this.handleCek.bind(this);
@@ -77,8 +80,7 @@ class Peserta extends Component {
 
     componentDidMount() {
         const columns = [
-            { dataField: 'id', text: 'ID',
-                formatter: (data) => numberFormatter(data, this.props.data) },
+            { dataField: 'id', text: 'ID' },
             { dataField: 'email', text: 'Email' },
             { dataField: 'nama', text: 'Nama' },
             { dataField: 'password', text: 'Password' },
@@ -87,6 +89,8 @@ class Peserta extends Component {
             { dataField: 'tanggal_lahir', text: 'Tanggal Lahir' },
             { dataField: 'kelompok', text: 'Kelompok' },
             { dataField: 'instansi', text: 'Instansi' },
+            { dataField: 'jenis_test', text: 'Jenis Test',
+              formatter: formatArray },
             { dataField: 'valid', text: 'Valid',
                 formatter: dateFormatter },
             { dataField: 'expired', text: 'Expired',
@@ -137,6 +141,7 @@ class Peserta extends Component {
                     tanggal_lahir,
                     kelompok : dataPeserta.kelompok,
                     instansi : dataPeserta.instansi,
+                    jenis_test : dataPeserta.jenis_test,
                 }
             }));
         }
@@ -170,7 +175,8 @@ class Peserta extends Component {
                 kelompok : '',
                 instansi : '',
                 valid: '',
-                expired: ''
+                expired: '',
+                jenis_test: [],
             },
             isLoading : false
         })
@@ -217,6 +223,24 @@ class Peserta extends Component {
             errors : {},
             errorMsg : ""
         }))
+    }
+
+    handleChangeJenisTest({target}) {
+      const jenisTest = this.state.dataInput.jenis_test ? [...this.state.dataInput.jenis_test] : [];
+      if (target.checked) {
+        jenisTest.push(target.name);
+      } else {
+        const index = jenisTest.indexOf(target.name);
+        jenisTest.splice(index, 1);
+      }
+      this.setState(prevState => ({
+        dataInput : {
+            ...prevState.dataInput,
+            jenis_test : jenisTest,
+        },
+        errors : {},
+        errorMsg : ""
+    }))
     }
 
     async handleCek(e) {
@@ -272,6 +296,11 @@ class Peserta extends Component {
             error["email"] = "Format email salah !";
         }
 
+        if(dataInput.jenis_test.length < 1) {
+          valid = false;
+          error["jenis_test"] = "Jenis test harus dipilih !";
+        }
+
         this.setState({
             errors: error,
             errorMsg : (empty) ? "Data tidak boleh kosong." : ""
@@ -305,6 +334,7 @@ class Peserta extends Component {
     handleEdit(e) {
         e.preventDefault();
         let { dataInput, filterID } = this.state
+
         if(this.formValidate()) {
             const payload = {
                 data: {
@@ -341,6 +371,7 @@ class Peserta extends Component {
                 tanggal_lahir : '',
                 kelompok : '',
                 instansi : '',
+                jenis_test: [],
             }
         })
         this.props.SET_ERROR_STATUS({errorMsg : ""})
@@ -363,6 +394,7 @@ class Peserta extends Component {
                 tanggal_lahir,
                 kelompok : row.kelompok,
                 instansi : row.instansi,
+                jenis_test: row.jenis_test,
                 valid,
                 expired,
             },
@@ -394,6 +426,7 @@ class Peserta extends Component {
                         handleClickModal={this.handleCloseModal}
                         showModal={this.state.showModal}
                         handleChange={this.handleChange}
+                        handleChangeJenisTest={this.handleChangeJenisTest}
                         dataInput={this.state.dataInput}
                         errors={this.state.errors}
                         handleCek={this.handleCek}
@@ -405,13 +438,13 @@ class Peserta extends Component {
                         isLoading={this.state.isLoading}
                     />
                 );
-                break;
             case "editPeserta" :
                 return (
                     <Modal
                         handleClickModal={this.handleCloseModal}
                         showModal={this.state.showModal}
                         handleChange={this.handleChange}
+                        handleChangeJenisTest={this.handleChangeJenisTest}
                         dataInput={this.state.dataInput}
                         errors={this.state.errors}
                         disabled={this.state.disabled}
@@ -421,7 +454,6 @@ class Peserta extends Component {
                         isLoading={this.state.isLoading}
                     />
                 );
-                break;
             case "hapusPeserta" :
                 return (
                     <ModalHapus
@@ -432,7 +464,6 @@ class Peserta extends Component {
                         isLoading={this.state.isLoading}
                     />
                 );
-                break;
             default:
                 return null
         }
