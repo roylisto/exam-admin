@@ -189,33 +189,18 @@ module.exports = {
           data: {}
         })
       }
-      const jadwaltest = await db.jadwalTest.findByPk(peserta.jadwal_test);
 
-      if(!jadwaltest) {
-        return res.status(404).json({
-          messages: 'Data not found!',
-          data: {}
-        })
-      }
+      await db.peserta.destroy({
+        where: {
+          id: req.params.id
+        }
+      });
 
-      if(moment(peserta.valid).isSameOrBefore(jadwaltest.waktu)) {
-        await db.peserta.destroy({
-          where: {
-            id: req.params.id
-          }
-        });
-        res.json({
-          status: 'OK',
-          messages: 'Success delete data.',
-          data: {}
-        });
-      } else {
-        res.json({
-          status: 'ERROR',
-          messages: 'delete peserta gagal.',
-          data: {}
-        });
-      }
+      res.json({
+        status: 'OK',
+        messages: 'Success delete data.',
+        data: {}
+      });
     } catch (err) {
       res.status(500).json({
         status: 'ERROR',

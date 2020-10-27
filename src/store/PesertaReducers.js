@@ -127,7 +127,7 @@ const peserta = {
                         alertNotification(
                             "error",
                             "",
-                            "Jadwal test belum dimulai."
+                            "Jadwal test gagal dihapus"
                         );
                     }
                 })
