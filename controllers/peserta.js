@@ -16,7 +16,7 @@ module.exports = {
           message: 'Data not found!',
           data: {}
         });
-      
+
       const jawaban = await db.jawaban.findAll({
         attributes: ['jawaban_peserta', 'paket_soal'],
         order: [['paket_soal', 'ASC']],
@@ -84,19 +84,19 @@ module.exports = {
 
   getList: async (req, res) => {
     try {
-      const event_test = await db.jadwalTest.findByPk(req.params.id);    
+      const event_test = await db.jadwalTest.findByPk(req.params.id);
       if(event_test === null) {
         return res.status(404).json({
           message: 'Jadwal test not found!'
         });
       }
-      
+
       const list_peserta = await db.peserta.list(event_test.id);
-      
+
       const jumlah_peserta = await db.peserta.count({
         where: { jadwal_test: event_test.id }
       });
-      
+
       res.json({
         status: 'OK',
         messages: '',
@@ -157,11 +157,11 @@ module.exports = {
           messages: 'Data not found!',
           data: {}
         });
-      
+
       if(req.body.id) {
         delete req.body.id
       }
-      
+
       await db.peserta.update(req.body, { where: {id: req.params.id} });
       await db.user.update(req.body, {where: {email: peserta.email}});
 
@@ -181,25 +181,24 @@ module.exports = {
 
   delete: async (req, res) => {
     try {
-      const peserta = await db.peserta.findByPk(req.params.id);
-      
+      const peserta = await db.peserta.findByPk(req.params.id, {raw: true});
+
       if(!peserta) {
         return res.status(404).json({
           messages: 'Peserta not found!',
           data: {}
         })
       }
-      console.log("id:", peserta.jadwal_test)
       const jadwaltest = await db.jadwalTest.findByPk(peserta.jadwal_test);
-      
+
       if(!jadwaltest) {
         return res.status(404).json({
           messages: 'Data not found!',
           data: {}
         })
       }
-      
-      if(moment().isSameOrBefore(jadwaltest.waktu)) {
+
+      if(moment(peserta.valid).isSameOrBefore(jadwaltest.waktu)) {
         await db.peserta.destroy({
           where: {
             id: req.params.id
@@ -230,7 +229,7 @@ module.exports = {
     try {
       const to = req.params.email;
       const id_jadwaltest = req.params.jadwaltest;
-      
+
       const event = await db.jadwalTest.findByPk(id_jadwaltest);
       const peserta = await db.peserta.findOne({where: {email: to, jadwal_test: id_jadwaltest}});
 
@@ -248,9 +247,9 @@ module.exports = {
         nama: user.nama,
         password: peserta.password
       }
-      
+
       const html = email_helper.welcomeTemplate(data);
-      
+
       const data_email = {
         from: process.env.EMAIL_USER, // sender address
         to: to, // list of receivers

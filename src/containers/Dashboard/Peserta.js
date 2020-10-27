@@ -227,13 +227,21 @@ class Peserta extends Component {
     }
 
     handleChangeJenisTest({target}) {
-      const jenisTest = this.state.dataInput.jenis_test;
+      const jenisTest = this.state.dataInput.jenis_test ? [...this.state.dataInput.jenis_test] : [];
       if (target.checked) {
         jenisTest.push(target.name);
       } else {
         const index = jenisTest.indexOf(target.name);
         jenisTest.splice(index, 1);
       }
+      this.setState(prevState => ({
+        dataInput : {
+            ...prevState.dataInput,
+            jenis_test : jenisTest,
+        },
+        errors : {},
+        errorMsg : ""
+    }))
     }
 
     async handleCek(e) {
