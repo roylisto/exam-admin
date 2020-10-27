@@ -137,14 +137,14 @@ class ModalInputPeserta extends React.Component {
                                   <input type="checkbox" className="form-check-input"
                                     id="ist" disabled={this.props.disabled}
                                     name="IST"
-                                    defaultChecked={this.props.dataInput.jenis_test.indexOf('IST') > -1}
+                                    defaultChecked={this.props.dataInput.jenis_test ? this.props.dataInput.jenis_test.indexOf('IST') > -1 : false}
                                     onChange={this.props.handleChangeJenisTest}
                                     />
                                   <label className="form-check-label">IST</label>
                                   <input type="checkbox" className="form-check-input"
                                     id="mii" disabled={this.props.disabled}
                                     name="MII"
-                                    defaultChecked={this.props.dataInput.jenis_test.indexOf('MII') > -1}
+                                    defaultChecked={this.props.dataInput.jenis_test ? this.props.dataInput.jenis_test.indexOf('MII') > -1 : false}
                                     onChange={this.props.handleChangeJenisTest}
                                     />
                                   <label className="form-check-label">MII</label>
