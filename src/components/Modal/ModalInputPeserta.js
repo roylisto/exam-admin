@@ -6,7 +6,7 @@ import DatePicker from 'react-datepicker'
 // ASSETS
 import calendar from "../../assets/images/calendar.png"
 
-class ModalInputPeserta extends React.Component { 
+class ModalInputPeserta extends React.Component {
 
     componentDidMount() {
         document.getElementById("tanggal_lahir").setAttribute("autocomplete","off");
@@ -19,9 +19,9 @@ class ModalInputPeserta extends React.Component {
 
         return (
             <div className="modal" style={{display: (this.props.showModal) ? "block" : "none"}}>
-                <div className="modal-dialog modal-dialog-centered" role="document">
-                    <div className="modal-content ">
-                        <h5>Input Peserta</h5>
+                <div className="modal-dialog" role="document">
+                    <div className="modal-content">
+                      <h5>Input Peserta</h5>
                         {
                             (this.props.errorMsg) ?
                             <div className="alert-text" role="alert">
@@ -42,11 +42,11 @@ class ModalInputPeserta extends React.Component {
                                 />
                                 <p>{this.props.errors.email}</p>
                                 {
-                                    (this.props.handleCek) ? 
+                                    (this.props.handleCek) ?
                                     <Button small xs className="float-right" onClick={this.props.handleCek}>
                                         {
-                                            (this.props.isLoading) ? 
-                                            <div className="spinner-border spinner-border-sm" role="status"></div> 
+                                            (this.props.isLoading) ?
+                                            <div className="spinner-border spinner-border-sm" role="status"></div>
                                             : "Cek"
                                         }
                                     </Button> : ""
@@ -128,6 +128,28 @@ class ModalInputPeserta extends React.Component {
                                     disabled={this.props.disabled}
                                 />
                             </div>
+                            <div className="form-group">
+                                <label>Jenis Test</label>
+                                <p>{this.props.errors.jenis_test}</p>
+                                <div
+                                  className={`form-control form-check form-check-inline ${this.props.errors.jenis_test ? "invalid" : ""}`}
+                                >
+                                  <input type="checkbox" className="form-check-input"
+                                    id="ist" disabled={this.props.disabled}
+                                    name="IST"
+                                    defaultChecked={this.props.dataInput.jenis_test ? this.props.dataInput.jenis_test.indexOf('IST') > -1 : false}
+                                    onChange={this.props.handleChangeJenisTest}
+                                    />
+                                  <label className="form-check-label">IST</label>
+                                  <input type="checkbox" className="form-check-input"
+                                    id="mii" disabled={this.props.disabled}
+                                    name="MII"
+                                    defaultChecked={this.props.dataInput.jenis_test ? this.props.dataInput.jenis_test.indexOf('MII') > -1 : false}
+                                    onChange={this.props.handleChangeJenisTest}
+                                    />
+                                  <label className="form-check-label">MII</label>
+                                </div>
+                            </div>
                             {
                                 (this.props.showModal === "editPeserta") ?
                                 <React.Fragment>
@@ -158,15 +180,17 @@ class ModalInputPeserta extends React.Component {
                                             onChange={date=>this.props.handleChangeDate(date,"expired")}
                                         />
                                         <img src={calendar} />
-                                    </div> 
+                                    </div>
                                 </React.Fragment> : ""
                             }
-                            <Button small onClick={this.props.handleSubmit} disabled={this.props.disabled}>
+                            <div className="modal-footer">
+                              <Button small onClick={this.props.handleSubmit} disabled={this.props.disabled}>
                                 {
-                                    (this.props.isLoading) ? 
-                                    <div className="spinner-border spinner-border-sm" role="status"></div> : "Selesai"
+                                  (this.props.isLoading) ?
+                                  <div className="spinner-border spinner-border-sm" role="status"></div> : "Selesai"
                                 }
-                            </Button>
+                              </Button>
+                            </div>
                         </form>
                     </div>
                 </div>

@@ -10,7 +10,6 @@
 .modal-content {
     font-family: "Roboto";
     padding: 20px;
-    text-align: center;
     max-height: 90vh;
     overflow-y: auto;
     .form-group {
@@ -33,6 +32,11 @@
     }
     .input-icon {
         padding: 0.65rem 1rem 0.65rem 2.5rem;
+    }
+    .form-check {
+      label {
+        padding-right: 15px;
+      }
     }
 }
 
