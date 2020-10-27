@@ -80,8 +80,7 @@ class Peserta extends Component {
 
     componentDidMount() {
         const columns = [
-            { dataField: 'id', text: 'ID',
-                formatter: (data) => numberFormatter(data, this.props.data) },
+            { dataField: 'id', text: 'ID' },
             { dataField: 'email', text: 'Email' },
             { dataField: 'nama', text: 'Nama' },
             { dataField: 'password', text: 'Password' },

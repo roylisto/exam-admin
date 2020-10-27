@@ -43,7 +43,7 @@ const Image = styled.img`{
 
 const SidebarNew = (props) => {
     const [showpeserta, setShowPeserta] = useState(false);
-    
+
     const handleShowPeserta = () => {
         setShowPeserta(prevShow => !prevShow);
     }
@@ -69,25 +69,25 @@ const SidebarNew = (props) => {
                 onClick={handleShowPeserta}
             >
                 <Image src={calendar} />
-                Jadwal Test 
+                Jadwal Test
             </NavLink>
             <NavLink
                 to="/dashboard/peserta"
                 activeClassName="sidebar-menu-link-active"
-                className={`sidebar-menu-link sub-menu ${(showpeserta) ? "hide" : ""}`}
+                className={`sidebar-menu-link sub-menu`}
             >
                 <Image src={people}/>
-                Peserta 
+                Peserta
             </NavLink>
             {
-                (props.role === "superadmin") ? 
+                (props.role === "superadmin") ?
                 <NavLink
                     to="/dashboard/useradmin"
                     activeClassName="sidebar-menu-link-active"
                     className="sidebar-menu-link"
                 >
                     <Image src={pluspeople}/>
-                    Add User Admin 
+                    Add User Admin
                 </NavLink> : ""
             }
             <NavLink
@@ -96,7 +96,7 @@ const SidebarNew = (props) => {
                 onClick={()=>clearLocalStorage()}
             >
                 <Image src={logout} />
-                Log Out 
+                Log Out
             </NavLink>
         </Container>
     )
