@@ -6,7 +6,7 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true,
       autoIncrement: true,
     },
-    email: {        
+    email: {
       type: DataTypes.STRING
     },
     password: {
@@ -15,10 +15,10 @@ module.exports = function(sequelize, DataTypes) {
         this.setDataValue('password', value.toUpperCase())
       }
     },
-    valid: {        
+    valid: {
       type: DataTypes.DATE,
     },
-    expired: {        
+    expired: {
       type: DataTypes.DATE
     },
     jadwal_test: {
@@ -34,7 +34,7 @@ module.exports = function(sequelize, DataTypes) {
         this.setDataValue('jenis_test', value.join(","))
       }
     }
-  }, {    
+  }, {
     tableName: 'peserta',
     underscored: true,
     timestamps: false,
@@ -45,7 +45,7 @@ module.exports = function(sequelize, DataTypes) {
       replacements: {email, pesertaId: id},
       type: sequelize.QueryTypes.SELECT
     });
-    
+
     if(user===null || user[0].deleted_at) {
       return false;
     }
@@ -73,12 +73,13 @@ module.exports = function(sequelize, DataTypes) {
   }
 
   peserta.list = async (jadwal_test_id) => {
-    
-    const list_peserta = await sequelize.query("SELECT * FROM user JOIN peserta ON user.email=peserta.email WHERE peserta.jadwal_test = :jadwal_test_id", {
+
+    const list_peserta = await sequelize.query(`SELECT * FROM user JOIN peserta ON user.email = peserta.email
+      WHERE peserta.jadwal_test = :jadwal_test_id ORDER BY peserta.id DESC`, {
       replacements: {jadwal_test_id},
       type: sequelize.QueryTypes.SELECT
     });
-    
+
     if(list_peserta==null) {
       return false;
     }
@@ -104,7 +105,7 @@ module.exports = function(sequelize, DataTypes) {
         jadwal_test: x.jadwal_test,
         jenis_test: jenis_test
       }
-    });    
+    });
 
     return list_peserta_map;
   }
@@ -113,7 +114,7 @@ module.exports = function(sequelize, DataTypes) {
     peserta.hasMany(models.scorePeserta, {
       foreignKey: 'peserta_id'
     });
-    
+
   };
   return peserta;
 };

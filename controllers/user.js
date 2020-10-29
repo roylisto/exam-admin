@@ -24,7 +24,7 @@ module.exports = {
           nama: req.body.nama,
           email: req.body.email,
           no_hp: req.body.no_hp,
-          tanggal_lahir: req.body.tanggal_lahir,
+          tanggal_lahir: moment(req.body.tanggal_lahir).format('YYYY-MM-DD'),
           jenis_kelamin: req.body.jenis_kelamin,
           kelompok: req.body.kelompok,
           instansi: req.body.instansi
