@@ -32,6 +32,10 @@ if (env === 'development') {
   }));
 }
 
+if (env === 'production') {
+  require('newrelic');
+}
+
 app.use((req, res) => {
   return res.status(404).send('not found');
 });
