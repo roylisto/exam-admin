@@ -9,11 +9,11 @@ exports.config = {
   /**
    * Array of application names.
    */
-  app_name: ['exam-admin'],
+  app_name: [process.env.NEWRELIC_APP_NAME],
   /**
    * Your New Relic license key.
    */
-  license_key: '06013fde13618fe58d3268698e1d9f2de620NRAL',
+  license_key: process.env.NEWRELIC_LICENSE_KEY,
   /**
    * This setting controls distributed tracing.
    * Distributed tracing lets you see the path that a request takes through your
