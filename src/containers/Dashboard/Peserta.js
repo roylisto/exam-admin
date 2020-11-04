@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 // COMPONENTS
 import Button from '../../components/Button';
+import ButtonIcon from '../../components/ButtonIcon';
 import TabelPeserta from "../../components/Tabel/Tabel";
 import ModalHapus from '../../components/Modal/ModalHapus';
 import Modal from "../../components/Modal/ModalInputPeserta";
@@ -10,8 +11,10 @@ import Loading from "../../components/Loading";
 import { emailFormatter, phoneNumberFormatter, dateFormatter, numberFormatter, formatArray }
   from "../../modules/Formatter";
 // ASSETS
-import download from "../../assets/images/save.svg"
-import plus from "../../assets/images/plus.svg"
+import download from "../../assets/images/save.svg";
+import plus from "../../assets/images/plus.svg";
+import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
+import { textFilter } from 'react-bootstrap-table2-filter';
 
 const Header = styled.div`{
     display : flex;
@@ -30,6 +33,8 @@ const Header = styled.div`{
         font-size: 15px;
     }
 }`;
+
+const { SearchBar } = Search;
 
 class Peserta extends Component {
     constructor(props) {
@@ -80,24 +85,24 @@ class Peserta extends Component {
 
     componentDidMount() {
         const columns = [
+            { dataField: 'aksi', text: 'Action',
+                formatter: this.actionFormatter },
             { dataField: 'id', text: 'ID' },
-            { dataField: 'email', text: 'Email' },
-            { dataField: 'nama', text: 'Nama' },
+            { dataField: 'email', text: 'Email' , filter: textFilter()},
+            { dataField: 'nama', text: 'Nama' , filter: textFilter()},
             { dataField: 'password', text: 'Password' },
-            { dataField: 'no_hp', text: 'No HP' },
+            { dataField: 'no_hp', text: 'No HP' , filter: textFilter()},
             { dataField: 'jenis_kelamin', text: 'Jenis Kelamin' },
             { dataField: 'tanggal_lahir', text: 'Tanggal Lahir' },
-            { dataField: 'kelompok', text: 'Kelompok' },
-            { dataField: 'instansi', text: 'Instansi' },
+            { dataField: 'kelompok', text: 'Kelompok' , filter: textFilter()},
+            { dataField: 'instansi', text: 'Instansi' , filter: textFilter()},
             { dataField: 'jenis_test', text: 'Jenis Test',
-              formatter: formatArray },
+              formatter: formatArray , filter: textFilter()},
             { dataField: 'valid', text: 'Valid',
                 formatter: dateFormatter },
             { dataField: 'expired', text: 'Expired',
                 formatter: dateFormatter },
             { dataField: '', text: ''},
-            { dataField: 'aksi', text: 'Action',
-                formatter: this.actionFormatter },
         ]
         this.setState({ columns })
         this.props.fetchJadwalTest();
@@ -406,14 +411,12 @@ class Peserta extends Component {
     actionFormatter(e, row) {
         return (
             <div className="btn-group">
-                <Button white small xs onClick={()=>this.handleClickButtonAction("editPeserta",row)}>
+                <ButtonIcon white onClick={()=>this.handleClickButtonAction("editPeserta",row)}>
                     <img src={require("../../assets/images/edit.svg")} />
-                    Edit
-                </Button>
-                <Button white small xs onClick={()=>this.handleClickButtonAction("hapusPeserta",row)}>
+                </ButtonIcon>
+                <ButtonIcon white onClick={()=>this.handleClickButtonAction("hapusPeserta",row)}>
                     <img src={require("../../assets/images/delete.svg")} />
-                    Hapus
-                </Button>
+                </ButtonIcon>
             </div>
         )
     }
@@ -457,7 +460,7 @@ class Peserta extends Component {
             case "hapusPeserta" :
                 return (
                     <ModalHapus
-                        type="jadwal"
+                        type="peserta"
                         handleCloseModal={this.handleCloseModal}
                         showModal={this.state.showModal}
                         handleHapus={this.handleHapus}
