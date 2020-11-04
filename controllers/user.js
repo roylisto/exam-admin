@@ -58,7 +58,18 @@ module.exports = {
 
   import: async (req, res) => {
     try {
-      const { jadwal_test } = req.body;
+      let { jadwal_test } = req.body;
+      let jenisTest = [];
+      if (req.body.jenis_test && req.body.jenis_test.trim().split(',').length > 0) {
+        jenisTest = req.body.jenis_test.trim().split(',');
+        jenisTest = jenisTest.sort();
+      } else {
+        return res.status(404).json({
+          status: 'ERROR',
+          messages: 'Jenis test not found!',
+          data: {}
+        });
+      }
       const test = await jadwalTest.findByPk(jadwal_test);
       if(jadwal_test && test==null) {
         return res.status(404).json({
@@ -94,7 +105,8 @@ module.exports = {
                 password: randomstring.generate(8),
                 valid: test.waktu,
                 expired: expired,
-                jadwal_test: jadwal_test
+                jadwal_test: jadwal_test,
+                jenis_test: jenisTest,
               },
               where: {
                 email: row.values[3],
