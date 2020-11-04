@@ -42,31 +42,21 @@
     }
     td {
         text-align: left;
+        background-color: white;
     }
-    // td:nth-child(2),
-    // td:nth-child(3){
-    //     text-align: left;
-    // }
-    // th:nth-child(13),
-    // td:nth-child(13){
-    //     min-width: 170px;
-    // }
-    // th:last-child{
-    //     position: absolute;
-    //     right: 0px;
-    //     width: 220px;
-    // }
-    // td:last-child{
-    //     width: 220px;
-    //     .btn-group {
-    //         position: absolute;
-    //         right: 0;
-    //         margin-top: -8px;
-    //         background-color: #fff;
-    //     }
-    // }
     label {
         display: block;
+    }
+    th:last-child, td:last-child
+    {
+        position: sticky;
+        right: 0px;
+    }
+    td:last-child {
+        background-color: #f5f5f5;
+    }
+    th:last-child {
+        background-color: #bdc3c7;
     }
 }
 

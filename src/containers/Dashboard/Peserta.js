@@ -6,7 +6,8 @@ import Button from '../../components/Button';
 import ButtonIcon from '../../components/ButtonIcon';
 import TabelPeserta from "../../components/Tabel/Tabel";
 import ModalHapus from '../../components/Modal/ModalHapus';
-import Modal from "../../components/Modal/ModalInputPeserta";
+import ModalPeserta from "../../components/Modal/ModalInputPeserta";
+import ModalResetJawaban from "../../components/Modal/ModalResetJawaban";
 import Loading from "../../components/Loading";
 import { emailFormatter, phoneNumberFormatter, dateFormatter, numberFormatter, formatArray }
   from "../../modules/Formatter";
@@ -85,8 +86,6 @@ class Peserta extends Component {
 
     componentDidMount() {
         const columns = [
-            { dataField: 'aksi', text: 'Action',
-                formatter: this.actionFormatter },
             { dataField: 'id', text: 'ID' },
             { dataField: 'email', text: 'Email' , filter: textFilter()},
             { dataField: 'nama', text: 'Nama' , filter: textFilter()},
@@ -103,6 +102,8 @@ class Peserta extends Component {
             { dataField: 'expired', text: 'Expired',
                 formatter: dateFormatter },
             { dataField: '', text: ''},
+            { dataField: 'aksi', text: 'Action',
+                formatter: this.actionFormatter },
         ]
         this.setState({ columns })
         this.props.fetchJadwalTest();
@@ -414,6 +415,9 @@ class Peserta extends Component {
                 <ButtonIcon white onClick={()=>this.handleClickButtonAction("editPeserta",row)}>
                     <img src={require("../../assets/images/edit.svg")} />
                 </ButtonIcon>
+                <ButtonIcon white onClick={()=>this.handleClickButtonAction("resetPeserta",row)}>
+                    <img src={require("../../assets/images/reset.svg")} />
+                </ButtonIcon>
                 <ButtonIcon white onClick={()=>this.handleClickButtonAction("hapusPeserta",row)}>
                     <img src={require("../../assets/images/delete.svg")} />
                 </ButtonIcon>
@@ -425,7 +429,7 @@ class Peserta extends Component {
         switch(this.state.showModal) {
             case "addPeserta" :
                 return (
-                    <Modal
+                    <ModalPeserta
                         handleClickModal={this.handleCloseModal}
                         showModal={this.state.showModal}
                         handleChange={this.handleChange}
@@ -443,7 +447,23 @@ class Peserta extends Component {
                 );
             case "editPeserta" :
                 return (
-                    <Modal
+                    <ModalPeserta
+                        handleClickModal={this.handleCloseModal}
+                        showModal={this.state.showModal}
+                        handleChange={this.handleChange}
+                        handleChangeJenisTest={this.handleChangeJenisTest}
+                        dataInput={this.state.dataInput}
+                        errors={this.state.errors}
+                        disabled={this.state.disabled}
+                        handleSubmit={this.handleEdit}
+                        handleChangeDate={this.handleChangeDate}
+                        errorMsg={this.state.errorMsg}
+                        isLoading={this.state.isLoading}
+                    />
+                );
+            case "resetPeserta" :
+                return (
+                    <ModalResetJawaban
                         handleClickModal={this.handleCloseModal}
                         showModal={this.state.showModal}
                         handleChange={this.handleChange}
