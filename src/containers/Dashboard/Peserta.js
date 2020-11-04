@@ -355,6 +355,11 @@ class Peserta extends Component {
         }
     }
 
+    handleResetJawaban(e) {
+        e.preventDefault();
+
+    }
+
     handleExport(route) {
         let { filterID } = this.state;
         let payload = {
@@ -466,13 +471,9 @@ class Peserta extends Component {
                     <ModalResetJawaban
                         handleClickModal={this.handleCloseModal}
                         showModal={this.state.showModal}
-                        handleChange={this.handleChange}
-                        handleChangeJenisTest={this.handleChangeJenisTest}
                         dataInput={this.state.dataInput}
                         errors={this.state.errors}
-                        disabled={this.state.disabled}
-                        handleSubmit={this.handleEdit}
-                        handleChangeDate={this.handleChangeDate}
+                        handleSubmit={this.handleResetJawaban}
                         errorMsg={this.state.errorMsg}
                         isLoading={this.state.isLoading}
                     />

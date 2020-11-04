@@ -50,32 +50,28 @@ class ModalResetJawaban extends React.Component {
                                 />
                             </div>
                             <div className="form-group">
-                                <label>Jenis Test</label>
+                                <label>IST</label>
                                 <p>{this.props.errors.jenis_test}</p>
                                 <div
                                   className={`form-control form-check form-check-inline ${this.props.errors.jenis_test ? "invalid" : ""}`}
                                 >
                                   <input type="checkbox" className="form-check-input"
                                     id="ist"
-                                    name="IST"
-                                    defaultChecked={this.props.dataInput.jenis_test ? this.props.dataInput.jenis_test.indexOf('IST') > -1 : false}
-                                    onChange={this.props.handleChangeJenisTest}
+                                    name="subtest_1_ist"
                                     />
-                                  <label className="form-check-label">IST</label>
+                                  <label className="form-check-label">Subtest 1</label>
                                   <input type="checkbox" className="form-check-input"
-                                    id="mii"
-                                    name="MII"
-                                    defaultChecked={this.props.dataInput.jenis_test ? this.props.dataInput.jenis_test.indexOf('MII') > -1 : false}
-                                    onChange={this.props.handleChangeJenisTest}
+                                    id="ist"
+                                    name="subtest_2_ist"
                                     />
-                                  <label className="form-check-label">MII</label>
+                                  <label className="form-check-label">Subtest 2</label>
                                 </div>
                             </div>
                             <div className="modal-footer">
-                              <Button small onClick={this.props.handleSubmit} disabled={this.props.disabled}>
+                              <Button small onClick={this.props.handleSubmit}>
                                 {
                                   (this.props.isLoading) ?
-                                  <div className="spinner-border spinner-border-sm" role="status"></div> : "Selesai"
+                                  <div className="spinner-border spinner-border-sm" role="status"></div> : "Reset"
                                 }
                               </Button>
                             </div>
