@@ -2,7 +2,8 @@ import {
     GetData,
     PostData,
     UpdateData,
-    DeleteData
+    DeleteData,
+    Delete,
 } from "../services/Agent";
 import { alertNotification } from "../modules/utils";
 
@@ -127,11 +128,14 @@ const peserta = {
                         alertNotification(
                             "error",
                             "",
-                            "Jadwal test gagal dihapus"
+                            "Peserta gagal dihapus"
                         );
                     }
                 })
-        }
+        },
+        resetJawaban(payload) {
+            return Delete(`reset/peserta/${payload.peserta_id}/subtest/${payload.subtest}`);
+        },
     })
 }
 

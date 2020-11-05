@@ -1,5 +1,5 @@
 export function PostData (type, data) {
-	
+
 	return  new Promise((resolve, reject) => {
 		fetch(process.env.REACT_APP_SERVER_URL+type, {
 			method: 'POST',
@@ -17,12 +17,12 @@ export function PostData (type, data) {
 		.catch((error) => {
 			reject(error);
 		});
-	}); 
+	});
 }
 
 export function GetData (type, params) {
-	let route = (params) ? 
-					process.env.REACT_APP_SERVER_URL+type+params : 
+	let route = (params) ?
+					process.env.REACT_APP_SERVER_URL+type+params :
 					process.env.REACT_APP_SERVER_URL+type
 
 	return  new Promise((resolve, reject) => {
@@ -41,7 +41,7 @@ export function GetData (type, params) {
 		.catch((error) => {
 			reject(error);
 		});
-	}); 
+	});
 }
 
 export function UpdateData (type, data) {
@@ -63,7 +63,7 @@ export function UpdateData (type, data) {
 		.catch((error) => {
 			reject(error);
 		});
-	}); 
+	});
 }
 
 export function DeleteData (type, id) {
@@ -84,5 +84,25 @@ export function DeleteData (type, id) {
 		.catch((error) => {
 			reject(error);
 		});
-	}); 
+	});
+}
+
+export function Delete (endpoint) {
+	return  new Promise((resolve, reject) => {
+		fetch(process.env.REACT_APP_SERVER_URL+endpoint, {
+			method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+			  'Accept': 'application/json',
+			  'x-access-token' : localStorage.getItem("token")
+            },
+		})
+		.then((response) => response.json())
+		.then((responseJson) => {
+			resolve(responseJson);
+		})
+		.catch((error) => {
+			reject(error);
+		});
+	});
 }

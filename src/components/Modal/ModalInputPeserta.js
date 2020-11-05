@@ -132,7 +132,7 @@ class ModalInputPeserta extends React.Component {
                                 <label>Jenis Test</label>
                                 <p>{this.props.errors.jenis_test}</p>
                                 <div
-                                  className={`form-control form-check form-check-inline ${this.props.errors.jenis_test ? "invalid" : ""}`}
+                                  className={`mt-0 form-control form-check form-check-inline ${this.props.errors.jenis_test ? "invalid" : ""}`}
                                 >
                                   <input type="checkbox" className="form-check-input"
                                     id="ist" disabled={this.props.disabled}

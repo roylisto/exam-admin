@@ -84,7 +84,7 @@ class Login extends Component {
         }
         this.props.login(payload);
     }
-        
+
     showHide() {
         this.setState({
           type: this.state.type === "text" ? "password" : "text"
@@ -112,7 +112,7 @@ class Login extends Component {
                                 id="emailAdmin"
                                 type="email"
                                 placeholder="Email"
-                                onChange={this.handleChange} 
+                                onChange={this.handleChange}
                                 required/>
                         </div>
                         <div className="form-group">
@@ -133,7 +133,7 @@ class Login extends Component {
                             onClick={this.handleLogin}
                             disabled={!this.state.emailAdmin || !this.state.passwordAdmin}
                             >
-                            LOG IN
+                            <span style={{fontSize: "20px"}}>LOG IN</span>
                         </button>
                     </ContentForm>
                 </div>
