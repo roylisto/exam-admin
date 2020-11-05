@@ -2,11 +2,14 @@ import React from 'react';
 import "./Modal.scss"
 // COMPONENTS
 import Button from "../Button"
+import { connect } from 'react-redux';
+import { alertNotification } from "../../modules/utils";
 
 class ModalResetJawaban extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
+        isLoading: false,
         ist: [
           { label: 'Subtest 1', key: 'subtest_1_ist' },
           { label: 'Subtest 2', key: 'subtest_2_ist' },
@@ -71,10 +74,37 @@ class ModalResetJawaban extends React.Component {
 
     handleResetJawaban(e) {
       e.preventDefault();
-      const data = this.state.ist.filter((i) => {
+      this.setState({
+        isLoading: true,
+      });
+      const ist = this.state.ist.filter((i) => {
         return i.checked === true;
       });
-      console.log(data);
+
+      const mii = this.state.mii.filter((i) => {
+        return i.checked === true;
+      });
+
+      const data = [...ist, ...mii];
+      const resetPromises = [];
+      data.forEach((item, index) => {
+        resetPromises.push(this.props.resetJawaban({
+          peserta_id: this.props.dataInput.id,
+          subtest: item.key,
+        }))
+      });
+      Promise.all(resetPromises)
+        .then(() => {
+          alertNotification(
+            "success",
+            "",
+            "Data berhasil direset."
+          );
+          this.setState({
+            isLoading: false,
+          });
+          this.props.handleCloseModal();
+        });
     }
 
     render(){
@@ -97,28 +127,21 @@ class ModalResetJawaban extends React.Component {
                 <div className="modal-dialog" role="document">
                     <div className="modal-content">
                       <h5>Reset Jawaban</h5>
-                        {
-                            (this.props.errorMsg) ?
-                            <div className="alert-text" role="alert">
-                                <img src={require("../../assets/images/error.svg")} alt="" />
-                                {this.props.errorMsg}
-                            </div> : ""
-                        }
                         <form>
-                            <div className={`form-group ${(this.props.handleCek)? "mb-5":""}`}>
+                            <div className={`form-group`}>
                                 <label>ID</label>
                                 <input
-                                    className={`form-control ${this.props.errors.email ? "invalid" : ""}`}
+                                    className={`form-control`}
                                     id="id"
                                     type="text"
                                     value={this.props.dataInput.id}
                                     readOnly={true}
                                 />
                             </div>
-                            <div className={`form-group ${(this.props.handleCek)? "mb-5":""}`}>
+                            <div className={`form-group`}>
                                 <label>Email</label>
                                 <input
-                                    className={`form-control ${this.props.errors.email ? "invalid" : ""}`}
+                                    className={`form-control`}
                                     id="email"
                                     type="email"
                                     value={this.props.dataInput.email}
@@ -128,7 +151,7 @@ class ModalResetJawaban extends React.Component {
                             <div className="form-group">
                                 <label>Nama</label>
                                 <input
-                                    className={`form-control ${this.props.errors.nama ? "invalid" : ""}`}
+                                    className={`form-control`}
                                     id="nama"
                                     type="text"
                                     value={this.props.dataInput.nama}
@@ -188,7 +211,7 @@ class ModalResetJawaban extends React.Component {
                             <div className="modal-footer">
                               <Button small onClick={this.handleResetJawaban.bind(this)} disabled={invalidReset()}>
                                 {
-                                  (this.props.isLoading) ?
+                                  (this.state.isLoading) ?
                                   <div className="spinner-border spinner-border-sm" role="status"></div> : "Reset"
                                 }
                               </Button>
@@ -202,4 +225,12 @@ class ModalResetJawaban extends React.Component {
     }
 }
 
-export default ModalResetJawaban;
+const mapState = state => ({});
+
+const mapDispatch = dispatch => ({
+  resetJawaban: value =>
+      dispatch({ type: 'peserta/resetJawaban', payload: value })
+});
+
+
+export default connect(mapState, mapDispatch)(ModalResetJawaban);

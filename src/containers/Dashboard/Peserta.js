@@ -14,7 +14,6 @@ import { emailFormatter, phoneNumberFormatter, dateFormatter, numberFormatter, f
 // ASSETS
 import download from "../../assets/images/save.svg";
 import plus from "../../assets/images/plus.svg";
-import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
 import { textFilter } from 'react-bootstrap-table2-filter';
 
 const Header = styled.div`{
@@ -34,8 +33,6 @@ const Header = styled.div`{
         font-size: 15px;
     }
 }`;
-
-const { SearchBar } = Search;
 
 class Peserta extends Component {
     constructor(props) {
@@ -467,9 +464,7 @@ class Peserta extends Component {
                         handleClickModal={this.handleCloseModal}
                         showModal={this.state.showModal}
                         dataInput={this.state.dataInput}
-                        errors={this.state.errors}
-                        errorMsg={this.state.errorMsg}
-                        isLoading={this.state.isLoading}
+                        handleCloseModal={this.handleCloseModal}
                     />
                 );
             case "hapusPeserta" :
@@ -579,7 +574,7 @@ const mapDispatch = dispatch => ({
     editPeserta: value =>
         dispatch({ type: 'peserta/editPeserta', payload: value }),
     hapusPeserta: value =>
-        dispatch({ type: 'peserta/hapusPeserta', payload: value })
+        dispatch({ type: 'peserta/hapusPeserta', payload: value }),
 });
 
 
