@@ -31,7 +31,67 @@ class ModalResetJawaban extends React.Component {
       }
     }
 
+    handleChecklistIST(e) {
+      const data = this.state.ist.find((i) => i.key === e.target.name);
+      data.checked = e.target.checked;
+      this.setState({
+        ist: Object.assign([...this.state.ist], {data}),
+      })
+    }
+
+    handleCheckAllIST(e) {
+      let data = [...this.state.ist];
+      data = data.map((d) => {
+        d.checked = e.target.checked;
+        return d;
+      });
+      this.setState({
+        ist: data,
+      });
+    }
+
+    handleChecklistMII(e) {
+      const data = this.state.mii.find((i) => i.key === e.target.name);
+      data.checked = e.target.checked;
+      this.setState({
+        mii: Object.assign([...this.state.mii], {data}),
+      })
+    }
+
+    handleCheckAllMII(e) {
+      let data = [...this.state.mii];
+      data = data.map((d) => {
+        d.checked = e.target.checked;
+        return d;
+      });
+      this.setState({
+        mii: data,
+      });
+    }
+
+    handleResetJawaban(e) {
+      e.preventDefault();
+      const data = this.state.ist.filter((i) => {
+        return i.checked === true;
+      });
+      console.log(data);
+    }
+
     render(){
+      const invalidReset = () => {
+        const ist = this.state.ist.find((i) => {
+          return i.checked === true;
+        });
+
+        const mii = this.state.mii.find((i) => {
+          return i.checked === true;
+        });
+
+        if (ist || mii) {
+          return false;
+        }
+        return true;
+      }
         return (
             <div className="modal" style={{display: (this.props.showModal) ? "block" : "none"}}>
                 <div className="modal-dialog" role="document">
@@ -79,15 +139,20 @@ class ModalResetJawaban extends React.Component {
                               <div className="col-lg-6">
                                 <div className="form-group">
                                   <label>IST</label>
-                                  <p>{this.props.errors.jenis_test}</p>
                                   <div
-                                    className={`mt-0 form-control form-check form-check-inline d-inline-block ${this.props.errors.jenis_test ? "invalid" : ""}`}
+                                    className={`mt-0 form-control form-check form-check-inline d-inline-block`}
                                   >
+                                    <input type="checkbox" className="form-check-input"
+                                      name="check_all_ist"
+                                      onChange={this.handleCheckAllIST.bind(this)}
+                                    />
+                                    <label className="form-check-label">Pilih Semua</label>
                                     {this.state.ist.map((item, index) => {
                                       return <div key={index}>
                                               <input type="checkbox" className="form-check-input"
-                                                id="ist"
                                                 name={item.key}
+                                                onChange={this.handleChecklistIST.bind(this)}
+                                                checked={item.checked || false}
                                               />
                                               <label className="form-check-label">{item.label}</label>
                                             </div>
@@ -98,15 +163,20 @@ class ModalResetJawaban extends React.Component {
                               <div className="col-lg-6">
                                 <div className="form-group">
                                   <label>MII</label>
-                                  <p>{this.props.errors.jenis_test}</p>
                                   <div
-                                    className={`mt-0 form-control form-check form-check-inline d-inline-block ${this.props.errors.jenis_test ? "invalid" : ""}`}
+                                    className={`mt-0 form-control form-check form-check-inline d-inline-block`}
                                   >
+                                    <input type="checkbox" className="form-check-input"
+                                      name="check_all_mii"
+                                      onChange={this.handleCheckAllMII.bind(this)}
+                                    />
+                                    <label className="form-check-label">Pilih Semua</label>
                                     {this.state.mii.map((item, index) => {
                                       return <div key={index}>
                                               <input type="checkbox" className="form-check-input"
-                                                id="mii"
                                                 name={item.key}
+                                                onChange={this.handleChecklistMII.bind(this)}
+                                                checked={item.checked || false}
                                               />
                                               <label className="form-check-label">{item.label}</label>
                                             </div>
@@ -116,7 +186,7 @@ class ModalResetJawaban extends React.Component {
                               </div>
                             </div>
                             <div className="modal-footer">
-                              <Button small onClick={this.props.handleSubmit}>
+                              <Button small onClick={this.handleResetJawaban.bind(this)} disabled={invalidReset()}>
                                 {
                                   (this.props.isLoading) ?
                                   <div className="spinner-border spinner-border-sm" role="status"></div> : "Reset"
