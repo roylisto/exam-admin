@@ -3,15 +3,18 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 // COMPONENTS
 import Button from '../../components/Button';
+import ButtonIcon from '../../components/ButtonIcon';
 import TabelPeserta from "../../components/Tabel/Tabel";
 import ModalHapus from '../../components/Modal/ModalHapus';
-import Modal from "../../components/Modal/ModalInputPeserta";
+import ModalPeserta from "../../components/Modal/ModalInputPeserta";
+import ModalResetJawaban from "../../components/Modal/ModalResetJawaban";
 import Loading from "../../components/Loading";
 import { emailFormatter, phoneNumberFormatter, dateFormatter, numberFormatter, formatArray }
   from "../../modules/Formatter";
 // ASSETS
-import download from "../../assets/images/save.svg"
-import plus from "../../assets/images/plus.svg"
+import download from "../../assets/images/save.svg";
+import plus from "../../assets/images/plus.svg";
+import { textFilter } from 'react-bootstrap-table2-filter';
 
 const Header = styled.div`{
     display : flex;
@@ -81,16 +84,16 @@ class Peserta extends Component {
     componentDidMount() {
         const columns = [
             { dataField: 'id', text: 'ID' },
-            { dataField: 'email', text: 'Email' },
-            { dataField: 'nama', text: 'Nama' },
+            { dataField: 'email', text: 'Email' , filter: textFilter()},
+            { dataField: 'nama', text: 'Nama' , filter: textFilter()},
             { dataField: 'password', text: 'Password' },
-            { dataField: 'no_hp', text: 'No HP' },
+            { dataField: 'no_hp', text: 'No HP' , filter: textFilter()},
             { dataField: 'jenis_kelamin', text: 'Jenis Kelamin' },
             { dataField: 'tanggal_lahir', text: 'Tanggal Lahir' },
-            { dataField: 'kelompok', text: 'Kelompok' },
-            { dataField: 'instansi', text: 'Instansi' },
+            { dataField: 'kelompok', text: 'Kelompok' , filter: textFilter()},
+            { dataField: 'instansi', text: 'Instansi' , filter: textFilter()},
             { dataField: 'jenis_test', text: 'Jenis Test',
-              formatter: formatArray },
+              formatter: formatArray , filter: textFilter()},
             { dataField: 'valid', text: 'Valid',
                 formatter: dateFormatter },
             { dataField: 'expired', text: 'Expired',
@@ -406,14 +409,15 @@ class Peserta extends Component {
     actionFormatter(e, row) {
         return (
             <div className="btn-group">
-                <Button white small xs onClick={()=>this.handleClickButtonAction("editPeserta",row)}>
+                <ButtonIcon white onClick={()=>this.handleClickButtonAction("editPeserta",row)}>
                     <img src={require("../../assets/images/edit.svg")} />
-                    Edit
-                </Button>
-                <Button white small xs onClick={()=>this.handleClickButtonAction("hapusPeserta",row)}>
+                </ButtonIcon>
+                <ButtonIcon white onClick={()=>this.handleClickButtonAction("resetPeserta",row)}>
+                    <img src={require("../../assets/images/reset.svg")} />
+                </ButtonIcon>
+                <ButtonIcon white onClick={()=>this.handleClickButtonAction("hapusPeserta",row)}>
                     <img src={require("../../assets/images/delete.svg")} />
-                    Hapus
-                </Button>
+                </ButtonIcon>
             </div>
         )
     }
@@ -422,7 +426,7 @@ class Peserta extends Component {
         switch(this.state.showModal) {
             case "addPeserta" :
                 return (
-                    <Modal
+                    <ModalPeserta
                         handleClickModal={this.handleCloseModal}
                         showModal={this.state.showModal}
                         handleChange={this.handleChange}
@@ -440,7 +444,7 @@ class Peserta extends Component {
                 );
             case "editPeserta" :
                 return (
-                    <Modal
+                    <ModalPeserta
                         handleClickModal={this.handleCloseModal}
                         showModal={this.state.showModal}
                         handleChange={this.handleChange}
@@ -454,10 +458,19 @@ class Peserta extends Component {
                         isLoading={this.state.isLoading}
                     />
                 );
+            case "resetPeserta" :
+                return (
+                    <ModalResetJawaban
+                        handleClickModal={this.handleCloseModal}
+                        showModal={this.state.showModal}
+                        dataInput={this.state.dataInput}
+                        handleCloseModal={this.handleCloseModal}
+                    />
+                );
             case "hapusPeserta" :
                 return (
                     <ModalHapus
-                        type="jadwal"
+                        type="peserta"
                         handleCloseModal={this.handleCloseModal}
                         showModal={this.state.showModal}
                         handleHapus={this.handleHapus}
@@ -561,7 +574,7 @@ const mapDispatch = dispatch => ({
     editPeserta: value =>
         dispatch({ type: 'peserta/editPeserta', payload: value }),
     hapusPeserta: value =>
-        dispatch({ type: 'peserta/hapusPeserta', payload: value })
+        dispatch({ type: 'peserta/hapusPeserta', payload: value }),
 });
 
 
