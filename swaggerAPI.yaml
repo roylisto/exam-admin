@@ -168,7 +168,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/createoneuser%2Bpesertarequest'
+              $ref: '#/components/schemas/createoneuserPesertarequest'
             example:
               nama: namaku
               email: tesKategori2@gmail.com
@@ -1386,8 +1386,8 @@ components:
         tanggal_lahir: 2020-12-15
         kelompok: kelas 2
         instansi: unsri ilkom
-    createoneuser+pesertarequest:
-      title: createoneuser+pesertarequest
+    createoneuserPesertarequest:
+      title: createoneuserPesertarequest
       required:
       - nama
       - email
