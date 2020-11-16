@@ -1159,6 +1159,7 @@ paths:
       summary: auth peserta
       operationId: authpeserta
       parameters: []
+      security: []
       requestBody:
         description: ''
         content:
