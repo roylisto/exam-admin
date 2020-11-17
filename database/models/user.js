@@ -8,10 +8,16 @@ module.exports = function(sequelize, DataTypes) {
     },
     nama: {
       allowNull: false,
+      validate: {
+        isAlpha: true
+      },
       type: DataTypes.STRING
     },
     email: {
       allowNull: false,
+      validate: {
+        isEmail: true
+      },
       type: DataTypes.STRING
     },
     no_hp: {
@@ -20,6 +26,9 @@ module.exports = function(sequelize, DataTypes) {
     },
     tanggal_lahir: {
       allowNull: false,
+      validate: {
+        isDate: true,
+      },
       type: DataTypes.INTEGER
     },
     jenis_kelamin: {      
