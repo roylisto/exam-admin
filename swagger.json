@@ -1,0 +1,1503 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Exam APP",
+    "contact": {},
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000/api"
+    }
+  ],
+  "security": [
+    {
+      "apiKey": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "auth"
+    },
+    {
+      "name": "admin"
+    },
+    {
+      "name": "reset"
+    },
+    {
+      "name": "email"
+    },
+    {
+      "name": "peserta"
+    },
+    {
+      "name": "jadwal-test",
+      "description": "crud jadwal test"
+    },
+    {
+      "name": "users"
+    },
+    {
+      "name": "export"
+    },
+    {
+      "name": "import"
+    },
+    {
+      "name": "Delete Files",
+      "description": "menghapus file yang ada di server"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "list users",
+        "operationId": "listusers",
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      },
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "create one users",
+        "operationId": "createoneusers",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createoneusersrequest"
+              },
+              "example": {
+                "nama": "nama test",
+                "email": "test111@gmail.com",
+                "no_hp": 85758612441,
+                "jenis_kelamin": "pria",
+                "tanggal_lahir": "2020-12-15",
+                "kelompok": "kelas 2",
+                "instansi": "unsri ilkom"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      }
+    },
+    "/users/{userId}": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "get one users",
+        "operationId": "getoneusers",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      },
+      "put": {
+        "tags": [
+          "users"
+        ],
+        "summary": "update one users",
+        "operationId": "updateoneusers",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/updateoneusersrequest"
+              },
+              "example": {
+                "nama": "nama test edit",
+                "email": "test1@gmail.com",
+                "no_hp": 85758612442,
+                "tanggal_lahir": "2020-12-15",
+                "kelompok": "kelas 2",
+                "instansi": "unsri ilkom"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      },
+      "delete": {
+        "tags": [
+          "users"
+        ],
+        "summary": "delete one users",
+        "operationId": "deleteOneUsers",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      }
+    },
+    "/users/peserta": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "create one user+peserta",
+        "operationId": "createoneuser+peserta",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createoneuserPesertarequest"
+              },
+              "example": {
+                "nama": "namaku",
+                "email": "tesKategori2@gmail.com",
+                "no_hp": 8888188111,
+                "jenis_kelamin": "pria",
+                "tanggal_lahir": "1997-10-13",
+                "kelompok": "BB",
+                "instansi": "ilkom",
+                "jadwal_test": 1,
+                "jenis_test": [
+                  "IST",
+                  "MII"
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      }
+    },
+    "/reset/test/{jadwalTestId}": {
+      "delete": {
+        "tags": [
+          "reset"
+        ],
+        "summary": "reset seluruh peserta by id jadwaltest",
+        "operationId": "resetseluruhpesertabyidjadwaltest",
+        "parameters": [
+          {
+            "name": "jadwalTestId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      }
+    },
+    "/reset/peserta/{pesertaId}/subtest/{namaSubtest}": {
+      "delete": {
+        "tags": [
+          "reset"
+        ],
+        "summary": "reset subtest peserta by id peserta dan code_subtest",
+        "description": "code_subtest = {\n\n  subtest_1_ist, //start ist\n\n  subtest_2_ist,\n\n  subtest_3_ist,\n\n  subtest_4_ist,\n\n  subtest_5_ist,\n\n  subtest_6_ist,\n\n  subtest_7_ist,\n\n  subtest_8_ist,\n\n  subtest_9_ist, //end ist\n\n  bagian_1_verb_ling, //start subtest mii\n\n  bagian_2_log_math,\n\n  bagian_3_spat,\n\n  bagian_4_mus,\n\n  bagian_5_bod_kin,\n\n  bagian_6_inter,\n\n  bagian_7_intra,\n\n  bagian_8_nat, //end mii\n\n}",
+        "operationId": "resetsubtestpesertabyidpesertadancode_subtest",
+        "parameters": [
+          {
+            "name": "pesertaId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "namaSubtest",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      }
+    },
+    "/reset/peserta/{pesertaId}": {
+      "delete": {
+        "tags": [
+          "reset"
+        ],
+        "summary": "reset satu peserta by id peserta",
+        "description": "reset seluruh subtest untuk satu peserta",
+        "operationId": "resetsatupesertabyidpeserta",
+        "parameters": [
+          {
+            "name": "pesertaId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      }
+    },
+    "/score-peserta/{jadwalTestId}": {
+      "put": {
+        "tags": [
+          "reset"
+        ],
+        "summary": "reset score all peserta by id test",
+        "operationId": "resetscoreallpesertabyidtest",
+        "parameters": [
+          {
+            "name": "jadwalTestId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      }
+    },
+    "/score-peserta/{jadwalTestId}/{pesertaId}": {
+      "put": {
+        "tags": [
+          "reset"
+        ],
+        "summary": "reset score one peserta by id test dan id peserta",
+        "operationId": "resetscoreonepesertabyidtestdanidpeserta",
+        "parameters": [
+          {
+            "name": "jadwalTestId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "pesertaId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      }
+    },
+    "/peserta/welcome-email/{pesertaId}/{emailPeserta}": {
+      "post": {
+        "tags": [
+          "email"
+        ],
+        "summary": "send welcome-email peserta",
+        "description": "parameter pertama id jadwaltest, yang kedua email peserta",
+        "operationId": "sendwelcome-emailpeserta",
+        "parameters": [
+          {
+            "name": "pesertaId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "emailPeserta",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      }
+    },
+    "/peserta": {
+      "get": {
+        "tags": [
+          "peserta"
+        ],
+        "summary": "get list peserta",
+        "operationId": "getlistpeserta",
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      },
+      "post": {
+        "tags": [
+          "peserta"
+        ],
+        "summary": "create peserta",
+        "operationId": "createpeserta",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createpesertarequest"
+              },
+              "example": {
+                "user_email": [
+                  "aa@gmail.com",
+                  "b@gmail.com",
+                  "c@gmail.com",
+                  "dd@gmail.com"
+                ],
+                "jadwal_test": 3
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      }
+    },
+    "/peserta/{pesertaId}": {
+      "get": {
+        "tags": [
+          "peserta"
+        ],
+        "summary": "get one peserta by id",
+        "description": "return {\n\n    \"nama\",\n\n    \"email\",\n\n    \"no_hp\",\n\n    \"tanggal_lahir\",\n\n    \"kelompok\",\n\n    \"instansi\",\n\n    \"created_at\",\n\n    \"updated_at\",\n\n    \"deleted_at\",\n\n    \"jenis_kelamin\",\n\n    \"password\",\n\n    \"valid\",\n\n    \"expired\",\n\n    \"jadwal_test\",\n\n}",
+        "operationId": "getonepesertabyid",
+        "parameters": [
+          {
+            "name": "pesertaId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      },
+      "put": {
+        "tags": [
+          "peserta"
+        ],
+        "summary": "update data peserta by id",
+        "description": "request body sesuai dgn add user+peserta",
+        "operationId": "updatedatapesertabyid",
+        "parameters": [
+          {
+            "name": "pesertaId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/updatedatapesertabyidrequest"
+              },
+              "example": {
+                "nama": "namaku",
+                "email": "tesKategori2@gmail.com",
+                "no_hp": 8888188111,
+                "tanggal_lahir": "1997-10-13",
+                "kelompok": "BB",
+                "instansi": "ilkom",
+                "jenis_kelamin": "pria",
+                "password": "ODUPWEWD",
+                "valid": "2020-07-20T01:12:00Z",
+                "expired": "2020-08-21T01:12:00Z",
+                "jadwal_test": 1,
+                "jenis_test": [
+                  "IST"
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      },
+      "delete": {
+        "tags": [
+          "peserta"
+        ],
+        "summary": "delete one peserta",
+        "operationId": "deleteonepeserta",
+        "parameters": [
+          {
+            "name": "pesertaId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      }
+    },
+    "/peserta/test/{jadwalTestId}": {
+      "get": {
+        "tags": [
+          "peserta"
+        ],
+        "summary": "get list peserta by id jadwal_test",
+        "operationId": "getlistpesertabyidjadwal_test",
+        "parameters": [
+          {
+            "name": "jadwalTestId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      }
+    },
+    "/peserta/{pesertaId}/jawaban": {
+      "get": {
+        "tags": [
+          "peserta"
+        ],
+        "summary": "show jawaban peserta",
+        "description": "get jawaban peserta by id peserta + query jenis tes",
+        "operationId": "showjawabanpeserta",
+        "parameters": [
+          {
+            "name": "pesertaId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "test",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "example": "ist"
+            }
+          }
+        ],
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      }
+    },
+    "/jadwal-test": {
+      "get": {
+        "tags": [
+          "jadwal-test"
+        ],
+        "summary": "list jadwal test",
+        "operationId": "listjadwaltest",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "boolean",
+              "example": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      },
+      "post": {
+        "tags": [
+          "jadwal-test"
+        ],
+        "summary": "create jadwal test",
+        "operationId": "createjadwaltest",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createjadwaltestrequest"
+              },
+              "example": {
+                "waktu": "2020-07-27 06:00",
+                "expired": "2020-07-27 07:00",
+                "instansi": "testing 27",
+                "keterangan": "batch 1"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      }
+    },
+    "/jadwal-test/{jadwalTestId}": {
+      "get": {
+        "tags": [
+          "jadwal-test"
+        ],
+        "summary": "get jadwal test",
+        "operationId": "getjadwaltest",
+        "parameters": [
+          {
+            "name": "jadwalTestId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      },
+      "put": {
+        "tags": [
+          "jadwal-test"
+        ],
+        "summary": "update jadwal test",
+        "operationId": "updatejadwaltest",
+        "parameters": [
+          {
+            "name": "jadwalTestId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/updatejadwaltestrequest"
+              },
+              "example": {
+                "waktu": "2020-07-19 10:00",
+                "instansi": "sma 9 testing"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      },
+      "delete": {
+        "tags": [
+          "jadwal-test"
+        ],
+        "summary": "delete jadwal test",
+        "operationId": "deletejadwaltest",
+        "parameters": [
+          {
+            "name": "jadwalTestId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      }
+    },
+    "/admin": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "list admin",
+        "operationId": "listadmin",
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      },
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "create admin",
+        "operationId": "createadmin",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createadminrequest"
+              },
+              "example": {
+                "name": "Admin for delete",
+                "email": "del@educasia.id",
+                "password": 11111111
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      }
+    },
+    "/admin/{adminId}": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "get admin",
+        "operationId": "getadmin",
+        "parameters": [
+          {
+            "name": "adminId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      },
+      "put": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "update admin",
+        "operationId": "updateadmin",
+        "parameters": [
+          {
+            "name": "adminId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/updateadminrequest"
+              },
+              "example": {
+                "name": "Admin testcreate update",
+                "email": "bbc@educasia.id",
+                "password": 12341234
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      },
+      "delete": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "delete admin",
+        "operationId": "deleteadmin",
+        "parameters": [
+          {
+            "name": "adminId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "security":[],
+        "summary": "login admin",
+        "operationId": "loginadmin",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/loginadminrequest"
+              },
+              "example": {
+                "email": "admin@bakatku.id",
+                "password": "BinaHuman#2020"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      }
+    },
+    "/admin/reset-password": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "reset password admin by user",
+        "operationId": "resetpasswordadminbyuser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/resetpasswordadminbyuserrequest"
+              },
+              "example": {
+                "old_password": 1234567,
+                "new_password": 12341234
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      }
+    },
+    "/peserta-test/{jadwalTestId}": {
+      "get": {
+        "tags": [
+          "export"
+        ],
+        "summary": "export list peserta test",
+        "operationId": "exportlistpesertatest",
+        "parameters": [
+          {
+            "name": "jadwalTestId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      }
+    },
+    "/hasil-test/{jadwalTestId}": {
+      "get": {
+        "tags": [
+          "export"
+        ],
+        "summary": "get hasil test",
+        "description": "/hasil-test/:id",
+        "operationId": "gethasiltest",
+        "parameters": [
+          {
+            "name": "jadwalTestId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      }
+    },
+    "/jawaban-test/{jadwalTestId}": {
+      "get": {
+        "tags": [
+          "export"
+        ],
+        "summary": "get jawaban peserta dgn params id jadwal test",
+        "operationId": "getjawabanpesertadgnparamsidjadwaltest",
+        "parameters": [
+          {
+            "name": "jadwalTestId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      }
+    },
+    "/users/excel": {
+      "post": {
+        "tags": [
+          "import"
+        ],
+        "summary": "import user by excel",
+        "operationId": "importuserbyexcel",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "required": [
+                  "jadwal_test",
+                  "user"
+                ],
+                "type": "object",
+                "properties": {
+                  "user": {
+                    "type": "string"
+                  },
+                  "jadwal_test": {
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 82
+                  },
+                  "jenis_test": {
+                    "type": "string"
+                  }
+                }
+              },
+              "encoding": {}
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {}
+        },
+        "deprecated": false
+      }
+    },
+    "/files": {
+      "delete": {
+        "tags": [
+          "Delete Files"
+        ],
+        "summary": "delete files in dir files",
+        "operationId": "deletefilesindirfiles",
+        "responses": {
+          "200": {
+            "description": "operation success"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/uploads": {
+      "delete": {
+        "tags": [
+          "Delete Files"
+        ],
+        "summary": "delete files in dir uploads",
+        "operationId": "deletefilesindiruploads",
+        "responses": {
+          "200": {
+            "description": "operation success"
+          }
+        },
+        "deprecated": false
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "createoneusersrequest": {
+        "title": "createoneusersrequest",
+        "required": [
+          "email",
+          "instansi",
+          "jenis_kelamin",
+          "jenis_test",
+          "kelompok",
+          "nama",
+          "no_hp",
+          "tanggal_lahir"
+        ],
+        "type": "object",
+        "properties": {
+          "nama": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "no_hp": {
+            "type": "string"
+          },
+          "jenis_kelamin": {
+            "type": "string"
+          },
+          "tanggal_lahir": {
+            "type": "string"
+          },
+          "kelompok": {
+            "type": "string"
+          },
+          "instansi": {
+            "type": "string"
+          },
+          "jenis_test": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "nama": "nama test",
+          "email": "test111@gmail.com",
+          "no_hp": 85758612441,
+          "jenis_kelamin": "pria",
+          "tanggal_lahir": "2020-12-15",
+          "kelompok": "kelas 2",
+          "instansi": "unsri ilkom",
+          "jenis_test": "MII,IST"
+        }
+      },
+      "updateoneusersrequest": {
+        "title": "updateoneusersrequest",
+        "required": [
+          "email",
+          "instansi",
+          "kelompok",
+          "nama",
+          "no_hp",
+          "tanggal_lahir"
+        ],
+        "type": "object",
+        "properties": {
+          "nama": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "no_hp": {
+            "type": "string"
+          },
+          "tanggal_lahir": {
+            "type": "string"
+          },
+          "kelompok": {
+            "type": "string"
+          },
+          "instansi": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "nama": "nama test edit",
+          "email": "test1@gmail.com",
+          "no_hp": 85758612442,
+          "tanggal_lahir": "2020-12-15",
+          "kelompok": "kelas 2",
+          "instansi": "unsri ilkom"
+        }
+      },
+      "createoneuserPesertarequest": {
+        "title": "createoneuserPesertarequest",
+        "required": [
+          "email",
+          "instansi",
+          "jadwal_test",
+          "jenis_kelamin",
+          "jenis_test",
+          "kelompok",
+          "nama",
+          "no_hp",
+          "tanggal_lahir"
+        ],
+        "type": "object",
+        "properties": {
+          "nama": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "no_hp": {
+            "type": "string"
+          },
+          "jenis_kelamin": {
+            "type": "string"
+          },
+          "tanggal_lahir": {
+            "type": "string"
+          },
+          "kelompok": {
+            "type": "string"
+          },
+          "instansi": {
+            "type": "string"
+          },
+          "jadwal_test": {
+            "type": "string"
+          },
+          "jenis_test": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "example": {
+          "nama": "namaku",
+          "email": "tesKategori2@gmail.com",
+          "no_hp": 8888188111,
+          "jenis_kelamin": "pria",
+          "tanggal_lahir": "1997-10-13",
+          "kelompok": "BB",
+          "instansi": "ilkom",
+          "jadwal_test": 1,
+          "jenis_test": [
+            "IST",
+            "MII"
+          ]
+        }
+      },
+      "createpesertarequest": {
+        "title": "createpesertarequest",
+        "required": [
+          "jadwal_test",
+          "user_email"
+        ],
+        "type": "object",
+        "properties": {
+          "user_email": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "jadwal_test": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "example": {
+          "user_email": [
+            "aa@gmail.com",
+            "b@gmail.com",
+            "c@gmail.com",
+            "dd@gmail.com"
+          ],
+          "jadwal_test": 3
+        }
+      },
+      "updatedatapesertabyidrequest": {
+        "title": "updatedatapesertabyidrequest",
+        "required": [
+          "email",
+          "expired",
+          "instansi",
+          "jadwal_test",
+          "jenis_kelamin",
+          "jenis_test",
+          "kelompok",
+          "nama",
+          "no_hp",
+          "password",
+          "tanggal_lahir",
+          "valid"
+        ],
+        "type": "object",
+        "properties": {
+          "nama": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "no_hp": {
+            "type": "string"
+          },
+          "tanggal_lahir": {
+            "type": "string"
+          },
+          "kelompok": {
+            "type": "string"
+          },
+          "instansi": {
+            "type": "string"
+          },
+          "jenis_kelamin": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "valid": {
+            "type": "string"
+          },
+          "expired": {
+            "type": "string"
+          },
+          "jadwal_test": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "jenis_test": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "example": {
+          "nama": "namaku",
+          "email": "tesKategori2@gmail.com",
+          "no_hp": 8888188111,
+          "tanggal_lahir": "1997-10-13",
+          "kelompok": "BB",
+          "instansi": "ilkom",
+          "jenis_kelamin": "pria",
+          "password": "ODUPWEWD",
+          "valid": "2020-07-20T01:12:00Z",
+          "expired": "2020-08-21T01:12:00Z",
+          "jadwal_test": 1,
+          "jenis_test": [
+            "IST"
+          ]
+        }
+      },
+      "createjadwaltestrequest": {
+        "title": "createjadwaltestrequest",
+        "required": [
+          "expired",
+          "instansi",
+          "keterangan",
+          "waktu"
+        ],
+        "type": "object",
+        "properties": {
+          "waktu": {
+            "type": "string"
+          },
+          "expired": {
+            "type": "string"
+          },
+          "instansi": {
+            "type": "string"
+          },
+          "keterangan": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "waktu": "2020-07-27 06:00",
+          "expired": "2020-07-27 07:00",
+          "instansi": "testing 27",
+          "keterangan": "batch 1"
+        }
+      },
+      "updatejadwaltestrequest": {
+        "title": "updatejadwaltestrequest",
+        "required": [
+          "instansi",
+          "waktu"
+        ],
+        "type": "object",
+        "properties": {
+          "waktu": {
+            "type": "string"
+          },
+          "instansi": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "waktu": "2020-07-19 10:00",
+          "instansi": "sma 9 testing"
+        }
+      },
+      "createadminrequest": {
+        "title": "createadminrequest",
+        "required": [
+          "email",
+          "name",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "name": "Admin for delete",
+          "email": "del@educasia.id",
+          "password": 11111111
+        }
+      },
+      "updateadminrequest": {
+        "title": "updateadminrequest",
+        "required": [
+          "email",
+          "name",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "name": "Admin testcreate update",
+          "email": "bbc@educasia.id",
+          "password": 12341234
+        }
+      },
+      "loginadminrequest": {
+        "title": "loginadminrequest",
+        "required": [
+          "email",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "email": "ana@educasia.id",
+          "password": 12345678
+        }
+      },
+      "resetpasswordadminbyuserrequest": {
+        "title": "resetpasswordadminbyuserrequest",
+        "required": [
+          "new_password",
+          "old_password"
+        ],
+        "type": "object",
+        "properties": {
+          "old_password": {
+            "type": "string"
+          },
+          "new_password": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "old_password": 1234567,
+          "new_password": 12341234
+        }
+      },
+      "authpesertarequest": {
+        "title": "authpesertarequest",
+        "required": [
+          "email",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "email": "jhon@gmail.com",
+          "password": 12345678
+        }
+      }
+    },
+    "securitySchemes": {
+      "apiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-access-token"
+      }
+    }
+  }
+}

@@ -11,6 +11,8 @@ const webpack = require('webpack');
 const webpackConfig = require('./webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const compiler = webpack(webpackConfig);
+const swaggerUi = require('swagger-ui-express');
+swaggerDocument = require('./swagger.json');
 
 const app = express();
 
@@ -30,6 +32,7 @@ if (env === 'development') {
       modules: false,
     },
   }));
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 }
 
 if (env === 'production') {
