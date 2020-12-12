@@ -59,8 +59,7 @@ const SidebarNew = (props) => {
             <NavLink
                 to="/dashboard/jadwaltest"
                 activeClassName="sidebar-menu-link-active"
-                className={`sidebar-menu-link
-                            ${(window.location.hash === "#/dashboard/peserta") ? "dropdown" : ""}`}
+                className={`sidebar-menu-link`}
                 isActive={(match, location) => {
                     if (location.pathname === "/dashboard" || location.pathname === "/dashboard/jadwaltest") {
                         return true
@@ -70,14 +69,6 @@ const SidebarNew = (props) => {
             >
                 <Image src={calendar} />
                 Jadwal Test
-            </NavLink>
-            <NavLink
-                to="/dashboard/peserta"
-                activeClassName="sidebar-menu-link-active"
-                className={`sidebar-menu-link sub-menu`}
-            >
-                <Image src={people}/>
-                Peserta
             </NavLink>
             {
                 (props.role === "superadmin") ?

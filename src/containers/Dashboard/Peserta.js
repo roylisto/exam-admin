@@ -42,11 +42,11 @@ class Peserta extends Component {
             showModal: false,
             data: null,
             columns: null,
-            namaInstansi : '',
+            namaInstansi : this.props.match.params.instansi,
             loading: true,
             jadwalTest : null,
-            filter : '',
-            filterID : '',
+            filter : this.props.match.params.instansi,
+            filterID : this.props.match.params.idJadwal,
             disabled: true,
             dataInput: {
                 nama : '',
@@ -79,6 +79,7 @@ class Peserta extends Component {
         this.handleCloseModal = this.handleCloseModal.bind(this);
         this.handleHapus = this.handleHapus.bind(this);
         this.handleEdit = this.handleEdit.bind(this);
+        this.props.fetchPesertaList(this.props.match.params.idJadwal);
     }
 
     componentDidMount() {
@@ -489,19 +490,10 @@ class Peserta extends Component {
         return (
             <React.Fragment>
                 <Header>
-                    <form>
-                        <select
-                            className="form-control"
-                            id="filter"
-                            onChange={this.handleChangeFilter}>
-                            <option value="">Jadwal Test</option>
-                            {
-                                this.state.jadwalTest.map((val,i)=>{
-                                    return <option key={i} value={val.id+";"+val.instansi}>{val.instansi}</option>
-                                })
-                            }
-                        </select>
-                    </form>
+                    <div className="d-flex pl-2">
+                        <h5><b>Jadwal Test : </b></h5>
+                        <span>&emsp;{this.state.filter}</span>
+                    </div>
                     <div>
                         <Button white
                           onClick={()=>this.handleExport("peserta-test/")}
@@ -524,18 +516,14 @@ class Peserta extends Component {
                         <Button
                             style={{width:"150px"}}
                             onClick={this.handleClickModal}
-                            disabled={this.state.filter === ""}>
+                            disabled={this.state.filterID === ""}>
                             <img src={plus} />
                             Input Peserta
                         </Button>
                     </div>
                 </Header>
-                <div className="d-flex pl-2">
-                    <h5><b>Jadwal Test : </b></h5>
-                    <span>&emsp;{this.state.filter}</span>
-                </div>
                 {
-                    (this.state.filter !== "") ?
+                    (this.state.filterID !== "") ?
                     <TabelPeserta
                         keyField="id"
                         data={this.state.data}
