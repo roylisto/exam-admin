@@ -9,11 +9,12 @@ import ModalHapus from '../../components/Modal/ModalHapus';
 import ModalPeserta from "../../components/Modal/ModalInputPeserta";
 import ModalResetJawaban from "../../components/Modal/ModalResetJawaban";
 import Loading from "../../components/Loading";
-import { emailFormatter, phoneNumberFormatter, dateFormatter, numberFormatter, formatArray }
+import { emailFormatter, phoneNumberFormatter, dateFormatter, formatArray }
   from "../../modules/Formatter";
 // ASSETS
 import download from "../../assets/images/save.svg";
 import plus from "../../assets/images/plus.svg";
+import upload from "../../assets/images/upload.svg";
 import { textFilter } from 'react-bootstrap-table2-filter';
 
 const Header = styled.div`{
@@ -362,6 +363,15 @@ class Peserta extends Component {
         this.props.exportPeserta(payload);
     }
 
+    handleImportPeserta() {
+      this.hiddenFileInput.click();
+    }
+
+    handleFileInput(e) {
+      const fileUploaded = e.target.files[0];
+      console.log(fileUploaded);
+    }
+
     handleOnFocusEmail() {
         this.setState({
             disabled: true,
@@ -513,6 +523,18 @@ class Peserta extends Component {
                           <img src={download} />
                           Export Hasil
                         </Button>
+                        <Button white
+                          onClick={()=>this.handleImportPeserta()}
+                          disabled={this.state.filterID === ""}>
+                          <img src={upload} />
+                          Import Peserta
+                        </Button>
+                        <input type="file"
+                          ref={input => this.hiddenFileInput = input}
+                          onChange={this.handleFileInput}
+                          style={{display:'none'}}
+                          accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                        />
                         <Button
                             style={{width:"150px"}}
                             onClick={this.handleClickModal}

@@ -9,7 +9,6 @@ const AdminController = require('../controllers/admin');
 const download = require('../controllers/download');
 const multer = require('../middlewares/multer.js');
 const file = require('../controllers/file');
-const user = require('../controllers/user.js');
 const peserta = require('../controllers/peserta.js');
 const jadwalTest = require('../controllers/jadwalTest.js');
 const hasil = require('../controllers/hasil.js');
@@ -28,8 +27,8 @@ module.exports = (router) => {
   router.put('/users/:id', [IsAuthenticated], UserController.update);
   router.delete('/users/:id', [IsAuthenticated], UserController.delete);
   router.post('/users/peserta/', [IsAuthenticated], UserController.userPeserta);
-  router.post('/users/excel', [IsAuthenticated], multer.single('user'), user.import);
-  
+  router.post('/users/excel', [IsAuthenticated], multer.single('user'), UserController.import);
+
   //admin account route
   router.get('/admin', [IsSuperAdmin], AdminController.list);
   router.get('/admin/:id', [IsSuperAdmin], AdminController.get);
