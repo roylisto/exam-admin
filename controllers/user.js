@@ -8,20 +8,30 @@ const insertPeserta = async (item, dataErr, options) => {
   let nama = item.nama ? item.nama.trim() : null;
   let email = item.email ? (item.email.text ? item.email.text.trim() : item.email.trim()) : null;
   let no_hp = item.no_hp ? item.no_hp.trim() : null;
-  let tanggal_lahir = item.tanggal_lahir ? String(item.tanggal_lahir).trim() : null;
+  let tanggal_lahir = item.tanggal_lahir ? item.tanggal_lahir : null;
   let jenis_kelamin = item.jenis_kelamin ? item.jenis_kelamin.trim() : null;
   let kelompok = item.kelompok ? item.kelompok.trim() : null;
   let instansi = item.instansi ? item.instansi.trim() : null;
 
   let isError = false;
-  let valid_tanggal_lahir = moment(tanggal_lahir, 'YYYY-MM-DD', true).isValid();
-  if (!valid_tanggal_lahir) {
+  if (tanggal_lahir) {
+    let valid_tanggal_lahir = moment(tanggal_lahir, 'YYYY-MM-DD', true).isValid();
+    if (!valid_tanggal_lahir) {
+      isError = true;
+      dataErr.push({
+        email: email,
+        no_hp: no_hp,
+        tanggal_lahir: tanggal_lahir,
+        error: 'Format tanggal lahir salah',
+      });
+    }
+  } else {
     isError = true;
     dataErr.push({
       email: email,
       no_hp: no_hp,
       tanggal_lahir: tanggal_lahir,
-      error: 'Format tanggal lahir salah',
+      error: 'Tanggal lahir tidak ada',
     });
   }
 
