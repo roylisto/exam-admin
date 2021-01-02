@@ -8,6 +8,7 @@ import TabelPeserta from "../../components/Tabel/Tabel";
 import ModalHapus from '../../components/Modal/ModalHapus';
 import ModalPeserta from "../../components/Modal/ModalInputPeserta";
 import ModalResetJawaban from "../../components/Modal/ModalResetJawaban";
+import ModalErrorUpload from "../../components/Modal/ModalErrorUpload";
 import Loading from "../../components/Loading";
 import { emailFormatter, phoneNumberFormatter, dateFormatter, formatArray }
   from "../../modules/Formatter";
@@ -64,6 +65,7 @@ class Peserta extends Component {
                 jenis_test: [],
             },
             errors: {},
+            errorUpload: [],
             isLoadind: false,
             uploadIST: false,
             uploadMII: false,
@@ -384,7 +386,13 @@ class Peserta extends Component {
             jenisTest.push('MII');
         }
         data.append('jenis_test', jenisTest.join(','));
-        this.props.uploadPeserta(data).then(() => {
+        this.props.uploadPeserta(data).then((result) => {
+            if (result.status !== "OK") {
+                this.setState({
+                    errorUpload: result.data,
+                    showModal: "errorUpload"
+                });
+            }
             this.setState({loadingData:false});
         });
     }
@@ -517,6 +525,14 @@ class Peserta extends Component {
                         isLoading={this.state.isLoading}
                     />
                 );
+            case "errorUpload" :
+                return (
+                    <ModalErrorUpload
+                        error={this.state.errorUpload}
+                        handleCloseModal={this.handleCloseModal}
+                        showModal={this.state.showModal}
+                    />
+                );
             default:
                 return null
         }
@@ -575,7 +591,8 @@ class Peserta extends Component {
                             <label className="form-check-label mr-1">MII</label>
                             <Button white
                             onClick={()=>this.handleImportPeserta()}
-                            disabled={this.state.filterID === "" || (this.state.uploadIST === false && this.state.uploadMII === false)}>
+                            disabled={this.state.filterID === "" || (this.state.uploadIST === false && this.state.uploadMII === false)
+                                || this.state.loadingData}>
                             <img src={upload} />
                             Import Peserta
                             </Button>

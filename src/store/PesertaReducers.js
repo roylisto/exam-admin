@@ -156,6 +156,7 @@ const peserta = {
                             result.messages,
                         );
                     }
+                    return result;
                 });
         }
     })
