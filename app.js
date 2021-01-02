@@ -12,7 +12,7 @@ const webpackConfig = require('./webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const compiler = webpack(webpackConfig);
 const swaggerUi = require('swagger-ui-express');
-swaggerDocument = require('./swagger.json');
+const swaggerDocument = require('./swagger.json');
 
 const app = express();
 

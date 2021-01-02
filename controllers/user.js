@@ -2,7 +2,82 @@ const { user, peserta, jadwalTest } = require('../database/models');
 const Excel = require('exceljs');
 const randomstring = require("randomstring");
 const moment = require('moment');
+const {default: PQueue} = require('p-queue');
 
+const insertPeserta = async (item, dataErr, options) => {
+  let nama = item.nama ? item.nama.trim() : null;
+  let email = item.email ? (item.email.text ? item.email.text.trim() : item.email.trim()) : null;
+  let no_hp = item.no_hp ? item.no_hp.trim() : null;
+  let tanggal_lahir = item.tanggal_lahir ? item.tanggal_lahir : null;
+  let jenis_kelamin = item.jenis_kelamin ? item.jenis_kelamin.trim() : null;
+  let kelompok = item.kelompok ? item.kelompok.trim() : null;
+  let instansi = item.instansi ? item.instansi.trim() : null;
+
+  let isError = false;
+  if (tanggal_lahir) {
+    let valid_tanggal_lahir = moment(tanggal_lahir, 'YYYY-MM-DD', true).isValid();
+    if (!valid_tanggal_lahir) {
+      isError = true;
+      dataErr.push({
+        email: email,
+        no_hp: no_hp,
+        tanggal_lahir: tanggal_lahir,
+        error: 'Format tanggal lahir salah',
+      });
+    }
+  } else {
+    isError = true;
+    dataErr.push({
+      email: email,
+      no_hp: no_hp,
+      tanggal_lahir: tanggal_lahir,
+      error: 'Tanggal lahir tidak ada',
+    });
+  }
+
+  if (!isError) {
+    await user.findOrCreate({
+      defaults: {
+        nama: nama,
+        email: email,
+        no_hp: no_hp,
+        tanggal_lahir: moment(tanggal_lahir).format('YYYY-MM-DD'),
+        jenis_kelamin: jenis_kelamin.toLowerCase(),
+        kelompok: kelompok,
+        instansi: instansi,
+      },
+        where: {
+          email: email
+        }
+    }).catch((error) => {
+      isError = true;
+      dataErr.push({
+        email: email,
+        no_hp: no_hp,
+        error: error.errors.map((e) => {
+          return e.message;
+        }),
+      });
+    });
+  }
+
+  if (!isError) {
+    await peserta.findOrCreate({
+      defaults: {
+        email: email,
+        password: randomstring.generate(8),
+        valid: options.test.waktu,
+        expired: options.expired,
+        jadwal_test: options.jadwal_test,
+        jenis_test: options.jenisTest,
+      },
+      where: {
+        email: email,
+        jadwal_test: options.jadwal_test
+      }
+    });
+  }
+};
 module.exports = {
   userPeserta: async (req, res) => {
     try {
@@ -61,7 +136,7 @@ module.exports = {
       let { jadwal_test } = req.body;
       let jenisTest = [];
       let data_excel = [];
-      let data_err = [];
+      let dataErr = [];
       if (req.body.jenis_test && req.body.jenis_test.trim().split(',').length > 0) {
         jenisTest = req.body.jenis_test.trim().split(',');
         jenisTest = jenisTest.sort();
@@ -99,71 +174,40 @@ module.exports = {
           data_excel.push(insertUser);
         }
       });
-      let row = 1;
-      for(const item of data_excel) {
-        let nama = item.nama ? item.nama.trim() : null;
-        let email = item.email ? (item.email.text ? item.email.text.trim() : item.email.trim()) : null;
-        let no_hp = item.no_hp ? item.no_hp.trim() : null;
-        let tanggal_lahir = item.tanggal_lahir ? String(item.tanggal_lahir).trim() : null;
-        tanggal_lahir = moment(tanggal_lahir).format('YYYY-MM-DD');
-        let jenis_kelamin = item.jenis_kelamin ? item.jenis_kelamin.trim() : null;
-        let kelompok = item.kelompok ? item.kelompok.trim() : null;
-        let instansi = item.instansi ? item.instansi.trim() : null;
-        
-        const insertUser = await user.findOrCreate({
-          defaults: {
-            nama: nama,
-            email: email,
-            no_hp: no_hp,
-            tanggal_lahir: tanggal_lahir,
-            jenis_kelamin: jenis_kelamin,
-            kelompok: kelompok,
-            instansi: instansi,
-          },
-            where: {
-              email: email
-            }             
-        }).catch(err => {
-          return null
+
+      if (data_excel.length <= 500) {
+        const importQueue = new PQueue({concurrency: 25});
+        let options = {};
+        options.test = test;
+        options.expired = expired;
+        options.jadwal_test = jadwal_test;
+        options.jenisTest = jenisTest;
+
+        for(const item of data_excel) {
+          importQueue.add(() => insertPeserta(item, dataErr, options));
+        }
+        importQueue.onIdle().then(() => {
+          if(dataErr.length > 0) {
+            return res.status(422).json({
+              status: 'ERROR',
+              messages: 'Beberapa data gagal di input',
+              data: dataErr
+            });
+          }
+
+          return res.json({
+            status: 'OK',
+            messages: 'Success insert data.',
+            data: {}
+          });
         });
-        
-        if(insertUser === null)
-          data_err.push({
-            no: row,
-            email: email,
-            no_hp: no_hp
-          });
-        else 
-          peserta.findOrCreate({
-            defaults: {
-              email: email,
-              password: randomstring.generate(8),
-              valid: test.waktu,
-              expired: expired,
-              jadwal_test: jadwal_test,
-              jenis_test: jenisTest,
-            },
-            where: {
-              email: email,
-              jadwal_test: jadwal_test
-            }
-          });
-        row++;
-      };
-      
-      if(data_err.length > 0) {
+      } else {
         return res.status(422).json({
           status: 'ERROR',
-          messages: 'beberapa data gagal di input',
-          data: data_err
-        });  
+          messages: 'Jumlah data yang diupload lebih dari 500',
+          data: {},
+        });
       }
-
-      return res.json({
-        status: 'OK',
-        messages: 'Success insert data.',
-        data: {}
-      });
     } catch (err) {
       res.status(500).json({
         status: 'ERROR',

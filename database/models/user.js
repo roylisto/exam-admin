@@ -8,9 +8,6 @@ module.exports = function(sequelize, DataTypes) {
     },
     nama: {
       allowNull: false,
-      validate: {
-        isAlpha: true
-      },
       type: DataTypes.STRING
     },
     email: {
@@ -29,22 +26,22 @@ module.exports = function(sequelize, DataTypes) {
       validate: {
         isDate: true,
       },
-      type: DataTypes.INTEGER
+      type: DataTypes.DATEONLY
     },
-    jenis_kelamin: {      
+    jenis_kelamin: {
       allowNull: true,
       type: DataTypes.STRING
     },
-    kelompok: {      
+    kelompok: {
       allowNull: true,
       type: DataTypes.STRING
     },
-    instansi: {      
+    instansi: {
       allowNull: false,
       type: DataTypes.STRING
     }
-  }, {    
-    tableName: 'user',    
+  }, {
+    tableName: 'user',
     underscored: true,
     timestamps: true,
     paranoid: true

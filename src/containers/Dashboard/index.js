@@ -47,7 +47,7 @@ class Dashboard extends Component {
         }
         this.handleMinimize = this.handleMinimize.bind(this);
     }
-    
+
     handleMinimize() {
         this.setState({
             minimize : !this.state.minimize
@@ -63,20 +63,20 @@ class Dashboard extends Component {
                     >
                     <img src={SidebarIcon} />
                 </ButtonSidebar>
-                <Sidebar 
+                <Sidebar
                     minimize={this.state.minimize}
                     role={this.props.role}
                 />
-                <NavbarDashboard 
+                <NavbarDashboard
                     username={this.props.username}
                 />
 
-                <Container 
+                <Container
                     minimize={this.state.minimize}>
                     <Switch>
                         <Route exact path="/dashboard" component={JadwalTest}  />
                         <Route path="/dashboard/jadwaltest" component={JadwalTest}  />
-                        <Route path="/dashboard/peserta" component={Peserta}  />
+                        <Route path="/dashboard/peserta/:idJadwal/:instansi" component={Peserta}  />
                         <Route path="/dashboard/useradmin" component={UserAdmin}  />
                     </Switch>
                 </Container>

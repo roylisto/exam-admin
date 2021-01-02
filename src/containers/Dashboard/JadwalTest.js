@@ -6,7 +6,7 @@ import TabelJadwal from "../../components/Tabel/Tabel";
 import Button from '../../components/Button';
 import Modal from "../../components/Modal/ModalTambahJadwal";
 import ModalHapus from '../../components/Modal/ModalHapus';
-import { dateFormatter, numberFormatter } from "../../modules/Formatter";
+import { dateFormatter } from "../../modules/Formatter";
 
 const Header = styled.div`{
     display : flex;
@@ -99,7 +99,12 @@ class JadwalTest extends Component {
         let waktu = new Date(row.waktu);
         let expired = new Date(row.expired);
 
-        this.setState({
+        console.log(row);
+
+        if (modal === "daftarPeserta") {
+          window.location.href =`/#/dashboard/peserta/${row.id}/${row.instansi}`;
+        } else {
+          this.setState({
             showModal : modal,
             timeStart: waktu,
             timeEnd: expired,
@@ -107,8 +112,8 @@ class JadwalTest extends Component {
             keterangan: (row.keterangan) ? row.keterangan : "",
             id: row.id,
             errors: {},
-        });
-
+          });
+        }
     }
 
     handleEditSubmit(e) {
@@ -132,6 +137,10 @@ class JadwalTest extends Component {
     actionFormatter(e, row) {
         return (
             <div className="btn-group">
+                <Button white small xs onClick={()=>this.handleClickButtonAction("daftarPeserta",row)}>
+                    <img src={require("../../assets/images/people.svg")} />
+                    Peserta
+                </Button>
                 <Button white small xs onClick={()=>this.handleClickButtonAction("editJadwal",row)}>
                     <img src={require("../../assets/images/edit.svg")} />
                     Edit

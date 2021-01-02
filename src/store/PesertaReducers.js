@@ -4,6 +4,7 @@ import {
     UpdateData,
     DeleteData,
     Delete,
+    Upload,
 } from "../services/Agent";
 import { alertNotification } from "../modules/utils";
 
@@ -136,6 +137,28 @@ const peserta = {
         resetJawaban(payload) {
             return Delete(`reset/peserta/${payload.peserta_id}/subtest/${payload.subtest}`);
         },
+        uploadPeserta(formData) {
+            return Upload(`users/excel`, formData)
+                .then((result) => {
+                    if(result.status === "OK") {
+                        dispatch.peserta.fetchPesertaList(formData.get('jadwal_test'));
+                        alertNotification(
+                            "success",
+                            "",
+                            "Peserta berhasil di upload."
+                        );
+                    }
+                    else {
+                        dispatch.peserta.SET_ERROR_STATUS({errorMsg : "Data input tidak valid"});
+                        alertNotification(
+                            "error",
+                            "Gagal Edit Peserta",
+                            result.messages,
+                        );
+                    }
+                    return result;
+                });
+        }
     })
 }
 

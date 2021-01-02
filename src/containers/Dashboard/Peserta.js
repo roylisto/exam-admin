@@ -8,12 +8,14 @@ import TabelPeserta from "../../components/Tabel/Tabel";
 import ModalHapus from '../../components/Modal/ModalHapus';
 import ModalPeserta from "../../components/Modal/ModalInputPeserta";
 import ModalResetJawaban from "../../components/Modal/ModalResetJawaban";
+import ModalErrorUpload from "../../components/Modal/ModalErrorUpload";
 import Loading from "../../components/Loading";
-import { emailFormatter, phoneNumberFormatter, dateFormatter, numberFormatter, formatArray }
+import { emailFormatter, phoneNumberFormatter, dateFormatter, formatArray }
   from "../../modules/Formatter";
 // ASSETS
 import download from "../../assets/images/save.svg";
 import plus from "../../assets/images/plus.svg";
+import upload from "../../assets/images/upload.svg";
 import { textFilter } from 'react-bootstrap-table2-filter';
 
 const Header = styled.div`{
@@ -42,11 +44,12 @@ class Peserta extends Component {
             showModal: false,
             data: null,
             columns: null,
-            namaInstansi : '',
+            namaInstansi : this.props.match.params.instansi,
             loading: true,
+            loadingData: false,
             jadwalTest : null,
-            filter : '',
-            filterID : '',
+            filter : this.props.match.params.instansi,
+            filterID : this.props.match.params.idJadwal,
             disabled: true,
             dataInput: {
                 nama : '',
@@ -62,7 +65,10 @@ class Peserta extends Component {
                 jenis_test: [],
             },
             errors: {},
-            isLoadind: false
+            errorUpload: [],
+            isLoadind: false,
+            uploadIST: false,
+            uploadMII: false,
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeFilter = this.handleChangeFilter.bind(this);
@@ -79,6 +85,7 @@ class Peserta extends Component {
         this.handleCloseModal = this.handleCloseModal.bind(this);
         this.handleHapus = this.handleHapus.bind(this);
         this.handleEdit = this.handleEdit.bind(this);
+        this.props.fetchPesertaList(this.props.match.params.idJadwal);
     }
 
     componentDidMount() {
@@ -361,6 +368,35 @@ class Peserta extends Component {
         this.props.exportPeserta(payload);
     }
 
+    handleImportPeserta() {
+      this.hiddenFileInput.click();
+    }
+
+    handleFileInput(e) {
+        e.preventDefault();
+        this.setState({loadingData:true});
+        const data = new FormData();
+        data.append('jadwal_test', this.state.filterID);
+        data.append('user', e.target.files[0]);
+        let jenisTest = [];
+        if (this.state.uploadIST) {
+            jenisTest.push('IST');
+        }
+        if (this.state.uploadMII) {
+            jenisTest.push('MII');
+        }
+        data.append('jenis_test', jenisTest.join(','));
+        this.props.uploadPeserta(data).then((result) => {
+            if (result.status !== "OK") {
+                this.setState({
+                    errorUpload: result.data,
+                    showModal: "errorUpload"
+                });
+            }
+            this.setState({loadingData:false});
+        });
+    }
+
     handleOnFocusEmail() {
         this.setState({
             disabled: true,
@@ -404,6 +440,18 @@ class Peserta extends Component {
             errors: {},
         });
 
+    }
+
+    handleCheckIST(e) {
+        this.setState({
+          uploadIST: e.target.checked
+        });
+    }
+
+    handleCheckMII(e) {
+        this.setState({
+          uploadMII: e.target.checked
+        });
     }
 
     actionFormatter(e, row) {
@@ -477,6 +525,14 @@ class Peserta extends Component {
                         isLoading={this.state.isLoading}
                     />
                 );
+            case "errorUpload" :
+                return (
+                    <ModalErrorUpload
+                        error={this.state.errorUpload}
+                        handleCloseModal={this.handleCloseModal}
+                        showModal={this.state.showModal}
+                    />
+                );
             default:
                 return null
         }
@@ -489,19 +545,15 @@ class Peserta extends Component {
         return (
             <React.Fragment>
                 <Header>
-                    <form>
-                        <select
-                            className="form-control"
-                            id="filter"
-                            onChange={this.handleChangeFilter}>
-                            <option value="">Jadwal Test</option>
-                            {
-                                this.state.jadwalTest.map((val,i)=>{
-                                    return <option key={i} value={val.id+";"+val.instansi}>{val.instansi}</option>
-                                })
-                            }
-                        </select>
-                    </form>
+                    <div className="d-flex pl-2">
+                        <h5><b>ID - Jadwal: </b></h5>
+                        <span>&emsp;{this.state.filterID} - {this.state.filter}</span>
+                    </div>
+                    <div>
+
+                    </div>
+                </Header>
+                <Header>
                     <div>
                         <Button white
                           onClick={()=>this.handleExport("peserta-test/")}
@@ -521,21 +573,49 @@ class Peserta extends Component {
                           <img src={download} />
                           Export Hasil
                         </Button>
+                    </div>
+                    <div>
+                        <div className="form-check form-check-inline" style={{border: '1px solid red', padding: '5px'}}>
+                            <label className="form-check-label mr-2">Jenis Test: </label>
+                            <input type="checkbox" className="form-check-input mr-1"
+                            id="ist"
+                            name="IST"
+                            onChange={this.handleCheckIST.bind(this)}
+                            />
+                            <label className="form-check-label mr-1">IST</label>
+                            <input type="checkbox" className="form-check-input mr-1"
+                            id="mii"
+                            name="MII"
+                            onChange={this.handleCheckMII.bind(this)}
+                            />
+                            <label className="form-check-label mr-1">MII</label>
+                            <Button white
+                            onClick={()=>this.handleImportPeserta()}
+                            disabled={this.state.filterID === "" || (this.state.uploadIST === false && this.state.uploadMII === false)
+                                || this.state.loadingData}>
+                            <img src={upload} />
+                            Import Peserta
+                            </Button>
+                            <input type="file"
+                            ref={input => this.hiddenFileInput = input}
+                            onChange={this.handleFileInput.bind(this)}
+                            style={{display:'none'}}
+                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                            />
+                        </div>
                         <Button
                             style={{width:"150px"}}
                             onClick={this.handleClickModal}
-                            disabled={this.state.filter === ""}>
+                            disabled={this.state.filterID === ""}>
                             <img src={plus} />
                             Input Peserta
                         </Button>
                     </div>
                 </Header>
-                <div className="d-flex pl-2">
-                    <h5><b>Jadwal Test : </b></h5>
-                    <span>&emsp;{this.state.filter}</span>
-                </div>
                 {
-                    (this.state.filter !== "") ?
+                    (this.state.filterID !== "") ?
+                    (this.state.loadingData) ?
+                    <Loading /> :
                     <TabelPeserta
                         keyField="id"
                         data={this.state.data}
@@ -575,6 +655,8 @@ const mapDispatch = dispatch => ({
         dispatch({ type: 'peserta/editPeserta', payload: value }),
     hapusPeserta: value =>
         dispatch({ type: 'peserta/hapusPeserta', payload: value }),
+    uploadPeserta: value =>
+        dispatch({ type: 'peserta/uploadPeserta', payload: value }),
 });
 
 
