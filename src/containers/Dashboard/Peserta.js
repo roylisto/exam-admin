@@ -45,6 +45,7 @@ class Peserta extends Component {
             columns: null,
             namaInstansi : this.props.match.params.instansi,
             loading: true,
+            loadingData: false,
             jadwalTest : null,
             filter : this.props.match.params.instansi,
             filterID : this.props.match.params.idJadwal,
@@ -370,8 +371,22 @@ class Peserta extends Component {
     }
 
     handleFileInput(e) {
-      const fileUploaded = e.target.files[0];
-      console.log(fileUploaded);
+        e.preventDefault();
+        this.setState({loadingData:true});
+        const data = new FormData();
+        data.append('jadwal_test', this.state.filterID);
+        data.append('user', e.target.files[0]);
+        let jenisTest = [];
+        if (this.state.uploadIST) {
+            jenisTest.push('IST');
+        }
+        if (this.state.uploadMII) {
+            jenisTest.push('MII');
+        }
+        data.append('jenis_test', jenisTest.join(','));
+        this.props.uploadPeserta(data).then(() => {
+            this.setState({loadingData:false});
+        });
     }
 
     handleOnFocusEmail() {
@@ -566,7 +581,7 @@ class Peserta extends Component {
                             </Button>
                             <input type="file"
                             ref={input => this.hiddenFileInput = input}
-                            onChange={this.handleFileInput}
+                            onChange={this.handleFileInput.bind(this)}
                             style={{display:'none'}}
                             accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                             />
@@ -582,6 +597,8 @@ class Peserta extends Component {
                 </Header>
                 {
                     (this.state.filterID !== "") ?
+                    (this.state.loadingData) ?
+                    <Loading /> :
                     <TabelPeserta
                         keyField="id"
                         data={this.state.data}
@@ -621,6 +638,8 @@ const mapDispatch = dispatch => ({
         dispatch({ type: 'peserta/editPeserta', payload: value }),
     hapusPeserta: value =>
         dispatch({ type: 'peserta/hapusPeserta', payload: value }),
+    uploadPeserta: value =>
+        dispatch({ type: 'peserta/uploadPeserta', payload: value }),
 });
 
 

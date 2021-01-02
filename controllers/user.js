@@ -190,7 +190,7 @@ module.exports = {
           if(dataErr.length > 0) {
             return res.status(422).json({
               status: 'ERROR',
-              messages: 'beberapa data gagal di input',
+              messages: 'Beberapa data gagal di input',
               data: dataErr
             });
           }
