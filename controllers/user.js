@@ -175,6 +175,20 @@ module.exports = {
         }
       });
 
+      const currentData = await peserta.findAndCountAll({
+        where: {
+          jadwal_test: jadwal_test,
+        }
+      });
+
+      if (currentData.count + data_excel.length > 1500) {
+        return res.status(422).json({
+          status: 'ERROR',
+          messages: `Maaf, anda hanya bisa menambahkan ${1500 - currentData.count} data lagi, jumlah data yang coba anda upload adalah ${data_excel.length}`,
+          data: {},
+        });
+      }
+
       if (data_excel.length <= 1500) {
         const importQueue = new PQueue({concurrency: 70});
         let options = {};
