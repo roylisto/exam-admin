@@ -99,8 +99,6 @@ class JadwalTest extends Component {
         let waktu = new Date(row.waktu);
         let expired = new Date(row.expired);
 
-        console.log(row);
-
         if (modal === "daftarPeserta") {
           window.location.href =`/#/dashboard/peserta/${row.id}/${row.instansi}`;
         } else {
