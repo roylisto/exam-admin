@@ -387,7 +387,7 @@ class Peserta extends Component {
         }
         data.append('jenis_test', jenisTest.join(','));
         this.props.uploadPeserta(data).then((result) => {
-            if (result.status !== "OK") {
+            if (result.status !== "OK" && result.data && result.data.length > 0) {
                 this.setState({
                     errorUpload: result.data,
                     showModal: "errorUpload"
