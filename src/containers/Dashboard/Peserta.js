@@ -551,7 +551,7 @@ class Peserta extends Component {
                     </div>
                     <div className="d-flex pr-2">
                         <h5><b>Jumlah Peserta: </b></h5>
-                        <span>&emsp;{this.state.data ? this.state.data.length : 0} </span>
+                        <span>&emsp;{this.state.data ? this.state.data.length : 0} (Max 1500) </span>
                     </div>
                 </Header>
                 <Header>

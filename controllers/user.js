@@ -176,7 +176,7 @@ module.exports = {
       });
 
       if (data_excel.length <= 1500) {
-        const importQueue = new PQueue({concurrency: 100});
+        const importQueue = new PQueue({concurrency: 70});
         let options = {};
         options.test = test;
         options.expired = expired;

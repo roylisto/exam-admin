@@ -258,7 +258,7 @@ module.exports = {
         { header: 'bagian 8 nat', key: 'bagian_8_nat', width: 30, style: { alignment: {wrapText: true}}}
       ];
 
-      const checkAnswerQueue = new PQueue({concurrency: 100});
+      const checkAnswerQueue = new PQueue({concurrency: 70});
       rowNumberJawaban = 0;
       for (const item of peserta) {
         let row = {};
@@ -375,7 +375,7 @@ module.exports = {
       ];
       // end init workbook
 
-      const hasilQueue = new PQueue({concurrency: 100});
+      const hasilQueue = new PQueue({concurrency: 70});
       rowNumberHasil = 0;
       for (let item of peserta) {
         let row = {};
