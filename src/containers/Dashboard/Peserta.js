@@ -9,6 +9,7 @@ import ModalHapus from '../../components/Modal/ModalHapus';
 import ModalPeserta from "../../components/Modal/ModalInputPeserta";
 import ModalResetJawaban from "../../components/Modal/ModalResetJawaban";
 import ModalErrorUpload from "../../components/Modal/ModalErrorUpload";
+import ModalWaitDownload from "../../components/Modal/ModalWaitDownload";
 import Loading from "../../components/Loading";
 import { emailFormatter, phoneNumberFormatter, dateFormatter, formatArray }
   from "../../modules/Formatter";
@@ -69,6 +70,7 @@ class Peserta extends Component {
             isLoadind: false,
             uploadIST: false,
             uploadMII: false,
+            loadingDownload: false,
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeFilter = this.handleChangeFilter.bind(this);
@@ -359,13 +361,22 @@ class Peserta extends Component {
         }
     }
 
-    handleExport(route) {
+    async handleExport(route) {
         let { filterID } = this.state;
         let payload = {
             route : route,
             params : filterID
         }
-        this.props.exportPeserta(payload);
+        this.setState({
+            loadingDownload: true,
+            showModal: "waitDownload"
+        });
+        this.props.exportPeserta(payload).then(() => {
+            this.setState({
+                loadingDownload: false,
+                showModal: false
+            });
+        });
     }
 
     handleImportPeserta() {
@@ -533,6 +544,13 @@ class Peserta extends Component {
                         showModal={this.state.showModal}
                     />
                 );
+            case "waitDownload" :
+                return (
+                    <ModalWaitDownload
+                        handleCloseModal={this.handleCloseModal}
+                        showModal={this.state.showModal}
+                    />
+                );
             default:
                 return null
         }
@@ -558,19 +576,19 @@ class Peserta extends Component {
                     <div>
                         <Button white
                           onClick={()=>this.handleExport("peserta-test/")}
-                          disabled={this.state.filterID === ""}>
+                          disabled={this.state.filterID === "" || this.state.loadingDownload}>
                           <img src={download} />
                           Export Peserta
                         </Button>
                         <Button white
                             onClick={()=>this.handleExport("jawaban-test/")}
-                            disabled={this.state.filterID === ""}>
+                            disabled={this.state.filterID === "" || this.state.loadingDownload}>
                             <img src={download} />
                             Export Jawaban
                         </Button>
                         <Button white
                           onClick={()=>this.handleExport("hasil-test/")}
-                          disabled={this.state.filterID === ""}>
+                          disabled={this.state.filterID === "" || this.state.loadingDownload}>
                           <img src={download} />
                           Export Hasil
                         </Button>
