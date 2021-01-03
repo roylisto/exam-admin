@@ -549,8 +549,9 @@ class Peserta extends Component {
                         <h5><b>ID - Jadwal: </b></h5>
                         <span>&emsp;{this.state.filterID} - {this.state.filter}</span>
                     </div>
-                    <div>
-
+                    <div className="d-flex pr-2">
+                        <h5><b>Jumlah Peserta: </b></h5>
+                        <span>&emsp;{this.state.data ? this.state.data.length : 0} </span>
                     </div>
                 </Header>
                 <Header>
@@ -592,7 +593,7 @@ class Peserta extends Component {
                             <Button white
                             onClick={()=>this.handleImportPeserta()}
                             disabled={this.state.filterID === "" || (this.state.uploadIST === false && this.state.uploadMII === false)
-                                || this.state.loadingData}>
+                                || this.state.loadingData || (this.state.data && this.state.data.length >= 1500)}>
                             <img src={upload} />
                             Import Peserta
                             </Button>
@@ -606,7 +607,7 @@ class Peserta extends Component {
                         <Button
                             style={{width:"150px"}}
                             onClick={this.handleClickModal}
-                            disabled={this.state.filterID === ""}>
+                            disabled={this.state.filterID === "" || (this.state.data && this.state.data.length >= 1500)}>
                             <img src={plus} />
                             Input Peserta
                         </Button>
