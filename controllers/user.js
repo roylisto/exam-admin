@@ -175,8 +175,8 @@ module.exports = {
         }
       });
 
-      if (data_excel.length <= 500) {
-        const importQueue = new PQueue({concurrency: 25});
+      if (data_excel.length <= 1500) {
+        const importQueue = new PQueue({concurrency: 100});
         let options = {};
         options.test = test;
         options.expired = expired;
@@ -204,7 +204,7 @@ module.exports = {
       } else {
         return res.status(422).json({
           status: 'ERROR',
-          messages: 'Jumlah data yang diupload lebih dari 500',
+          messages: 'Jumlah data yang diupload lebih dari 1500',
           data: {},
         });
       }

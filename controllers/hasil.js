@@ -4,6 +4,10 @@ const moment = require('moment');
 const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
+const {default: PQueue} = require('p-queue');
+
+let rowNumberJawaban = 0;
+let rowNumberHasil = 0;
 
 const checkingDir = () => {
   const filesDir = path.join("files");
@@ -12,6 +16,183 @@ const checkingDir = () => {
   }
 }
 
+const getAnswer = async (row, peserta, worksheet, worksheet2) => {
+  const jawabanPeserta = await db.jawaban.findAll({
+    where: {
+      peserta_id: peserta.peserta_id
+    }
+  });
+  for(let j=0; j<jawabanPeserta.length; j++) {
+    row[jawabanPeserta[j].paket_soal] = jawabanPeserta[j].getDataValue('jawaban_peserta');
+  }
+
+  rowNumberJawaban++;
+  row.no = rowNumberJawaban;
+  worksheet.addRow(row);
+  worksheet2.addRow(row);
+}
+
+const getHasil = async (row, row2, peserta, worksheet, worksheet2) => {
+  peserta.scorePeserta = await db.scorePeserta.findAll({
+    where: {
+      peserta_id: peserta.id
+    }
+  });
+
+  let kode_soal = [
+    "SE", "WA", "AN", "GE", "RA", "ZR", "FA", "WU", "ME"
+  ];
+
+  let peserta_soal = [];
+
+  for(let j=0; j<peserta.scorePeserta.length; j++) {
+    peserta_soal.push(peserta.scorePeserta[j].kode_soal);
+    switch(peserta.scorePeserta[j].kode_soal) {
+      case 'SE':
+        row.SE_rw = peserta.scorePeserta[j].rw;
+        row.SE_sw = peserta.scorePeserta[j].sw;
+        row.SE_kategori = peserta.scorePeserta[j].kategori;
+        break;
+      case 'WA':
+        row.WA_rw = peserta.scorePeserta[j].rw;
+        row.WA_sw = peserta.scorePeserta[j].sw;
+        row.WA_kategori = peserta.scorePeserta[j].kategori;
+        break;
+      case 'AN':
+        row.AN_rw = peserta.scorePeserta[j].rw;
+        row.AN_sw = peserta.scorePeserta[j].sw;
+        row.AN_kategori = peserta.scorePeserta[j].kategori;
+        break;
+      case 'GE':
+        row.GE_rw = peserta.scorePeserta[j].rw;
+        row.GE_sw = peserta.scorePeserta[j].sw;
+        row.GE_kategori = peserta.scorePeserta[j].kategori;
+        break;
+      case 'RA':
+        row.RA_rw = peserta.scorePeserta[j].rw;
+        row.RA_sw = peserta.scorePeserta[j].sw;
+        row.RA_kategori = peserta.scorePeserta[j].kategori;
+        break;
+      case 'ZR':
+        row.ZR_rw = peserta.scorePeserta[j].rw;
+        row.ZR_sw = peserta.scorePeserta[j].sw;
+        row.ZR_kategori = peserta.scorePeserta[j].kategori;
+        break;
+      case 'FA':
+        row.FA_rw = peserta.scorePeserta[j].rw;
+        row.FA_sw = peserta.scorePeserta[j].sw;
+        row.FA_kategori = peserta.scorePeserta[j].kategori;
+        break;
+      case 'WU':
+        row.WU_rw = peserta.scorePeserta[j].rw;
+        row.WU_sw = peserta.scorePeserta[j].sw;
+        row.WU_kategori = peserta.scorePeserta[j].kategori;
+        break;
+      case 'ME':
+        row.ME_rw = peserta.scorePeserta[j].rw;
+        row.ME_sw = peserta.scorePeserta[j].sw;
+        row.ME_kategori = peserta.scorePeserta[j].kategori;
+        break;
+      case 'M1':
+      case 'M2':
+      case 'M3':
+      case 'M4':
+      case 'M5':
+      case 'M6':
+      case 'M7':
+      case 'M8':
+        row2[peserta.scorePeserta[j].kode_soal] = peserta.scorePeserta[j].rw;
+        break;
+    }
+  }
+
+  let tanggal_lahir = await db.user.findOne({
+    where: {
+      email: peserta.email
+    }
+  }).then(result => result.tanggal_lahir);
+
+  let umur = moment().diff(tanggal_lahir, 'years');
+
+  if (umur<13) {
+    umur = 13;
+  } else if(umur>18 && umur<=20) {
+    umur = 20;
+  } else if(umur>20 && umur <= 24) {
+    umur = 24;
+  } else if(umur>24 && umur <= 28) {
+    umur = 28;
+  } else if(umur>28 && umur <= 33) {
+    umur = 33;
+  } else if(umur>33 && umur <= 39) {
+    umur = 39;
+  } else if(umur>39 && umur <= 45) {
+    umur = 45;
+  } else if(umur >= 46) {
+    umur = 46;
+  }
+
+  peserta.iq = await db.scorePeserta.getIQ(peserta.id, umur);
+  row.IQ = peserta.iq;
+
+  row.IQ_kategori = 'Mentally Defective';
+
+  if(row.IQ > 65 && row.IQ <= 79) {
+    row.IQ_kategori = 'Borderline Defective';
+  } else if(row.IQ > 79 && row.IQ <= 90) {
+    row.IQ_kategori = 'Low Average';
+  } else if(row.IQ > 90 && row.IQ <= 110) {
+    row.IQ_kategori = 'Average';
+  } else if(row.IQ > 110 && row.IQ <= 119) {
+    row.IQ_kategori = 'High Average';
+  } else if(row.IQ > 119 && row.IQ <= 127) {
+    row.IQ_kategori = 'Superior';
+  } else if(row.IQ > 127 && row.IQ <= 139) {
+    row.IQ_kategori = 'Very Superior';
+  } else if(row.IQ > 139) {
+    row.IQ_kategori = 'Genius';
+  }
+
+  const check_code = _.difference(kode_soal, peserta_soal);
+
+  for(let l=0; l<check_code.length; l++) {
+    const sw = await db.scoreSubtest.findOne({
+      where: {
+        rw: 0,
+        umur: umur,
+        kode_soal: check_code[l]
+      }
+    });
+    let kategori = 'Sangat Rendah';
+    if(sw.sw>80 && sw.sw<=94) {
+      kategori = 'Rendah';
+    } else if(sw.sw > 94 && sw.sw <= 99) {
+      kategori = 'Sedang';
+    } else if(sw.sw > 99 && sw.sw <= 104) {
+      kategori = 'Cukup';
+    } else if(sw.sw > 104 && sw.sw <= 118) {
+      kategori = 'Tinggi';
+    } else if(sw.sw > 118) {
+      kategori = 'Sangat Tinggi';
+    }
+    await db.scorePeserta.create({
+      kode_soal: check_code[l],
+      rw: 0,
+      sw: sw.sw,
+      kategori: kategori,
+      peserta_id: peserta.id
+    });
+    row[check_code[l]+"_rw"] = 0;
+    row[check_code[l]+"_sw"] = sw.sw;
+    row[check_code[l]+"_kategori"] = kategori;
+  }
+  row.dominasi = await db.scorePeserta.getJurusan(peserta.id);
+  rowNumberHasil++;
+  row.no = rowNumberHasil;
+  row2.no= rowNumberHasil;
+  worksheet.addRow(row);
+  worksheet2.addRow(row2);
+}
 module.exports = {
   list_jawaban: async (req, res) => {
     try {
@@ -77,33 +258,25 @@ module.exports = {
         { header: 'bagian 8 nat', key: 'bagian_8_nat', width: 30, style: { alignment: {wrapText: true}}}
       ];
 
-      for(let i=0; i<peserta.length; i++) {
+      const checkAnswerQueue = new PQueue({concurrency: 100});
+      rowNumberJawaban = 0;
+      for (const item of peserta) {
         let row = {};
-        row.no = i+1;
-        row.nama = peserta[i].nama;
-        row.email = peserta[i].email;
-
-        const jawabanPeserta = await db.jawaban.findAll({
-          where: {
-            peserta_id: peserta[i].peserta_id
-          }
-        });
-        for(let j=0; j<jawabanPeserta.length; j++) {
-          row[jawabanPeserta[j].paket_soal] = jawabanPeserta[j].getDataValue('jawaban_peserta');
-        }
-
-        worksheet.addRow(row);
-        worksheet2.addRow(row);
+        row.nama = item.nama;
+        row.email = item.email;
+        checkAnswerQueue.add(() => getAnswer(row, item, worksheet, worksheet2));
       }
 
-      let nameFile = `jawaban_${moment(event_test.waktu).format('YYYY-MM-DD')}_${event_test.instansi}_${event_test.keterangan}`;
-      nameFile = nameFile.replace(/ /g,"_").replace(/:/g,"-") +'-'+event_test.id;
+      checkAnswerQueue.onIdle().then(async () => {
+        let nameFile = `jawaban_${moment(event_test.waktu).format('YYYY-MM-DD')}_${event_test.instansi}_${event_test.keterangan}`;
+        nameFile = nameFile.replace(/ /g,"_").replace(/:/g,"-") +'-'+event_test.id;
 
-      await workbook.xlsx.writeFile(`./files/${nameFile}.xlsx`);
-      res.json({
-        download:`${process.env.REACT_APP_SERVER_URL}download?file=${nameFile}.xlsx`,
-        peserta
-      });
+        await workbook.xlsx.writeFile(`./files/${nameFile}.xlsx`);
+        res.json({
+          download:`${process.env.REACT_APP_SERVER_URL}download?file=${nameFile}.xlsx`,
+          peserta
+        });
+      })
     } catch (err) {
       res.status(500).json({
         status: 'ERROR',
@@ -200,182 +373,27 @@ module.exports = {
         { header: 'M7', key: 'M7', width: 8},
         { header: 'M8', key: 'M8', width: 8}
       ];
-
       // end init workbook
-      for(let i=0; i<peserta.length; i++) {
+
+      const hasilQueue = new PQueue({concurrency: 100});
+      rowNumberHasil = 0;
+      for (let item of peserta) {
         let row = {};
         let row2 = {};
-        row.no = i+1;
-        row2.no = i+1;
-        row.email = peserta[i].email;
-        row.nama = peserta[i].nama;
-        row2.email = peserta[i].email;
-        row2.nama = peserta[i].nama;
-        peserta[i].scorePeserta = await db.scorePeserta.findAll({
-          where: {
-            peserta_id: peserta[i].id
-          }
-        });
-
-        let kode_soal = [
-          "SE", "WA", "AN", "GE", "RA", "ZR", "FA", "WU", "ME"
-        ];
-
-        let peserta_soal = [];
-
-        for(let j=0; j<peserta[i].scorePeserta.length; j++) {
-          peserta_soal.push(peserta[i].scorePeserta[j].kode_soal);
-          switch(peserta[i].scorePeserta[j].kode_soal) {
-            case 'SE':
-              row.SE_rw = peserta[i].scorePeserta[j].rw;
-              row.SE_sw = peserta[i].scorePeserta[j].sw;
-              row.SE_kategori = peserta[i].scorePeserta[j].kategori;
-              break;
-            case 'WA':
-              row.WA_rw = peserta[i].scorePeserta[j].rw;
-              row.WA_sw = peserta[i].scorePeserta[j].sw;
-              row.WA_kategori = peserta[i].scorePeserta[j].kategori;
-              break;
-            case 'AN':
-              row.AN_rw = peserta[i].scorePeserta[j].rw;
-              row.AN_sw = peserta[i].scorePeserta[j].sw;
-              row.AN_kategori = peserta[i].scorePeserta[j].kategori;
-              break;
-            case 'GE':
-              row.GE_rw = peserta[i].scorePeserta[j].rw;
-              row.GE_sw = peserta[i].scorePeserta[j].sw;
-              row.GE_kategori = peserta[i].scorePeserta[j].kategori;
-              break;
-            case 'RA':
-              row.RA_rw = peserta[i].scorePeserta[j].rw;
-              row.RA_sw = peserta[i].scorePeserta[j].sw;
-              row.RA_kategori = peserta[i].scorePeserta[j].kategori;
-              break;
-            case 'ZR':
-              row.ZR_rw = peserta[i].scorePeserta[j].rw;
-              row.ZR_sw = peserta[i].scorePeserta[j].sw;
-              row.ZR_kategori = peserta[i].scorePeserta[j].kategori;
-              break;
-            case 'FA':
-              row.FA_rw = peserta[i].scorePeserta[j].rw;
-              row.FA_sw = peserta[i].scorePeserta[j].sw;
-              row.FA_kategori = peserta[i].scorePeserta[j].kategori;
-              break;
-            case 'WU':
-              row.WU_rw = peserta[i].scorePeserta[j].rw;
-              row.WU_sw = peserta[i].scorePeserta[j].sw;
-              row.WU_kategori = peserta[i].scorePeserta[j].kategori;
-              break;
-            case 'ME':
-              row.ME_rw = peserta[i].scorePeserta[j].rw;
-              row.ME_sw = peserta[i].scorePeserta[j].sw;
-              row.ME_kategori = peserta[i].scorePeserta[j].kategori;
-              break;
-            case 'M1':
-            case 'M2':
-            case 'M3':
-            case 'M4':
-            case 'M5':
-            case 'M6':
-            case 'M7':
-            case 'M8':
-              row2[peserta[i].scorePeserta[j].kode_soal] = peserta[i].scorePeserta[j].rw;
-              break;
-          }
-        }
-
-        let tanggal_lahir = await db.user.findOne({
-          where: {
-            email: peserta[i].email
-          }
-        }).then(result => result.tanggal_lahir);
-
-        let umur = moment().diff(tanggal_lahir, 'years');
-
-        if (umur<13) {
-          umur = 13;
-        } else if(umur>18 && umur<=20) {
-          umur = 20;
-        } else if(umur>20 && umur <= 24) {
-          umur = 24;
-        } else if(umur>24 && umur <= 28) {
-          umur = 28;
-        } else if(umur>28 && umur <= 33) {
-          umur = 33;
-        } else if(umur>33 && umur <= 39) {
-          umur = 39;
-        } else if(umur>39 && umur <= 45) {
-          umur = 45;
-        } else if(umur >= 46) {
-          umur = 46;
-        }
-
-        peserta[i].iq = await db.scorePeserta.getIQ(peserta[i].id, umur);
-        row.IQ = peserta[i].iq;
-
-        row.IQ_kategori = 'Mentally Defective';
-
-        if(row.IQ > 65 && row.IQ <= 79) {
-          row.IQ_kategori = 'Borderline Defective';
-        } else if(row.IQ > 79 && row.IQ <= 90) {
-          row.IQ_kategori = 'Low Average';
-        } else if(row.IQ > 90 && row.IQ <= 110) {
-          row.IQ_kategori = 'Average';
-        } else if(row.IQ > 110 && row.IQ <= 119) {
-          row.IQ_kategori = 'High Average';
-        } else if(row.IQ > 119 && row.IQ <= 127) {
-          row.IQ_kategori = 'Superior';
-        } else if(row.IQ > 127 && row.IQ <= 139) {
-          row.IQ_kategori = 'Very Superior';
-        } else if(row.IQ > 139) {
-          row.IQ_kategori = 'Genius';
-        }
-
-        const check_code = _.difference(kode_soal, peserta_soal);
-
-        for(let l=0; l<check_code.length; l++) {
-          const sw = await db.scoreSubtest.findOne({
-            where: {
-              rw: 0,
-              umur: umur,
-              kode_soal: check_code[l]
-            }
-          });
-          let kategori = 'Sangat Rendah';
-          if(sw.sw>80 && sw.sw<=94) {
-            kategori = 'Rendah';
-          } else if(sw.sw > 94 && sw.sw <= 99) {
-            kategori = 'Sedang';
-          } else if(sw.sw > 99 && sw.sw <= 104) {
-            kategori = 'Cukup';
-          } else if(sw.sw > 104 && sw.sw <= 118) {
-            kategori = 'Tinggi';
-          } else if(sw.sw > 118) {
-            kategori = 'Sangat Tinggi';
-          }
-          await db.scorePeserta.create({
-            kode_soal: check_code[l],
-            rw: 0,
-            sw: sw.sw,
-            kategori: kategori,
-            peserta_id: peserta[i].id
-          });
-          row[check_code[l]+"_rw"] = 0;
-          row[check_code[l]+"_sw"] = sw.sw;
-          row[check_code[l]+"_kategori"] = kategori;
-        }
-        row.dominasi = await db.scorePeserta.getJurusan(peserta[i].id);
-        worksheet.addRow(row);
-        worksheet2.addRow(row2);
+        row.email = item.email;
+        row.nama = item.nama;
+        row2.email = item.email;
+        row2.nama = item.nama;
+        hasilQueue.add(() => getHasil(row, row2, item, worksheet, worksheet2));
       }
+      hasilQueue.onIdle().then(async () => {
+        let nameFile = `hasil_${moment(event_test.waktu).format('YYYY-MM-DD')}_${event_test.instansi}_${event_test.keterangan}`;
+        nameFile = nameFile.replace(/ /g,"_").replace(/:/g,"-") +'-'+event_test.id;
 
-      let nameFile = `${moment(event_test.waktu).format('YYYY-MM-DD')}_${event_test.instansi}_${event_test.keterangan}`;
-      nameFile = nameFile.replace(/ /g,"_").replace(/:/g,"-") +'-'+event_test.id;
-
-      await workbook.xlsx.writeFile(`./files/${nameFile}.xlsx`);
-      res.json({
-        download:`${process.env.REACT_APP_SERVER_URL}download?file=${nameFile}.xlsx`,
-        peserta
+        await workbook.xlsx.writeFile(`./files/${nameFile}.xlsx`);
+        res.json({
+          download:`${process.env.REACT_APP_SERVER_URL}download?file=${nameFile}.xlsx`
+        });
       });
     } catch (err) {
       res.status(500).json({
@@ -404,12 +422,6 @@ module.exports = {
           type: db.sequelize.QueryTypes.SELECT
         }
       );
-
-      const jumlah_peserta = await db.peserta.count({
-        where: {
-          jadwal_test: event_test.id
-        }
-      });
 
       const workbook = new Excel.Workbook();
 

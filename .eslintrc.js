@@ -8,7 +8,7 @@ module.exports = {
 	"extends": [
 		"eslint:recommended",
 		"plugin:react/recommended"
-	],	
+	],
 	"globals": {
 		"Atomics": "readonly",
 		"SharedArrayBuffer": "readonly"
@@ -25,5 +25,6 @@ module.exports = {
 	],
 	"rules": {
 		"react/prop-types": 0
-	}
+	},
+	"require-atomic-updates": "off"
 };

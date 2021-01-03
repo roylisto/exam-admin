@@ -59,4 +59,4 @@ const server = http.createServer(app);
 
 db.sequelize.authenticate()
   .then(() => server.listen(port, () => console.log(`env: ${env}\nport: ${port}`)))
-  .catch(() => console.log('sequelize error'));
+  .catch((error) => console.error(error));

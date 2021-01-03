@@ -16,7 +16,7 @@ module.exports = {
     "timezone": process.env.TZ,
     "pool": {
       min: 0,
-      max: 30,
+      max: 150,
     }
   },
   "staging": {
@@ -34,7 +34,7 @@ module.exports = {
     "timezone": process.env.TZ,
     "pool": {
       min: 0,
-      max: 30,
+      max: 150,
     }
   },
   "production": {
@@ -52,7 +52,7 @@ module.exports = {
     "timezone": process.env.TZ,
     "pool": {
       min: 0,
-      max: 30,
+      max: 150,
     }
   }
 };
